@@ -1,0 +1,29 @@
+/*
+AZUL #00A5E3
+VERDE #8DD7BF
+ROSA #FF96C5
+ROJO #FF5768
+NARANJA #FFBF65
+*/
+
+*{
+    box-sizing: border-box;
+    font-family: Tahoma, Verdana, sans-serif;
+    color: white;
+}
+
+body {
+    align-content:  center;
+    background-color: #00A5E3;
+}
+
+button {
+    background-color: #FF5768 ;
+    border-radius: 40px;
+}
+
+input{
+    border-radius: 40px;
+}
+
+        

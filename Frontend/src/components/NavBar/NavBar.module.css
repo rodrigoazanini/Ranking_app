@@ -1,0 +1,25 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    
+    background-color: white;
+	padding: 18px 24px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+}
+
+:global(.dark) .navbar {
+    background-color: #111;
+    color: white;
+}
+
+.logoutButton {
+    background-color: transparent;
+    font-size: 15px;
+}
+
+:global(.dark) .logoutButton {
+    color: white;
+}

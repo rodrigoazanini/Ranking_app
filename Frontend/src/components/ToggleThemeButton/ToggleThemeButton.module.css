@@ -1,0 +1,7 @@
+.button {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	padding: 12px;
+	border-radius: 50%;
+}
