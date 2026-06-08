@@ -7,7 +7,6 @@ public class UserResponse {
     private String username;
     private String email;
     private String password;
-    private Long dni;
 
     public UserResponse() {}
 
@@ -15,14 +14,12 @@ public class UserResponse {
         Long id,
         String username, 
         String email, 
-        String password, 
-        Long dni 
+        String password
     ) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.dni = dni;
     }
 
     static public UserResponse fromEntity(User user) {
@@ -30,8 +27,7 @@ public class UserResponse {
             user.getId(), 
             user.getUserName(), 
             user.getEmail(),
-            user.getPassword(),
-            user.getDni()
+            user.getPassword()
         );
     }
 
@@ -49,9 +45,5 @@ public class UserResponse {
 
     public String getPassword() {
         return password;
-    }
-
-    public Long getDni() {
-        return dni;
     }
 }

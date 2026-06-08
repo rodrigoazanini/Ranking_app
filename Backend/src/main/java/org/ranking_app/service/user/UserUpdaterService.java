@@ -27,7 +27,6 @@ public class UserUpdaterService {
 
         user.setUserName(userRequest.getUserName());
         user.setEmail(userRequest.getEmail());
-        user.setDni(userRequest.getDni());
 
         if (userRequest.getPassword() != null && !userRequest.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));

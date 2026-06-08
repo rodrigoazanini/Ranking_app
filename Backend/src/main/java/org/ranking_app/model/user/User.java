@@ -27,24 +27,18 @@ public class User {
     @NotBlank
     private String password;
 
-    @Column(nullable = true)
-    @Nullable
-    private Long dni;
-
     public User() {}
 
     public User(
         Long id,
         String username, 
         String email, 
-        String password, 
-        Long dni 
+        String password
     ) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.dni = dni;
     }
 
     static public User fromRequest(UserRequest request) {
@@ -52,8 +46,7 @@ public class User {
             null,
             request.getUserName(),
             request.getEmail(),
-            request.getPassword(),
-            request.getDni()
+            request.getPassword()
         );
     }
 
@@ -83,12 +76,5 @@ public class User {
     }
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getDni() {
-        return dni;
-    }
-    public void setDni(Long dni) {
-        this.dni = dni;
     }
 }
