@@ -26,13 +26,13 @@ public class Item {
     private Double weigth;
 
     @Column(nullable = false)
-    private Double price_min;
+    private Double priceMin;
 
     @Column()
-    private Double price_max;
+    private Double priceMax;
 
     @Column()
-    private Double rank_avg;
+    private Double rankingAvg;
 
     @Column(nullable = false)
     private Boolean enabled;
@@ -41,11 +41,17 @@ public class Item {
     private Boolean suggested;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(
+            name = "categoryId",
+            foreignKey = @ForeignKey(name = "fk_item_category")
+    )
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(
+            name = "userId",
+            foreignKey = @ForeignKey(name = "fk_item_suggested_by_user")
+    )
     private User suggested_by;
 
     public Item() {}
@@ -56,9 +62,9 @@ public class Item {
         String description,
         String brand,
         Double weight,
-        Double price_min,
-        Double price_max,
-        Double rank_avg,
+        Double priceMin,
+        Double priceMax,
+        Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
         Category category,
@@ -69,9 +75,9 @@ public class Item {
         this.description = description;
         this.brand = brand;
         this.weigth = weight;
-        this.price_min = price_min;
-        this.price_max = price_max;
-        this.rank_avg = rank_avg;
+        this.priceMin = priceMin;
+        this.priceMax = priceMax;
+        this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
         this.category = category;
@@ -85,9 +91,9 @@ public class Item {
             request.getDescription(),
             request.getBrand(),
             request.getWeight(),
-            request.getPrice_min(),
-            request.getPrice_max(),
-            request.getRanking_avg(),
+            request.getPriceMin(),
+            request.getPriceMax(),
+            request.getRankingAvg(),
             request.getEnabled(),
             request.getSuggested(),
             category,
@@ -116,28 +122,40 @@ public class Item {
         this.description = description;
     }
 
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
-
-    public Double getWeigth() { return weigth; }
-    public void setWeigth(Double weigth) { this.weigth = weigth; }
-
-    public Double getPrice_min() {
-        return price_min;
+    public String getBrand() {
+        return brand;
     }
-    public void setPrice_min(Double price_min) {
-        this.price_min = price_min;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
-    public Double getPrice_max() {
-        return price_max;
+    public Double getWeigth() {
+        return weigth;
     }
-    public void setPrice_max(Double price_max) {
-        this.price_max = price_max;
+    public void setWeigth(Double weigth) {
+        this.weigth = weigth;
     }
 
-    public Double getRank_avg() {return rank_avg; }
-    public void setRank_avg(Double rank_avg) { this.rank_avg = rank_avg; }
+    public Double getPriceMin() {
+        return priceMin;
+    }
+    public void setPriceMin(Double priceMin) {
+        this.priceMin = priceMin;
+    }
+
+    public Double getPriceMax() {
+        return priceMax;
+    }
+    public void setPriceMax(Double priceMax) {
+        this.priceMax = priceMax;
+    }
+
+    public Double getRankingAvg() {
+        return rankingAvg;
+    }
+    public void setRankingAvg(Double rankingAvg) {
+        this.rankingAvg = rankingAvg;
+    }
 
     public Boolean getEnabled() {
         return enabled;
@@ -160,7 +178,10 @@ public class Item {
         this.category = category;
     }
 
-    public User getSuggested_by() { return suggested_by; }
-    public void setSuggested_by(User suggested_by) { this.suggested_by = suggested_by;
+    public User getSuggested_by() {
+        return suggested_by;
+    }
+    public void setSuggested_by(User suggested_by) {
+        this.suggested_by = suggested_by;
     }
 }

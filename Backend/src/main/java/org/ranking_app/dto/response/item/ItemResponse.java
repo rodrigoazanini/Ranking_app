@@ -8,8 +8,8 @@ public class ItemResponse {
     private String description;
     private String brand;
     private Double weight;
-    private Double price_min;
-    private Double price_max;
+    private Double priceMin;
+    private Double priceMax;
     private Boolean enabled;
     private Boolean suggested;
     private Long categoryId;
@@ -23,8 +23,8 @@ public class ItemResponse {
         String description,
         String brand,
         Double weight,
-        Double price_min,
-        Double price_max,
+        Double priceMin,
+        Double priceMax,
         Boolean enabled,
         Boolean suggested,
         Long categoryId,
@@ -35,8 +35,8 @@ public class ItemResponse {
         this.description = description;
         this.brand = brand;
         this.weight = weight;
-        this.price_min = price_min;
-        this.price_max = price_max;
+        this.priceMin = priceMin;
+        this.priceMax = priceMax;
         this.enabled = enabled;
         this.suggested = suggested;
         this.categoryId = categoryId;
@@ -50,8 +50,8 @@ public class ItemResponse {
                 item.getDescription(),
                 item.getBrand(),
                 item.getWeigth(),
-                item.getPrice_min(),
-                item.getPrice_max(),
+                item.getPriceMin(),
+                item.getPriceMax(),
                 item.getEnabled(),
                 item.getSuggested(),
                 item.getCategory() != null ? item.getCategory().getId() : null,
@@ -75,12 +75,12 @@ public class ItemResponse {
 
     public Double getWeight() { return weight; }
 
-    public Double getPrice_min() {
-        return price_min;
+    public Double getPriceMin() {
+        return priceMin;
     }
 
-    public Double getPrice_max() {
-        return price_max;
+    public Double getPriceMax() {
+        return priceMax;
     }
 
     public Boolean getEnabled() {

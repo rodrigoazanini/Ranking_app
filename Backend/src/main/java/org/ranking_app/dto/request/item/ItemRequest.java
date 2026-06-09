@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
+
 public class ItemRequest {
 
     @NotBlank(message = "El nombre es obligatorio")
@@ -20,12 +22,12 @@ public class ItemRequest {
     private Double weight;
 
     @NotNull(message = "El precio es obligatorio")
-    private Double price_min;
+    private Double priceMin;
 
-    private Double price_max;
+    private Double priceMax;
 
     @Nullable
-    private Double ranking_avg; // Crear trigger the update?
+    private Double rankingAvg; // Crear trigger the update?
 
     @Nullable
     private Boolean enabled;
@@ -45,9 +47,9 @@ public class ItemRequest {
         String description,
         String brand,
         Double weight,
-        Double price_min,
-        Double price_max,
-        Double ranking_avg,
+        Double priceMin,
+        Double priceMax,
+        Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
         Long categoryId,
@@ -57,9 +59,9 @@ public class ItemRequest {
         this.description = description;
         this.brand = brand;
         this.weight = weight;
-        this.price_min = price_min;
-        this.price_max = price_max;
-        this.ranking_avg = ranking_avg;
+        this.priceMin = priceMin;
+        this.priceMax = priceMax;
+        this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
         this.categoryId = categoryId;
@@ -82,16 +84,16 @@ public class ItemRequest {
         return weight;
     }
 
-    public Double getPrice_min() {
-        return price_min;
+    public Double getPriceMin() {
+        return priceMin;
     }
 
-    public Double getPrice_max() {
-        return price_max;
+    public Double getPriceMax() {
+        return priceMax;
     }
 
-    public Double getRanking_avg() {
-        return ranking_avg;
+    public Double getRankingAvg() {
+        return rankingAvg;
     }
 
     public Boolean getEnabled() {

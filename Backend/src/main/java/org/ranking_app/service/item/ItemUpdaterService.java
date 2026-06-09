@@ -37,9 +37,9 @@ public class ItemUpdaterService {
         item.setDescription(itemRequest.getDescription());
         item.setBrand(item.getBrand());
         item.setWeigth(item.getWeigth());
-        item.setPrice_min(itemRequest.getPrice_min());  // esto se tiene que cambiar
-        item.setPrice_max(itemRequest.getPrice_max());  // esto se tiene que cambiar
-        item.setRank_avg(item.getRank_avg());           // esto se tiene que cambiar
+//        item.setPriceMin(itemRequest.getPriceMin());
+//        item.setPriceMax(itemRequest.getPriceMax());
+//        item.setRankingAvg(item.getRankingAvg());
         item.setEnabled(itemRequest.getEnabled());
         item.setSuggested(item.getSuggested());
 
@@ -48,7 +48,7 @@ public class ItemUpdaterService {
             item.setCategory(category);
         }
 
-        if (itemRequest.getUserId() != null) { // hmmm se supone que nada de logica aca habra que preguntar
+        if (itemRequest.getUserId() != null) {
             User user = userFinderService.find(itemRequest.getUserId());
             item.setSuggested_by(user);
         }
