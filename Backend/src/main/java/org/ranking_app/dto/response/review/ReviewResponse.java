@@ -1,6 +1,8 @@
 package org.ranking_app.dto.response.review;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.ranking_app.dto.response.item.ItemResponse;
+import org.ranking_app.dto.response.user.UserResponse;
 import org.ranking_app.model.review.Review;
 
 import java.util.Date;
@@ -10,11 +12,12 @@ public class ReviewResponse {
     private String comment;
     private Double ranking;
     private Double price;
-    private Long itemId;
-    private Long userId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date date;
+
+    private ItemResponse itemResponse;
+    private UserResponse userResponse;
 
     public ReviewResponse() {}
 
@@ -23,28 +26,30 @@ public class ReviewResponse {
         String comment,
         Double ranking,
         Double price,
-        Long itemId,
-        Long userId,
-        Date date
+        Date date,
+        ItemResponse itemResponse,
+        UserResponse userResponse
+
     ) {
         this.id = id;
         this.comment = comment;
         this.ranking = ranking;
         this.price = price;
-        this.itemId = itemId;
-        this.userId = userId;
         this.date = date;
+        this.itemResponse = itemResponse;
+        this.userResponse = userResponse;
+
     }
 
     static public ReviewResponse fromEntity(Review review) {
         return new ReviewResponse(
-            review.getId(),
-            review.getComment(),
-            review.getRanking(),
-            review.getPrice(),
-            review.getItem() != null ? review.getItem().getId() : null,
-            review.getUser() != null ? review.getUser().getId() : null,
-            review.getDate()
+                review.getId(),
+                review.getComment(),
+                review.getRanking(),
+                review.getPrice(),
+                review.getDate(),
+                ItemResponse.fromEntity(review.getItem()),
+                UserResponse.fromEntity(review.getUser())
         );
     }
 
@@ -64,15 +69,15 @@ public class ReviewResponse {
         return price;
     }
 
-    public Long getItemId() {
-        return itemId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
     public Date getDate() {
         return date;
+    }
+
+    public ItemResponse getItemResponse() {
+        return itemResponse;
+    }
+
+    public UserResponse getUserResponse() {
+        return userResponse;
     }
 }
