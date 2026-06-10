@@ -1,5 +1,6 @@
 package org.ranking_app.model.item;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.model.category.Category;
@@ -25,13 +26,16 @@ public class Item {
     @Column(nullable = false)
     private Double weigth;
 
-    @Column(nullable = false)
+    @Nullable
+    @Column(nullable = true)
     private Double priceMin;
 
-    @Column()
+    @Nullable
+    @Column(nullable = true)
     private Double priceMax;
 
-    @Column()
+    @Nullable
+    @Column(nullable = true)
     private Double rankingAvg;
 
     @Column(nullable = false)
@@ -40,16 +44,18 @@ public class Item {
     @Column(nullable = false)
     private Boolean suggested;
 
+    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "categoryId",
+            name = "category_id",
             foreignKey = @ForeignKey(name = "fk_item_category")
     )
     private Category category;
 
+    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "userId",
+            name = "user_id",
             foreignKey = @ForeignKey(name = "fk_item_suggested_by_user")
     )
     private User suggested_by;
@@ -62,9 +68,6 @@ public class Item {
         String description,
         String brand,
         Double weight,
-        Double priceMin,
-        Double priceMax,
-        Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
         Category category,
@@ -75,29 +78,23 @@ public class Item {
         this.description = description;
         this.brand = brand;
         this.weigth = weight;
-        this.priceMin = priceMin;
-        this.priceMax = priceMax;
-        this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
         this.category = category;
         this.suggested_by = suggested_by;
     }
 
-    static public Item fromRequest(ItemRequest request, Category category, User suggested_by) {
+    static public Item fromRequest(ItemRequest request) {
         return new Item(
             null,
             request.getName(),
             request.getDescription(),
             request.getBrand(),
             request.getWeight(),
-            request.getPriceMin(),
-            request.getPriceMax(),
-            request.getRankingAvg(),
             request.getEnabled(),
             request.getSuggested(),
-            category,
-            suggested_by
+            null,
+            null
         );
     }
 

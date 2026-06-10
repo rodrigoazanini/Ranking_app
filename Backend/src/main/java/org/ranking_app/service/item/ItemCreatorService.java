@@ -28,13 +28,16 @@ public class ItemCreatorService {
 
     @Transactional
     public Item create(ItemRequest request) {
-        Category category = request.getCategoryId() != null ||
-                request.getCategoryId().toString() != "" ? categoryFinderService.find(request.getCategoryId()) : null;
+        Category category = request.getCategoryId() != null ?
+                categoryFinderService.find(request.getCategoryId()) : null;
 
-        User suggested_by = request.getUserId() != null ||
-                request.getUserId().toString() != "" ? userFinderService.find(request.getUserId()) : null;
+        User suggested_by = request.getUserId() != null
+                ? userFinderService.find(request.getUserId()) : null;
 
-        Item item = Item.fromRequest(request, category, suggested_by);
+        Item item = Item.fromRequest(request);
+        item.setCategory(category);
+        item.setSuggested_by(suggested_by);
+
         return jpaItemRepository.save(item);
     }
 }

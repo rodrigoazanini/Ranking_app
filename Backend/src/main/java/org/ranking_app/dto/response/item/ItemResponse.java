@@ -1,5 +1,7 @@
 package org.ranking_app.dto.response.item;
 
+import org.ranking_app.dto.response.category.CategoryResponse;
+import org.ranking_app.dto.response.user.UserResponse;
 import org.ranking_app.model.item.Item;
 
 public class ItemResponse {
@@ -12,8 +14,8 @@ public class ItemResponse {
     private Double priceMax;
     private Boolean enabled;
     private Boolean suggested;
-    private Long categoryId;
-    private Long userId;
+    private CategoryResponse categoryResponse;
+    private UserResponse userResponse;
 
     public ItemResponse() {}
 
@@ -27,8 +29,8 @@ public class ItemResponse {
         Double priceMax,
         Boolean enabled,
         Boolean suggested,
-        Long categoryId,
-        Long userId
+        CategoryResponse categoryResponse,
+        UserResponse userResponse
     ) {
         this.id = id;
         this.name = name;
@@ -39,8 +41,8 @@ public class ItemResponse {
         this.priceMax = priceMax;
         this.enabled = enabled;
         this.suggested = suggested;
-        this.categoryId = categoryId;
-        this.userId = userId;
+        this.categoryResponse = categoryResponse;
+        this.userResponse = userResponse;
     }
 
     static public ItemResponse fromEntity(Item item) {
@@ -54,8 +56,8 @@ public class ItemResponse {
                 item.getPriceMax(),
                 item.getEnabled(),
                 item.getSuggested(),
-                item.getCategory() != null ? item.getCategory().getId() : null,
-                item.getSuggested_by() != null ? item.getSuggested_by().getId() : null
+                CategoryResponse.fromEntity(item.getCategory()),
+                UserResponse.fromEntity(item.getSuggested_by())
         );
     }
 
@@ -91,12 +93,12 @@ public class ItemResponse {
         return suggested;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public  CategoryResponse getCategoryResponse() {
+        return categoryResponse;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserResponse getUserResponse() {
+        return userResponse;
     }
 
 }

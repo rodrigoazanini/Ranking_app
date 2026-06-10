@@ -8,7 +8,7 @@ import org.ranking_app.model.user.User;
 @Entity
 @Table(
     name = "user_item_favorites",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "item_id"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "item_id"})
 )
 public class UserItemFavorite {
 
@@ -27,7 +27,7 @@ public class UserItemFavorite {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "userId",
+            name = "user_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_user_item_favorites_user")// no se crea?
     )

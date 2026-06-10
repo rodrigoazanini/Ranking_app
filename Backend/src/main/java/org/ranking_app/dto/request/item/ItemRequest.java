@@ -3,10 +3,8 @@ package org.ranking_app.dto.request.item;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
-
-import java.math.BigDecimal;
+import org.ranking_app.dto.response.category.CategoryResponse;
 
 public class ItemRequest {
 
@@ -21,21 +19,13 @@ public class ItemRequest {
 
     private Double weight;
 
-    @NotNull(message = "El precio es obligatorio")
-    private Double priceMin;
-
-    private Double priceMax;
-
-    @Nullable
-    private Double rankingAvg; // Crear trigger the update?
-
     @Nullable
     private Boolean enabled;
 
     @Nullable
     private Boolean suggested;
 
-    @NotNull(message = "La categoria es obligatoria")
+    @Nullable
     private Long categoryId;
 
     @Nullable
@@ -47,9 +37,6 @@ public class ItemRequest {
         String description,
         String brand,
         Double weight,
-        Double priceMin,
-        Double priceMax,
-        Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
         Long categoryId,
@@ -59,9 +46,6 @@ public class ItemRequest {
         this.description = description;
         this.brand = brand;
         this.weight = weight;
-        this.priceMin = priceMin;
-        this.priceMax = priceMax;
-        this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
         this.categoryId = categoryId;
@@ -82,18 +66,6 @@ public class ItemRequest {
 
     public Double getWeight() {
         return weight;
-    }
-
-    public Double getPriceMin() {
-        return priceMin;
-    }
-
-    public Double getPriceMax() {
-        return priceMax;
-    }
-
-    public Double getRankingAvg() {
-        return rankingAvg;
     }
 
     public Boolean getEnabled() {

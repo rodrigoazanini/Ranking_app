@@ -43,7 +43,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "userId",
+            name = "user_id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_review_user")
     )
@@ -68,16 +68,6 @@ public class Review {
         this.date = date;
         this.item = item;
         this.user = user;
-    }
-
-    public Review(
-        Long id,
-        String comment,
-        Double ranking,
-        Double price,
-        Date date
-    ) {
-        this(id, comment, ranking, price, date, null, null);
     }
 
     static public Review fromRequest(ReviewRequest request, Item item, User user) {
