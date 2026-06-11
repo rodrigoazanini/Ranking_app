@@ -2,7 +2,8 @@
     position: sticky;
     top: 0;
     
-    background-color: white;
+    color: white;
+    background-color: #F05A6A;
 	padding: 18px 24px;
 
     display: flex;
@@ -10,16 +11,7 @@
     gap: 24px;
 }
 
-:global(.dark) .navbar {
-    background-color: #111;
-    color: white;
-}
-
 .logoutButton {
     background-color: transparent;
     font-size: 15px;
-}
-
-:global(.dark) .logoutButton {
-    color: white;
 }

@@ -1,27 +1,42 @@
-import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { LoginPage } from "./pages/LoginPage/LoginPage.jsx";
-import { RegisterPage } from "./pages/RegisterPage/RegisterPage.jsx";
-import { PublicRoute, PrivateRoute } from "./Routes.jsx";
+import { useState } from "react";
+import "./index.css";
 
+import Navbar from "./components/Navbar/Navbar";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import HomePage from "./pages/HomePage/HomePage";
+import ItemDetailPage from "./pages/ItemDetailPage/ItemDetailPage";
+import SuggestItemPage from "./pages/SuggestItemPage/SuggestItemPage";
+import NewItemPage from "./pages/NewItemPage/NewItemPage";
+import EditItemPage from "./pages/EditItemPage/EditItemPage";
 
-export function App() {
+export default function App(){
+	const [page, setPage] = useState("login");
+	const [selectedItem, setSelectedItem] = useState(null);
+	const [serchQuery, setSearchQuery] = useState("")}
+
+	const showNav = page !== "login";
+	
 	return (
 		<>
-			<BrowserRouter>
-				<Routes>
-					<Route element={<PublicRoute />}>
-						<Route path="/auth/login" element={<LoginPage />} />
-						<Route path="/auth/register" element={<RegisterPage />} />
-					</Route>
+		{showNav && (
+			<Navbar
+				setPage={setpage}
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+			/>
+		)}
+	
 
-					<Route element={<PrivateRoute />}>
-						<Route path="/" element={<TasksPage />} />
-					</Route>
-				</Routes>
-			</BrowserRouter>
-
-			<ToggleThemeButton />
-		</>
-	);
-}
+{page === "login" && <LoginPage setPage={setPage} />}
+{page === "home" && <HomePage 
+		setPage={setPage} 	
+		setSelectedItem={setSelectedItem} 
+		searchQuery={searchQuery} />}	
+{page === "item" && selectedItem && <ItemDetailPage 
+	item={selectedItem}
+	setPage={setPage} />}
+{page === "suggest" && <SuggestItemPage setPage={setPage} />}
+{page === "new" && <NewItemPage setPage={setPage} />}
+{page === "edit" && selectedItem && <EditItemPage setPage={setPage} selectedItem={selectedItem} />}
+</>	
+);

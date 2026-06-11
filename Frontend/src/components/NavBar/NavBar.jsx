@@ -1,7 +1,6 @@
 import styles from "./NavBar.module.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 
 export function NavBar() {
 	const navigate = useNavigate();
@@ -29,7 +28,7 @@ export function NavBar() {
 
 	return (
 		<nav className={styles.navbar}>
-			<p>👤 {user.name}</p>
+			<p>👤 {user.username}</p>
 
 			<button className={styles.logoutButton} onClick={logout}>
 				Cerrar sesión
