@@ -1,0 +1,19 @@
+.card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid #DDE7EF;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.userName { font-weight: 800; color: #1A2A36; font-size: 15px; margin-bottom: 4px; }
+.meta { text-align: right; }
+.price { font-weight: 700; color: #2196C9; font-size: 14px; }
+.date  { color: #8A9BAE; font-size: 12px; font-weight: 600; }
+.comment { color: #445566; font-size: 14px; line-height: 1.6; }

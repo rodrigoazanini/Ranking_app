@@ -1,0 +1,19 @@
+.btn {
+  border: none;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 12px 28px;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.btn:hover:not(:disabled) { transform: translateY(-2px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.primary { background: #F9C22E; color: #1A2A36; }
+.coral   { background: #F05A6A; color: #FFFFFF;  }
+.ghost   { background: rgba(255,255,255,.2); color: #FFFFFF; }
+.outline { background: transparent; color: #2196C9; border: 2px solid #2196C9; }

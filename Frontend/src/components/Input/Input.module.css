@@ -1,0 +1,22 @@
+.wrapper { margin-bottom: 16px; }
+.label {
+  display: block;
+  font-weight: 700;
+  color: #1A2A36;
+  margin-bottom: 6px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.input {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 14px;
+  border: 2px solid #DDE7EF;
+  font-size: 15px;
+  outline: none;
+  background: #F4F8FB;
+  color: #1A2A36;
+  transition: border-color 0.2s;
+}
+.input:focus { border-color: #2196C9; }
