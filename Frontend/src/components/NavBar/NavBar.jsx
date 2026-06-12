@@ -6,16 +6,17 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user }) {
 
 
   const userMenuItems = [
-    { label: "Principal",      icon: "🏠", page: "home"    },
-    { label: "Mi perfil",      icon: "👤", page: "profile" },
-    { label: "Sugerir producto", icon: "💡", page: "suggest" },
-    { label: "Cerrar sesión",  icon: "🚪", page: "login"   },
+    { label: "Principal", page: "home"    },
+    { label: "Mi perfil", page: "profile" },
+    { label: "Sugerir producto", page: "suggest" },
+    { label: "Cerrar sesión",  page: "login"   },
   ];
 
+
   const adminMenuItems = [
-    { label: "Principal",      icon: "🏠", page: "home"   },
-    { label: "Administración", icon: "⚙️", page: "admin"  },
-    { label: "Cerrar sesión",  icon: "🚪", page: "login"  },
+    { label: "Principal", page: "home"   },
+    { label: "Administración", page: "admin"  },
+    { label: "Cerrar sesión",page: "login"  },
   ];
 
   const menuItems = user?.admin ? adminMenuItems : userMenuItems;
@@ -25,17 +26,16 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user }) {
       <div className={styles.inner}>
 
         <div className={styles.logo} onClick={() => setPage("home")}>
-          <span className={styles.logoIcon}>⭐</span>
+
           <span className={styles.logoText}>RANKING APP</span>
         </div>
 
         <div className={styles.searchWrapper}>
-          <span className={styles.searchIcon}>🔍</span>
           <input
             className={styles.searchInput}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar productos..."
+            placeholder="Buscar productos"
           />
         </div>
 
