@@ -5,11 +5,10 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import HomePage from "./pages/HomePage/HomePage";
 import ItemDetailPage from "./pages/ItemDetailPage/ItemDetailPage";
 import SuggestItemPage from "./pages/SuggestItemPage/SuggestItemPage";
-import CreateItemPage from "./pages/CreateItemPage/CreateItemPage";
+import CreateItemPage from "./pages/ItemFormPage/ItemFormPage";
 import EditItemPage from "./pages/EditItemPage/EditItemPage";
 import AdminItemsPage from "./pages/AdminItemsPage/AdminItemsPage";
 import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
-
 
 export function App() {
 	return (
@@ -25,9 +24,9 @@ export function App() {
 						</Route>
 
 						<Route element={<PrivateRoute />}>
-							<Route path="/items/suggest" element={<SuggestItemPage />} />
-							<Route path="/items/create" element={<CreateItemPage />} />
-							<Route path="/items/edit/:id" element={<EditItemPage />} />
+							<Route path="/items/suggest" element={<ItemFormPage />} />
+							<Route path="/items/create" element={<ItemFormPage />} />
+							<Route path="/items/edit/:id" element={<ItemFormPage />} />
 							<Route path="/admin/items" element={<AdminItemsPage />} />
 							<Route path="/profile" element={<UserProfilePage />} />
 						</Route>{/*ItemFormPage */}
