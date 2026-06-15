@@ -1,3 +1,7 @@
-import styles from "./AdminItemsPage.module.css";
-import Btn from "../../components/Btn/Btn";
- 
+export function AdminItemsPage() {
+	return (
+		<main>
+			<h1>Administracion</h1>
+		</main>
+	);
+}

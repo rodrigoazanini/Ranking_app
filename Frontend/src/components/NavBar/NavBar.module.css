@@ -3,27 +3,50 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
+  overflow-x: clip;
 }
 
 .inner {
-  max-width: 1100px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 64px;
+  min-height: 64px;
+  flex-wrap: wrap;
 }
 
-.logo {
+.brand {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  text-align: left;
 }
 
-.logoIcon { font-size: 28px; }
+.logoMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.logoMark::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.25);
+}
 
 .logoText {
   font-family: 'Baloo 2', sans-serif;
@@ -33,16 +56,28 @@
   letter-spacing: 1px;
 }
 
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 320px;
+  justify-content: flex-end;
+}
+
 .searchWrapper {
-  flex: 1;
+  flex: 1 1 240px;
   position: relative;
   max-width: 400px;
+  min-width: 0;
 }
 
 .searchInput {
   width: 100%;
-  padding: 9px 18px 9px 42px;
-  border-radius: 50px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
   border: none;
   font-size: 14px;
   background: rgba(255,255,255,.95);
@@ -51,56 +86,18 @@
   font-weight: 600;
 }
 
-.searchIcon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  opacity: 0.5;
-}
+@media (max-width: 720px) {
+  .inner {
+    padding: 12px 14px;
+    row-gap: 12px;
+  }
 
-.menuWrapper {
-  position: relative;
-  margin-left: auto;
-}
+  .actions {
+    flex-basis: 100%;
+    width: 100%;
+  }
 
-.hamburger {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 10px;
-  padding: 8px 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  .searchWrapper {
+    max-width: none;
+  }
 }
-
-.bar {
-  display: block;
-  width: 24px;
-  height: 3px;
-  border-radius: 2px;
-  background: #F05A6A;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-.menuItem {
-  width: 100%;
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 13px 22px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #1A2A36;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  border-bottom: 1px solid #DDE7EF;
-}
-
-.menuItem:last-child { border-bottom: none; color: #F05A6A; }
-.menuItem:hover { background: #F4F8FB; }
-.menuIcon { font-size: 18px; }

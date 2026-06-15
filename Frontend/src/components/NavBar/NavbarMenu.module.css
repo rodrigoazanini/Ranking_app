@@ -1,0 +1,75 @@
+.menuWrapper {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.hamburger {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: #FFFFFF;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(240px, calc(100vw - 24px));
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(26, 42, 54, 0.22);
+  overflow: hidden;
+  z-index: 20;
+}
+
+.menuItem {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1A2A36;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: #F4F8FB;
+}
+
+.menuItemDanger {
+  color: #F05A6A;
+}
+
+.menuIcon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.8;
+}

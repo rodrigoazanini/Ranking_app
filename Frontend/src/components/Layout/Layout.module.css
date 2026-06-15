@@ -3,7 +3,8 @@
 body {
   font-family: 'Nunito', sans-serif;
   background: #2196C9;
-  min-height: 100vh;
+  padding: 0;
+  margin: 0;
 }
 
 input, textarea, select { font-family: 'Nunito', sans-serif; }
