@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./Navbar.module.css";
 
-export default function Navbar({ setPage, searchQuery, setSearchQuery, user }) {
+export function Navbar({ setPage, searchQuery, setSearchQuery, user }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
 

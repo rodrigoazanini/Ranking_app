@@ -1,27 +1,74 @@
+.title {
+   font-family: 'Baloo 2', sans-serif;
+   font-size: 24px; 
+   color: #000000; 
+   font-weight: 800;
+  text-align: center; }
+
+  header {
+  margin-bottom: 32px;
+}
+
+.error { 
+  color: #F05A6A;
+   font-weight: 700; 
+   font-size: 13px; 
+   margin-bottom: 12px; 
+   text-align: center; }
+
 .page {
   min-height: 100vh;
-  background: #2196C9;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  justify-content: center; 
+  align-items: center;     
 }
+
 .card {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 28px;
   padding: 40px 36px;
   width: 100%;
-  max-width: 380px;
-  border: 1px solid #DDE7EF;
+  max-width: 420px;
+  border: 1px solid #dde7ef;
 }
-.avatarWrapper { text-align: center; margin-bottom: 24px; }
-.avatar {
-  width: 80px; height: 80px; border-radius: 50%;
-  background: #DDE7EF; margin: 0 auto 12px;
-  display: flex; align-items: center; justify-content: center; font-size: 38px;
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 8px;
 }
-.title { font-family: 'Baloo 2', sans-serif; font-size: 24px; color: #1A2A36; font-weight: 800; }
-.error { color: #F05A6A; font-weight: 700; font-size: 13px; margin-bottom: 12px; text-align: center; }
-.submitBtn { width: 100%; justify-content: center; margin-top: 4px; }
-.switchText { text-align: center; margin-top: 18px; font-size: 13px; color: #8A9BAE; font-weight: 700; }
-.switchLink { color: #F05A6A; cursor: pointer; text-decoration: underline; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.card p {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #666;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+form input {
+  width: 100%;
+  padding: 12px 16px;
+border: 1px solid #d0d0d0;
+border-radius:  999px;
+font-size: 16px;
+box-sizing: border-box;
+outline:none;
+}
+
+.submitBtn {
+  width: 180px;
+  margin-top: 12px;
+  align-self: center;
+  justify-content: center;
+}
+
+.UserIcon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+
+}

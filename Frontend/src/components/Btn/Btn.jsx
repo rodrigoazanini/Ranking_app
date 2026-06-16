@@ -1,9 +1,20 @@
 import styles from "./Btn.module.css";
 
-export default function Btn({ children, onClick, variant = "primary", className = "", disabled }) {
+export default function Btn({
+  children,
+  onClick,
+  variant = "primary",
+  className = "",
+  disabled,
+  type = "button"
+}) {
   return (
-    <button onClick={onClick} disabled={disabled}
-      className={`${styles.btn} ${styles[variant]} ${className}`}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${styles.btn} ${styles[variant]} ${className}`}
+    >
       {children}
     </button>
   );
