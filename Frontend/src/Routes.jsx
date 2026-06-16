@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { Navbar } from "./components/NavBar/NavBar";
+import  NavBar  from "./components/NavBar/NavBar";
+import  NavbarMenu  from "./components/NavBar/NavbarMenu";
 
 export function PublicRoute() {
 	const token = localStorage.getItem("token");
