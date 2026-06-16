@@ -2,17 +2,16 @@ import { Navigate, Outlet } from "react-router-dom";
 import { Navbar } from "./components/NavBar/NavBar";
 
 export function PublicRoute() {
-	/*const token = localStorage.getItem("token");
-	if (token) return <Navigate to="/" />;*/
-	return (<div className="mainWrapper">
+	const token = localStorage.getItem("token");
+	if (token) return <Navigate to="/" />;
+	return <div className="mainWrapper">
 		<Outlet />
-	</div>
-	);
+	</div>;
 }
 
 export function PrivateRoute() {
-	/*const token = localStorage.getItem("token");
-	if (!token) return <Navigate to="/auth/login" />;*/
+	const token = localStorage.getItem("token");
+	if (!token) return <Navigate to="/auth/login" />;
 	return (
 		<>
 			<NavBar />
