@@ -1,27 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import itemDefault from "../../images/item_default.png";
 import styles from "./CreateUpdateItemForm.module.css";
+import { itemService } from "../../services/itemService";
 
-export function CreateUpdateItemForm({ onSubmit }) {
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [weight, setWeight] = useState(0);
-    const [brand, setBrand] = useState("");
-    const [category, setCategory] = useState("");
+export function CreateUpdateItemForm({ editItem, isAdmin }) {
+    const [name, setName] = useState(editItem?.name || "");
+    const [description, setDescription] = useState(editItem?.description || "");
+    const [weight, setWeight] = useState(editItem?.weight || 0);
+    const [brand, setBrand] = useState(editItem?.brand || "");
+    const [category, setCategory] = useState(editItem?.category || "");
 
-    async function createItem(event) {
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        // TODO: Hacer fetch de categorias para el dropdown
+        // y actualizar el estado con setCategories
+    }, []);
+
+    async function onSubmit(event) {
         event.preventDefault();
+
+        // TODO: Validar ID de categoria
         if (!name || !description || !weight || !brand || !category) return;
-        onSubmit({ name, description, weight, brand, category });
-        setName("");
-        setDescription("");
-        setWeight(0);
-        setBrand("");
-        setCategory("");
+
+        const result = editItem 
+            ? await itemService.updateItem(editItem.id, { name, description, weight, brand, category })
+            : await itemService.createItem({
+                name,
+                description,
+                weight,
+                brand,
+                categoryId: 1, // TODO: Hacer dropdown de categorias
+                userId: 1, // TODO: Eliminarlo y hacer que el backend lo asigne segun el token
+                enabled: true, // TODO: Asociar el switch al estado
+                suggested: !isAdmin
+            });
+
+        // TODO: Mostrar error en la interfaz
+        if (!result) return;
+
+        // TODO: Redirigir a la pagina del item creado/actualizado
+        //if(isAdmin) navigate("/admin/items");
+        //else navigate("/items");
     }
 
     return (
-        <form className={styles.form} onSubmit={createItem}>
+        <form className={styles.form} onSubmit={onSubmit}>
             <div className={styles["left-section"]}>
                 <div>
                     <label>Nombre</label>
@@ -56,6 +80,9 @@ export function CreateUpdateItemForm({ onSubmit }) {
                     />
                 </div>
 
+                {
+                // TODO: Hacer dropdown de categorias en vez de input de texto usando el state categories
+                }
                 <div>
                     <label>Categoria</label>
                     <input type="text" className={styles.input}
@@ -69,8 +96,8 @@ export function CreateUpdateItemForm({ onSubmit }) {
                 <div className={styles["image-preview"]}>
                     <img id="preview" src={itemDefault} alt="Preview" />
                 </div>
-
-                <div className={styles["image-label"]}>Imagen</div>
+                
+                <label>Imagen</label>
 
                 <label className={styles["upload-box"]}>
                     <input type="file" accept="image/*" id="imageInput" />
@@ -82,18 +109,22 @@ export function CreateUpdateItemForm({ onSubmit }) {
                     </span>
                 </label>
 
-                <div className={styles["toggle-container"]}>
-                    <label className={styles["switch"]}>
-                        <input type="checkbox" id="status" />
-                        <span className={styles["slider"]}></span>
-                        <span className={styles["slider-text"]} id="statusText">
-                            ACTIVO
-                        </span>
-                    </label>
-                </div>
+                {
+                    isAdmin ? (
+                        <div className={styles["toggle-container"]}>
+                            <label className={styles["switch"]}>
+                                <input type="checkbox" id="status" />
+                                <span className={styles["slider"]}></span>
+                                <span className={styles["slider-text"]} id="statusText">
+                                    ACTIVO
+                                </span>
+                            </label>
+                        </div>
+                    ) : null
+                }
 
                 <button type="submit" className={styles["save-btn"]}>
-                    CREAR
+                    {editItem ? "ACTUALIZAR" : "CREAR"}
                 </button>
             </div>
         </form>

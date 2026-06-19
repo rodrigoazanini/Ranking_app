@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
+import {jwtDecode} from "jwt-decode";
 
 export default function Navbar({ setPage, searchQuery, setSearchQuery, user = null }) {
+  const token = localStorage.getItem("token");
+  const decodedJwt = token ? jwtDecode(token) : null;
+
   const navigate = useNavigate();
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
@@ -43,6 +47,14 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
               placeholder="Buscar productos"
             />
           </div>
+
+          {
+            decodedJwt && (
+              <p className={styles.welcomeMessage}>
+                Hola, {decodedJwt.sub}
+                </p>
+            )
+          }
 
           <NavbarMenu user={user} />
         </div>

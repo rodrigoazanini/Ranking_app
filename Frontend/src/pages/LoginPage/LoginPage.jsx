@@ -19,7 +19,7 @@ export function LoginPage() {
 		setError(null);
 
 		const data = await authService.login({ email, password });
-		if (data.ok) {
+		if (data.token) {
 			localStorage.setItem("token", data.token);
 			navigate("/");
 		} else {

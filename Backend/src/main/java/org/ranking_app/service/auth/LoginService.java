@@ -35,6 +35,8 @@ public class LoginService {
             throw new WrongPasswordException();
         }
 
+        // TODO: Agregar todos los datos el usuario en el token, menos password
+        // y como cambiar el nomebre de variable
         String token = jwtService.generateToken(user.getEmail());
         return new LoginResponse(token);
     }

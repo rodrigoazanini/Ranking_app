@@ -7,9 +7,13 @@
     width: 100%;
     min-height: calc(100vh - 64px);
     box-sizing: border-box;
-    padding: 24px 20px 48px;
+    padding-bottom: 48px;
+
+    max-width: 1000px;
+    margin: 0 auto;
+
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     overflow-x: hidden;
 }

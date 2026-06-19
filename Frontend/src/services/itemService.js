@@ -3,6 +3,7 @@ const API_URL = "http://localhost:8091/api";
 function getHeaders() {
 	return {
 		"authorization": `Bearer ${localStorage.getItem("token")}`,
+		"Content-Type": "application/json"
 	};
 }
 
