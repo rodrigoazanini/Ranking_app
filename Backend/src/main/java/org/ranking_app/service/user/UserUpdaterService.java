@@ -32,6 +32,12 @@ public class UserUpdaterService {
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
 
+        if (userRequest.getAdmin() != null) {
+            user.setAdmin(userRequest.getAdmin());
+        }else {
+            user.setAdmin(false);
+        }
+
         return jpaUserRepository.save(user);
     }
 }

@@ -37,7 +37,7 @@ public class LoginService {
 
         // TODO: Agregar todos los datos el usuario en el token, menos password
         // y como cambiar el nomebre de variable
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user);
         return new LoginResponse(token);
     }
 }

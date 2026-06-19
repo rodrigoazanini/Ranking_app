@@ -16,16 +16,19 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank
-    @Size(min = 5, max = 10)
+    @Size(min = 5, max = 25)
     private String username;
 
     @Column(nullable = false)
     @NotBlank
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     @NotBlank
     private String password;
+
+    @Column(nullable = false)
+    private Boolean admin;
 
     public User() {}
 
@@ -33,12 +36,14 @@ public class User {
         Long id,
         String username, 
         String email, 
-        String password
+        String password,
+        Boolean admin
     ) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.admin = admin;
     }
 
     static public User fromRequest(UserRequest request) {
@@ -46,7 +51,8 @@ public class User {
             null,
             request.getUserName(),
             request.getEmail(),
-            request.getPassword()
+            request.getPassword(),
+            false
         );
     }
 
@@ -76,5 +82,12 @@ public class User {
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 }

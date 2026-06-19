@@ -24,6 +24,10 @@ public class UserCreatorService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        if (request.getAdmin() == null) {
+            user.setAdmin(false);
+        }
+
         return jpaUserRepository.save(user);
     }
 }
