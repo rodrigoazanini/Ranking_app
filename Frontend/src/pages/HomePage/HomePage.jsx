@@ -10,6 +10,7 @@ return (
   <div className={styles.homePage}>
     <div className={styles.itemsContainer}>
 
+  <div className={styles.hero}>
       <div className={styles.heroTitle}>
         <h1>Ranking App</h1>
       </div>
@@ -18,6 +19,14 @@ return (
         <p>Reseña tu producto favorito para que llegue al top!</p>
       </div>
 
+
+      <img src="../../assets/HERO3.png" alt="Hero" className={styles.heroImage}
+      />
+
+  </div>
+
+
+<div className={styles.gridContainer}>
       <div className={styles.grid}>
         {mock_items.map((item) => (
           <ItemCard
@@ -27,7 +36,7 @@ return (
           />
         ))}
       </div>
-
+        </div>
     </div>
   </div>
 );
