@@ -1,11 +1,4 @@
-const API_URL = "http://localhost:8091/api";
-
-function getHeaders() {
-	return {
-		"authorization": `Bearer ${localStorage.getItem("token")}`,
-		"Content-Type": "application/json"
-	};
-}
+import { API_URL, getHeaders } from "./apiService";
 
 async function createItem(data) {
 	const response = await fetch(`${API_URL}/items`, {
@@ -22,14 +15,14 @@ async function getItem(id) {
 	return await response.json();
 }
 
-async function getItems() {
-	const response = await fetch(`${API_URL}/items`);
+async function getItems(page = 0, size = 10) {
+	const response = await fetch(`${API_URL}/items?page=${page}&size=${size}`);
 	return await response.json();
 }
 
 async function updateItem(id, data) {
 	const response = await fetch(`${API_URL}/items/${id}`, {
-		method: "PATCH",
+		method: "PUT",
 		headers: getHeaders(),
 		body: JSON.stringify(data),
 	});
@@ -41,11 +34,15 @@ async function deleteItem(id) {
 		method: "DELETE",
 		headers: getHeaders(),
 	});
+	if (response.status === 204) {
+		return null;
+	}
 	return await response.json();
 }
 
 export const itemService = {
 	getItem,
+	getItems,
 	createItem,
 	updateItem,
 	deleteItem,

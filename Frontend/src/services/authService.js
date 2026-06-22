@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8091/api";
+import { API_URL } from "./apiService";
 
 async function login(data){
     const response = await fetch(`${API_URL}/auth/login`, {
