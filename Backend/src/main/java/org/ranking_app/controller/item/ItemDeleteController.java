@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("api/items")
 public class ItemDeleteController {
@@ -17,8 +19,11 @@ public class ItemDeleteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        itemDeleterService.delete(id);
+    public ResponseEntity<Void> delete(
+        @PathVariable Long id,
+        HttpServletRequest httpRequest
+    ) {
+        itemDeleterService.delete(id, httpRequest);
         return ResponseEntity.noContent().build();
     }
 }

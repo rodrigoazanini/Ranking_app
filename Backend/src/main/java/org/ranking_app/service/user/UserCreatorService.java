@@ -23,10 +23,7 @@ public class UserCreatorService {
         User user = User.fromRequest(request);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        if (request.getAdmin() == null) {
-            user.setAdmin(false);
-        }
+        user.setAdmin(false); // por defecto, los usuarios creados no son admin
 
         return jpaUserRepository.save(user);
     }

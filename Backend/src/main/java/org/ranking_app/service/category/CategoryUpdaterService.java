@@ -21,7 +21,9 @@ public class CategoryUpdaterService {
     public Category update(CategoryRequest categoryRequest, Long id) {
         Category category = categoryFinderService.find(id);
 
-        category.setName(categoryRequest.getName());
+        if (categoryRequest.getName() != null && !categoryRequest.getName().isBlank()) {
+            category.setName(categoryRequest.getName());
+        }
 
         return jpaCategoryRepository.save(category);
     }

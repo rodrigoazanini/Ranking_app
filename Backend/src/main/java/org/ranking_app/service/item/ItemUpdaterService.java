@@ -7,6 +7,7 @@ import org.ranking_app.model.user.User;
 import org.ranking_app.repository.item.JpaItemRepository;
 import org.ranking_app.service.category.CategoryFinderService;
 import org.ranking_app.service.user.UserFinderService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +22,7 @@ public class ItemUpdaterService {
             JpaItemRepository jpaItemRepository,
             ItemFinderService itemFinderService,
             CategoryFinderService categoryFinderService,
-            UserFinderService userFinderService
-    ) {
+            UserFinderService userFinderService) {
         this.jpaItemRepository = jpaItemRepository;
         this.itemFinderService = itemFinderService;
         this.categoryFinderService = categoryFinderService;
@@ -30,28 +30,40 @@ public class ItemUpdaterService {
     }
 
     @Transactional
-    public Item update(ItemRequest itemRequest, Long id) {
+    public Item update(ItemRequest itemRequest, Long id, HttpServletRequest httpRequest) {
         Item item = itemFinderService.find(id);
 
-        item.setName(itemRequest.getName());
-        item.setDescription(itemRequest.getDescription());
-        item.setBrand(item.getBrand());
-        item.setWeigth(item.getWeigth());
-//        item.setPriceMin(itemRequest.getPriceMin());
-//        item.setPriceMax(itemRequest.getPriceMax());
-//        item.setRankingAvg(item.getRankingAvg());
-        item.setEnabled(itemRequest.getEnabled());
-        item.setSuggested(item.getSuggested());
+        if (itemRequest.getName() != null) {
+            item.setName(itemRequest.getName());
+        }
+        if (itemRequest.getDescription() != null) {
+            item.setDescription(itemRequest.getDescription());
+        }
+        if (itemRequest.getBrand() != null) {
+            item.setBrand(itemRequest.getBrand());
+        }
+        if (itemRequest.getWeight() != null) {
+            item.setWeigth(itemRequest.getWeight());
+        }
+        if (itemRequest.getEnabled() != null) {
+            item.setEnabled(itemRequest.getEnabled());
+        }
+        // Si el usuario autenticado es admin, se actualiza el campo suggested a false
+        User authenticatedUser = userFinderService.findAuthenticatedUser(httpRequest);
 
-        if (itemRequest.getCategoryId() != null){
+        if (authenticatedUser != null && authenticatedUser.getAdmin()) {
+            item.setSuggested(false);
+        } else {
+            if (itemRequest.getSuggested() != null) {
+                item.setSuggested(itemRequest.getSuggested());
+            }
+        }
+        if (itemRequest.getCategoryId() != null) {
             Category category = categoryFinderService.find(itemRequest.getCategoryId());
             item.setCategory(category);
         }
-
-        if (itemRequest.getUserId() != null) {
-            User user = userFinderService.find(itemRequest.getUserId());
-            item.setSuggested_by(user);
-        }
+        // No se permite actualizar el campo suggested_by,
+        // ya que solo se asigna al crear el item y no debería cambiarse después.
 
         return jpaItemRepository.save(item);
     }

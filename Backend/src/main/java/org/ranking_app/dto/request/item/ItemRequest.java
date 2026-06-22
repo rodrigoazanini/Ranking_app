@@ -4,7 +4,6 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.ranking_app.dto.response.category.CategoryResponse;
 
 public class ItemRequest {
 
@@ -15,8 +14,10 @@ public class ItemRequest {
     @NotBlank(message = "La descripcion es obligatoria")
     private String description;
 
+    @NotBlank(message = "La marca es obligatoria")
     private String brand;
 
+    @NotNull(message = "El peso es obligatorio")
     private Double weight;
 
     @Nullable
@@ -28,6 +29,7 @@ public class ItemRequest {
     @Nullable
     private Long categoryId;
 
+    // Deberia quitarse?, ya que el usuario se obtiene del token de autenticación
     @Nullable
     private Long userId;
 

@@ -5,6 +5,7 @@ import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.dto.response.item.ItemResponse;
 import org.ranking_app.model.item.Item;
 import org.ranking_app.service.item.ItemCreatorService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +24,10 @@ public class ItemPostController {
 
     @PostMapping
     public ResponseEntity<ItemResponse> create(
-            @Valid @RequestBody ItemRequest itemRequest
+            @Valid @RequestBody ItemRequest itemRequest,
+            HttpServletRequest httpRequest
     ) {
-        Item item =  itemCreatorService.create(itemRequest);
+        Item item = itemCreatorService.create(itemRequest, httpRequest);
 
         ItemResponse itemResponse = ItemResponse.fromEntity(item);
 

@@ -33,15 +33,28 @@ public class ReviewUpdaterService {
     public Review update(ReviewRequest reviewRequest, Long id) {
         Review review = reviewFinderService.find(id);
 
-        Item item = itemFinderService.find(reviewRequest.getItemId());
-        User user = userFinderService.find(reviewRequest.getUserId());
+        if (reviewRequest.getItemId() != null) {
+            Item item = itemFinderService.find(reviewRequest.getItemId());
+            review.setItem(item);
+        }
 
-        review.setComment(reviewRequest.getComment());
-        review.setRanking(reviewRequest.getRanking());
-        review.setPrice(reviewRequest.getPrice());
-        review.setItem(item);
-        review.setUser(user);
-        review.setDate(reviewRequest.getDate());
+        if (reviewRequest.getUserId() != null) {
+            User user = userFinderService.find(reviewRequest.getUserId());
+            review.setUser(user);
+        }
+
+        if (reviewRequest.getComment() != null) {
+            review.setComment(reviewRequest.getComment());
+        }
+        if (reviewRequest.getRanking() != null) {
+            review.setRanking(reviewRequest.getRanking());
+        }
+        if (reviewRequest.getPrice() != null) {
+            review.setPrice(reviewRequest.getPrice());
+        }
+        if (reviewRequest.getDate() != null) {
+            review.setDate(reviewRequest.getDate());
+        }
 
         return jpaReviewRepository.save(review);
     }

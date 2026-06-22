@@ -28,7 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         if (
-                path.startsWith("/api/auth")
+                method.equals("OPTIONS")
+                || path.startsWith("/api/auth")
                 || (path.startsWith("/api/users") && method.equals("POST"))
         ) {
             filterChain.doFilter(request, response);

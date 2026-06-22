@@ -33,11 +33,14 @@ public class UserItemFavoriteUpdaterService {
     public UserItemFavorite update(UserItemFavoriteRequest request, Long id) {
         UserItemFavorite userItemFavorite = userItemFavoriteFinderService.find(id);
 
-        Item item = itemFinderService.find(request.getItemId());
-        User user = userFinderService.find(request.getUserId());
-
-        userItemFavorite.setItem(item);
-        userItemFavorite.setUser(user);
+        if (request.getItemId() != null) {
+            Item item = itemFinderService.find(request.getItemId());
+            userItemFavorite.setItem(item);
+        }
+        if (request.getUserId() != null) {
+            User user = userFinderService.find(request.getUserId());
+            userItemFavorite.setUser(user);
+        }
 
         return jpaUserItemFavoriteRepository.save(userItemFavorite);
     }

@@ -5,6 +5,7 @@ import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.dto.response.item.ItemResponse;
 import org.ranking_app.model.item.Item;
 import org.ranking_app.service.item.ItemUpdaterService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +23,10 @@ public class ItemPutController {
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody ItemRequest request
+            @Valid @RequestBody ItemRequest request,
+            HttpServletRequest httpRequest
     ) {
-        Item item = itemUpdaterService.update(request, id);
+        Item item = itemUpdaterService.update(request, id, httpRequest);
 
         ItemResponse response = ItemResponse.fromEntity(item);
 

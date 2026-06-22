@@ -10,11 +10,17 @@ export function RegisterPage() {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [error, setError] = useState(null);
 
 	async function register(e) {
 		e.preventDefault();
 		setError(null);
+
+		if (password !== confirmPassword) {
+			setError("Las contraseñas no coinciden");
+			return;
+		}
 
 		const data = await authService.register({ username, email, password });
 		if (data?.id) {
@@ -71,6 +77,12 @@ export function RegisterPage() {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 
+						<input
+							type="password"
+							placeholder="Confirmar contraseña"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+						/>
 						{error ? <p className={styles.errorMessage}>{error}</p> : null}
 
 						<Btn className={styles.submitBtn} type="submit">
