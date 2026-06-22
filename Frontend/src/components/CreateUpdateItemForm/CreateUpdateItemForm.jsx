@@ -2,36 +2,64 @@ import { useEffect, useState } from "react";
 import itemDefault from "../../images/item_default.png";
 import styles from "./CreateUpdateItemForm.module.css";
 import { itemService } from "../../services/itemService";
+import { categoryService } from "../../services/categoryService";
 
 export function CreateUpdateItemForm({ editItem, isAdmin }) {
     const [name, setName] = useState(editItem?.name || "");
     const [description, setDescription] = useState(editItem?.description || "");
     const [weight, setWeight] = useState(editItem?.weight || 0);
     const [brand, setBrand] = useState(editItem?.brand || "");
-    const [category, setCategory] = useState(editItem?.category || "");
+    const [categoryId, setCategoryId] = useState(
+        editItem?.categoryResponse?.id
+            ? String(editItem.categoryResponse.id)
+            : editItem?.categoryId
+                ? String(editItem.categoryId)
+                : ""
+    );
     const [enabled, setEnabled] = useState(editItem?.enabled ?? true);
 
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
-        // TODO: Hacer fetch de categorias para el dropdown
-        // y actualizar el estado con setCategories
+        async function loadCategories() {
+            try {
+                const allCategories = await categoryService.getAllCategories();
+                setCategories(allCategories);
+            } catch (error) {
+                console.error("Failed to load categories", error);
+                setCategories([]);
+            }
+        }
+
+        loadCategories();
     }, []);
+
+    useEffect(() => {
+        const currentCategoryId = editItem?.categoryResponse?.id ?? editItem?.categoryId ?? "";
+        setCategoryId(currentCategoryId ? String(currentCategoryId) : "");
+    }, [editItem]);
 
     async function onSubmit(event) {
         event.preventDefault();
 
         // TODO: Validar ID de categoria
-        if (!name || !description || !weight || !brand || !category) return;
+        if (!name || !description || !weight || !brand || !categoryId) return;
 
         const result = editItem
-            ? await itemService.updateItem(editItem.id, { name, description, weight, brand, category, enabled })
+            ? await itemService.updateItem(editItem.id, {
+                name,
+                description,
+                weight,
+                brand,
+                categoryId: Number(categoryId),
+                enabled
+            })
             : await itemService.createItem({
                 name,
                 description,
                 weight,
                 brand,
-                categoryId: 1, // TODO: Hacer dropdown de categorias
+                categoryId: Number(categoryId),
                 userId: 1, // TODO: Eliminarlo y hacer que el backend lo asigne segun el token
                 enabled,
                 suggested: !isAdmin
@@ -82,14 +110,24 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 </div>
 
                 {
-                    // TODO: Hacer dropdown de categorias en vez de input de texto usando el state categories
+                    // Category select
                 }
                 <div>
                     <label>Categoria</label>
-                    <input type="text" className={styles.input}
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    />
+                    <select
+                        className={styles.input}
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                    >
+                        <option value="" disabled>
+                            Selecciona una categoria
+                        </option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={String(category.id)}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
 
