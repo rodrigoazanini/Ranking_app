@@ -9,6 +9,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
     const [weight, setWeight] = useState(editItem?.weight || 0);
     const [brand, setBrand] = useState(editItem?.brand || "");
     const [category, setCategory] = useState(editItem?.category || "");
+    const [enabled, setEnabled] = useState(editItem?.enabled ?? true);
 
 
     const [categories, setCategories] = useState([]);
@@ -23,8 +24,8 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
         // TODO: Validar ID de categoria
         if (!name || !description || !weight || !brand || !category) return;
 
-        const result = editItem 
-            ? await itemService.updateItem(editItem.id, { name, description, weight, brand, category })
+        const result = editItem
+            ? await itemService.updateItem(editItem.id, { name, description, weight, brand, category, enabled })
             : await itemService.createItem({
                 name,
                 description,
@@ -32,7 +33,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 brand,
                 categoryId: 1, // TODO: Hacer dropdown de categorias
                 userId: 1, // TODO: Eliminarlo y hacer que el backend lo asigne segun el token
-                enabled: true, // TODO: Asociar el switch al estado
+                enabled,
                 suggested: !isAdmin
             });
 
@@ -81,7 +82,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 </div>
 
                 {
-                // TODO: Hacer dropdown de categorias en vez de input de texto usando el state categories
+                    // TODO: Hacer dropdown de categorias en vez de input de texto usando el state categories
                 }
                 <div>
                     <label>Categoria</label>
@@ -96,7 +97,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 <div className={styles["image-preview"]}>
                     <img id="preview" src={itemDefault} alt="Preview" />
                 </div>
-                
+
                 <label>Imagen</label>
 
                 <label className={styles["upload-box"]}>
@@ -109,19 +110,24 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                     </span>
                 </label>
 
-                {
-                    isAdmin ? (
-                        <div className={styles["toggle-container"]}>
-                            <label className={styles["switch"]}>
-                                <input type="checkbox" id="status" />
-                                <span className={styles["slider"]}></span>
-                                <span className={styles["slider-text"]} id="statusText">
-                                    ACTIVO
-                                </span>
-                            </label>
-                        </div>
-                    ) : null
-                }
+                {isAdmin ? (
+                    <div className={styles.toggleContainer}>
+                        <label className={styles.label}>
+                            {enabled ? "ACTIVO" : "INACTIVO"}
+                        </label>
+                        <label className={styles.switch}>
+                            <input
+                                id={"status"}
+                                type="checkbox"
+                                checked={enabled}
+                                onChange={(e) => setEnabled(e.target.checked)}
+                            />
+                            <span className={styles.track} aria-hidden="true">
+                                <span className={styles.thumb}></span>
+                            </span>
+                        </label>
+                    </div>
+                ) : null}
 
                 <button type="submit" className={styles["save-btn"]}>
                     {editItem ? "ACTUALIZAR" : "CREAR"}

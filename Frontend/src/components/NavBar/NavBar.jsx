@@ -51,7 +51,7 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
           {
             decodedJwt && (
               <p className={styles.welcomeMessage}>
-                Hola, {decodedJwt.sub}
+                Hola, {decodedJwt.username}
                 </p>
             )
           }

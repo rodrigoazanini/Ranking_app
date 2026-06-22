@@ -1,9 +1,10 @@
+/* Main container styles */
 .form {
     width: 100%;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
     gap: 40px;
-    padding: 0;
+    padding: 0 20px;
     margin: 0;
     box-sizing: border-box;
     align-items: start;
@@ -20,19 +21,6 @@
     text-transform: uppercase;
 }
 
-.left-section {
-    display: flex;
-    flex-direction: column;
-}
-
-.right-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-top: 67px;
-}
-
 .input {
     width: 100%;
     height: 55px;
@@ -44,6 +32,23 @@
     box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.35);
     box-sizing: border-box;
 }
+
+/* Section styles */
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 66px;
+}
+
+/* Image preview styles */
 
 .image-preview {
     width: 400px;
@@ -60,6 +65,75 @@
     object-fit: cover;
     display: block;
 }
+
+/* ToggleSwitch styles */
+
+.toggleContainer {
+    --switch-height: 55px;
+    --thumb-size: 45px;
+    --thumb-gap: 5px;
+    width: min(400px, 100%);
+    height: 123px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.switch {
+    position: relative;
+    margin-top: 0px !important;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+
+.switch input {
+    position: absolute;
+    height: var(--switch-height);
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+    caret-color: transparent;
+}
+
+.track {
+    position: absolute;
+    inset: 0;
+    height: var(--switch-height);
+    border-radius: 999px;
+    background: #ff5959;
+    transition: background 0.25s ease;
+}
+
+.thumb {
+    position: absolute;
+    inset-block-start: -20px;
+    top: var(--thumb-gap);
+    left: var(--thumb-gap);
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    border-radius: 50%;
+    background: #fff;
+    transition: left 0.25s ease;
+    will-change: left;
+}
+
+.switch input:checked + .track {
+    background: #39c76a;
+}
+
+.switch input:checked + .track .thumb {
+    left: calc(100% - var(--thumb-gap) - var(--thumb-size));
+}
+
+.switch input:focus-visible + .track {
+    outline: rgba(33, 150, 201, 0.35) solid 3px;
+    outline-offset: 2px;
+}
+
+/* Upload box styles */
 
 .upload-box {
     width: min(400px, 100%);
@@ -84,65 +158,8 @@
     color: #9a9a9a;
 }
 
-.toggle-container {
-    width: min(400px, 100%);
-    margin-top: 10px;
-}
-
-.switch {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 54px;
-}
-
-.switch input {
-    display: none;
-}
-
-.slider {
-    position: absolute;
-    inset: 0;
-    border-radius: 999px;
-    background: #ff5959;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.slider::before {
-    content: "";
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    left: 4px;
-    top: 3px;
-    border-radius: 50%;
-    background: white;
-    transition: left 0.3s ease, transform 0.3s ease;
-}
-
-.slider-text {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    line-height: 54px;
-    color: white;
-    font-weight: 800;
-    font-size: 18px;
-    z-index: 1;
-}
-
-.switch input:checked + .slider {
-    background: #39c76a;
-}
-
-.switch input:checked + .slider::before {
-    left: calc(100% - 52px);
-    transform: none;
-}
-
 .save-btn {
-    margin-top: 8px;
+    margin-top: 15px;
     border: none;
     background: #f3b04c;
     color: #111111;
@@ -152,7 +169,7 @@
     border-radius: 20px;
     cursor: pointer;
     box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.35);
-    align-self: flex-start;
+    align-self: flex-end;
 }
 
 .save-btn:hover {
@@ -162,20 +179,38 @@
 @media (max-width: 720px) {
     .form {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 30px;
     }
 
     .form label {
         font-size: 16px;
+        margin-bottom: 6px;
+        margin-top: 10px;
     }
 
     .input {
-        height: 50px;
+        height: 40px;
     }
 
-    .toggle-container,
-    .upload-box,
+    .right-section {
+        margin-top: 0px;
+    }
+
     .image-preview {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+    }
+
+    .toggleContainer {
+        width: 100%;
+        --switch-height: 40px;
+        --thumb-size: 32px;
+        --thumb-gap: 4px;
+    }
+
+    .upload-box {
+        height: 40px !important;
         width: 100%;
     }
 }
