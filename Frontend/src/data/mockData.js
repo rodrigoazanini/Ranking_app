@@ -15,7 +15,7 @@
     name: "Coca-Cola Lata 354 ml",
     brand: "Coca-Cola",
     category: "Bebidas",
-    rankingAvg: 4.9,
+    rankingAvg: 3,
     priceMin: 1200,
     priceMax: 1700,
     image: "./public/Mock_Images/COCALATA.webp",
@@ -59,15 +59,39 @@
     name: "Pringles Crema y Cebolla",
     brand: "Pringles",
     category: "Snacks",
-    rankingAvg: 4.8,
+    rankingAvg: 3.5,
     priceMin: 2500,
     priceMax: 3500,
     image: "./public/Mock_Images/PRINGLES CREMA.jpg",
     description: "Papas fritas Pringles sabor crema y cebolla en tubo."
   },
 ];
- export const mock_reviews = [
-  { id:1, user_name:"María G.",  ranking:5, comment:"¡Riquísimo! Lo compro siempre que puedo, el precio es muy accesible.", price:650, date:"2024-05-10" },
-  { id:2, user_name:"Juan P.",   ranking:4, comment:"Muy bueno, aunque a veces el chocolate queda un poco blando. En general recomendado.", price:600, date:"2024-04-22" },
-  { id:3, user_name:"Sofía R.",  ranking:5, comment:"El mejor del mercado sin dudas. Nunca defrauda.", price:700, date:"2024-03-15" },
+export const mock_reviews = [
+  {
+    id: 1,
+    itemId: 1,
+    userName: "María G.",
+    ranking: 5,
+    comment: "¡Riquísimo! Lo compro siempre que puedo, el precio es muy accesible.",
+    price: 650,
+    date: "2024-05-10",
+  },
+  {
+    id: 2,
+    itemId: 1,
+    userName: "Juan P.",
+    ranking: 4,
+    comment: "Muy bueno, aunque a veces el chocolate queda un poco blando.",
+    price: 600,
+    date: "2024-04-22",
+  },
+  {
+    id: 3,
+    itemId: 2,
+    userName: "Sofía R.",
+    ranking: 5,
+    comment: "El mejor del mercado sin dudas. Nunca defrauda.",
+    price: 700,
+    date: "2024-03-15",
+  },
 ];

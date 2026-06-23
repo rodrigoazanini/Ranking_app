@@ -1,0 +1,67 @@
+.page { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+
+.backBtn {
+  background: rgba(255,255,255,.2); border: none; color: #FFFFFF;
+  border-radius: 50px; padding: 8px 20px; font-weight: 700; font-size: 14px;
+  cursor: pointer; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+}
+.backBtn:hover { background: rgba(255,255,255,.3); }
+
+.productCard {
+  background: #FFFFFF; border-radius: 24px; overflow: hidden;
+  border: 1px solid #DDE7EF; margin-bottom: 28px;
+  display: flex; flex-wrap: wrap;
+}
+
+.imageWrapper { flex: 0 0 340px; max-width: 100%; min-height: 280px; position: relative; background: #F4F8FB; }
+.image { width: 100%; height: 100%; object-fit: cover; min-height: 280px; }
+
+.favBtn {
+  position: absolute; top: 16px; right: 16px;
+  background: #FFFFFF; border: 1px solid #DDE7EF; border-radius: 50%;
+  width: 44px; height: 44px; font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.favBtn:hover { background: #F4F8FB; }
+
+.productInfo { flex: 1; padding: 32px; min-width: 260px; }
+
+.badges { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.badgeCategory { background: #E3F2FF; color: #1877A8; border-radius: 50px; padding: 4px 14px; font-size: 12px; font-weight: 800; }
+.badgeBrand    { background: #DDE7EF; color: #8A9BAE; border-radius: 50px; padding: 4px 14px; font-size: 12px; font-weight: 700; }
+
+.productName { font-family: 'Baloo 2', sans-serif; font-size: 28px; font-weight: 800; color: #1A2A36; margin-bottom: 8px; line-height: 1.2; }
+
+.ratingRow { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ratingValue { font-weight: 800; color: #1A2A36; font-size: 18px; }
+.ratingCount { color: #8A9BAE; font-size: 13px; font-weight: 600; }
+
+.noReviews { color: #F05A6A; font-weight: 700; font-size: 14px; font-style: italic; margin-bottom: 12px; }
+
+.description { color: #8A9BAE; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+
+.priceBox { background: #F4F8FB; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; }
+.priceLabel { font-size: 12px; font-weight: 700; color: #8A9BAE; letter-spacing: 1px; margin-bottom: 4px; }
+.priceValue { font-size: 22px; font-weight: 900; color: #2196C9; }
+
+/* Formulario reseña */
+.reviewForm { background: #FFFFFF; border-radius: 20px; padding: 28px; margin-bottom: 28px; border: 1px solid #DDE7EF; }
+.reviewFormTitle { font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800; color: #1A2A36; margin-bottom: 20px; }
+.fieldGroup { margin-bottom: 16px; }
+.fieldLabel { display: block; font-weight: 700; font-size: 13px; color: #1A2A36; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+.priceInput {
+  padding: 12px 16px; border-radius: 12px; border: 2px solid #DDE7EF;
+  font-size: 15px; outline: none; width: 180px; font-family: 'Nunito', sans-serif; transition: border-color 0.2s;
+}
+.priceInput:focus { border-color: #2196C9; }
+.textarea {
+  width: 100%; padding: 13px 16px; border-radius: 14px; border: 2px solid #DDE7EF;
+  font-size: 15px; outline: none; resize: vertical; font-family: 'Nunito', sans-serif;
+  background: #F4F8FB; color: #1A2A36; transition: border-color 0.2s;
+}
+.textarea:focus { border-color: #2196C9; }
+.successMsg { background: #e8f5e9; color: #2e7d32; border-radius: 10px; padding: 12px 16px; font-weight: 700; margin-bottom: 16px; }
+
+/* Lista reseñas */
+.reviewsTitle { font-family: 'Baloo 2', sans-serif; font-size: 20px; font-weight: 800; color: #000000; margin-bottom: 20px; }
+.reviewsList { display: flex; flex-direction: column; gap: 16px; }

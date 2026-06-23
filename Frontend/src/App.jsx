@@ -7,6 +7,7 @@ import { AdminItemsPage } from "./pages/AdminItemsPage/AdminItemsPage.jsx";
 import { LoginPage } from "./pages/LoginPage/LoginPage.jsx";
 import { RegisterPage } from "./pages/RegisterPage/RegisterPage.jsx";
 import { UserProfilePage } from "./pages/UserProfilePage/UserProfilePage.jsx";
+import  ItemDetailPage  from "./pages/ItemDetailPage/ItemDetailPage.jsx";
 import  HomePage  from "./pages/HomePage/HomePage.jsx";
 
 export function App() {
@@ -14,9 +15,11 @@ export function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route element={<Layout />}>
-					<Route path="/" element={<HomePage />} /> {/* para testing, luego se cambia a home page o algo asi */}
+					<Route path="/" element={<HomePage />} /> 
+        				<Route path="/item/:id" element={<ItemDetailPage />} />
 
 					<Route element={<PublicRoute />}>
+					{/* Login */}
 						<Route path="/auth/login" element={<LoginPage />} />
 						<Route path="/auth/register" element={<RegisterPage />} />
 					</Route>

@@ -12,8 +12,26 @@
   flex-wrap: wrap;
   gap: 8px;
 }
-.userName { font-weight: 800; color: #1A2A36; font-size: 15px; margin-bottom: 4px; }
-.meta { text-align: right; }
-.price { font-weight: 700; color: #2196C9; font-size: 14px; }
-.date  { color: #8A9BAE; font-size: 12px; font-weight: 600; }
-.comment { color: #445566; font-size: 14px; line-height: 1.6; }
+.userName { 
+  font-weight: 800;
+   color: #1A2A36; 
+   font-size: 15px; 
+   margin-bottom: 4px; 
+  }
+
+.price {
+  font-weight: 700; 
+  color: #2196C9;
+  font-size: 14px; 
+}
+
+.date  {
+  color: #484d53; 
+  font-size: 12px;
+  font-weight: 600;
+ }
+.comment { 
+  color: black;
+  font-size: 14px;
+  line-height: 1.6; 
+}

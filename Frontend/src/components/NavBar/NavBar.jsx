@@ -33,7 +33,7 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
     <header className={styles.navbar}>
       <div className={styles.inner}>
         <button type="button" className={styles.brand} onClick={handleBrandClick}>
-          <span className={styles.logoMark} aria-hidden="true" />
+          <img src="../../assets/logo.webp" alt="Logo" className={styles.logoImage} /> 
           <span className={styles.logoText}>RANKING APP</span>
         </button>
 
