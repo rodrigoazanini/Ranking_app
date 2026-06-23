@@ -4,7 +4,7 @@ import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
 import {jwtDecode} from "jwt-decode";
 
-export default function Navbar({ setPage, searchQuery, setSearchQuery, user = null }) {
+export default function Navbar({searchQuery, setSearchQuery}) {
   const token = localStorage.getItem("token");
   const decodedJwt = token ? jwtDecode(token) : null;
 
@@ -12,8 +12,7 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
 
-  function handleBrandClick() {
-    if (typeof setPage === "function") setPage("home");
+  function handleBrandClick() {;
     navigate("/");
   }
 
@@ -56,7 +55,7 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
             )
           }
 
-          <NavbarMenu user={user} />
+          <NavbarMenu user={decodedJwt} />
         </div>
       </div>
     </header>
