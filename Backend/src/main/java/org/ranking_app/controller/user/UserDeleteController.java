@@ -1,5 +1,6 @@
 package org.ranking_app.controller.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.ranking_app.service.user.UserDeleterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,12 +14,15 @@ public class UserDeleteController {
     private final UserDeleterService userDeleterService;
 
     public UserDeleteController(UserDeleterService userDeleterService) {
+
         this.userDeleterService = userDeleterService;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userDeleterService.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            HttpServletRequest httpRequest) {
+        userDeleterService.delete(id, httpRequest);
         return ResponseEntity.noContent().build();
     }
 }
