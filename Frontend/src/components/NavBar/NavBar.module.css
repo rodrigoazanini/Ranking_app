@@ -5,6 +5,7 @@
   z-index: 100;
   width: 100%;
   overflow-x: clip;
+  border-radius: 20px;
 }
 
 .inner {
@@ -54,6 +55,13 @@
   color: #FFFFFF;
   font-size: 18px;
   letter-spacing: 1px;
+}
+
+.logoImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .actions {

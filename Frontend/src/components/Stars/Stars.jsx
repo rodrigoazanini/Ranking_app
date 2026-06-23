@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./Stars.module.css";
 
-const YELLOW     = "#F9C22E";
+const YELLOW     = "#fff281";
 const GRAY_LIGHT = "#9c9d9e";
 
 export default function Stars({ value, size = 18, interactive = false, onChange }) {
