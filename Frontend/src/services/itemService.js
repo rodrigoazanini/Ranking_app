@@ -40,10 +40,12 @@ async function deleteItem(id) {
 	return await response.json();
 }
 
+
+
 export const itemService = {
 	getItem,
 	getItems,
 	createItem,
 	updateItem,
-	deleteItem,
+	deleteItem
 };

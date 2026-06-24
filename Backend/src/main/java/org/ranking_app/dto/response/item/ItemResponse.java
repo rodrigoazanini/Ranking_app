@@ -14,6 +14,7 @@ public class ItemResponse {
     private Double priceMax;
     private Boolean enabled;
     private Boolean suggested;
+    private String imageUrl;
     private CategoryResponse categoryResponse;
     private UserResponse userResponse;
 
@@ -29,6 +30,7 @@ public class ItemResponse {
         Double priceMax,
         Boolean enabled,
         Boolean suggested,
+        String imageUrl,
         CategoryResponse categoryResponse,
         UserResponse userResponse
     ) {
@@ -41,6 +43,7 @@ public class ItemResponse {
         this.priceMax = priceMax;
         this.enabled = enabled;
         this.suggested = suggested;
+        this.imageUrl = imageUrl;
         this.categoryResponse = categoryResponse;
         this.userResponse = userResponse;
     }
@@ -56,6 +59,7 @@ public class ItemResponse {
                 item.getPriceMax(),
                 item.getEnabled(),
                 item.getSuggested(),
+                item.getImageUrl(),
                 CategoryResponse.fromEntity(item.getCategory()),
                 UserResponse.fromEntity(item.getSuggested_by())
         );
@@ -92,6 +96,8 @@ public class ItemResponse {
     public Boolean getSuggested() {
         return suggested;
     }
+
+    public String getImageUrl() { return imageUrl; }
 
     public  CategoryResponse getCategoryResponse() {
         return categoryResponse;

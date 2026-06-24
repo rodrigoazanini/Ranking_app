@@ -27,6 +27,7 @@ export default function NavbarMenu({ user }) {
   const adminMenuItems = [
     { label: "Principal", to: "/" },
     { label: "Administracion", to: "/admin/items" },
+    { label: "Crear producto", to: "/items/create"},
     { label: "Cerrar sesion", action: "logout" },
   ];
 

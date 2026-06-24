@@ -1,16 +1,18 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
 import {jwtDecode} from "jwt-decode";
 
 export default function Navbar({searchQuery, setSearchQuery}) {
-  const token = localStorage.getItem("token");
-  const decodedJwt = token ? jwtDecode(token) : null;
+
 
   const navigate = useNavigate();
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
+
+  const[user, setUser] = useState(null)
+  
 
   function handleBrandClick() {;
     navigate("/");
@@ -27,6 +29,15 @@ export default function Navbar({searchQuery, setSearchQuery}) {
       setLocalSearch(nextValue);
     }
   }
+
+  const location = useLocation()
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const decodedJwt = token ? jwtDecode(token) : null;
+    setUser(decodedJwt);
+  }, [location])
+
+  //TODO useeffect reload texto nabvar user admin
 
   return (
     <header className={styles.navbar}>
@@ -47,15 +58,15 @@ export default function Navbar({searchQuery, setSearchQuery}) {
             />
           </div>
 
-          {
-            decodedJwt && (
+          {//TODO location.reload
+            user && (
               <p className={styles.welcomeMessage}>
-                Hola, {decodedJwt.username}
+                Hola, {user.username}
                 </p>
             )
           }
 
-          <NavbarMenu user={decodedJwt} />
+          <NavbarMenu user={user} />
         </div>
       </div>
     </header>

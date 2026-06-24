@@ -44,6 +44,9 @@ public class Item {
     @Column(nullable = false)
     private Boolean suggested;
 
+    @Column(nullable = false) //TODO agregar NotBlank
+    private String imageUrl;
+
     @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -70,6 +73,7 @@ public class Item {
         Double weight,
         Boolean enabled,
         Boolean suggested,
+        String imageUrl,
         Category category,
         User suggested_by
     ) {
@@ -80,6 +84,7 @@ public class Item {
         this.weigth = weight;
         this.enabled = enabled;
         this.suggested = suggested;
+        this.imageUrl = imageUrl;
         this.category = category;
         this.suggested_by = suggested_by;
     }
@@ -93,6 +98,7 @@ public class Item {
             request.getWeight(),
             request.getEnabled(),
             request.getSuggested(),
+            request.getImageUrl(),
             null,
             null
         );
@@ -168,6 +174,13 @@ public class Item {
         this.suggested = suggested;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -181,4 +194,6 @@ public class Item {
     public void setSuggested_by(User suggested_by) {
         this.suggested_by = suggested_by;
     }
+
+
 }
