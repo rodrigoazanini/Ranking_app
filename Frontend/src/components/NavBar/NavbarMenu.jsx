@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./NavbarMenu.module.css";
 
-export default function NavbarMenu({ user = null }) {
+export default function NavbarMenu({ user }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,8 +10,6 @@ export default function NavbarMenu({ user = null }) {
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
-
-  const token = localStorage.getItem("token");
 
   const guestMenuItems = [
     { label: "Principal", to: "/" },
@@ -29,10 +27,12 @@ export default function NavbarMenu({ user = null }) {
   const adminMenuItems = [
     { label: "Principal", to: "/" },
     { label: "Administracion", to: "/admin/items" },
+    { label: "Crear producto", to: "/items/create"},
     { label: "Cerrar sesion", action: "logout" },
   ];
 
-  const menuItems = user?.admin ? adminMenuItems : token ? userMenuItems : guestMenuItems;
+  const menuItems = user?.admin ? adminMenuItems : 
+                    user? userMenuItems : guestMenuItems;
 
   function handleMenuItemClick(item) {
     setMenuOpen(false);

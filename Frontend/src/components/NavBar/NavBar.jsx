@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-export default function Navbar({ setPage, searchQuery, setSearchQuery, user = null }) {
-  const token = localStorage.getItem("token");
-  const decodedJwt = token ? jwtDecode(token) : null;
+export default function Navbar({ searchQuery, setSearchQuery }) {
+
 
   const navigate = useNavigate();
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
 
+  const [user, setUser] = useState(null)
+
   function handleBrandClick() {
-    if (typeof setPage === "function") setPage("home");
+    ;
     navigate("/");
   }
 
@@ -29,11 +30,21 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
     }
   }
 
+  const location = useLocation()
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const decodedJwt = token ? jwtDecode(token) : null;
+    setUser(decodedJwt);
+  }, [location])
+
   return (
     <header className={styles.navbar}>
       <div className={styles.inner}>
         <button type="button" className={styles.brand} onClick={handleBrandClick}>
-          <img src="../../assets/logo.webp" alt="Logo" className={styles.logoImage} /> 
+          <picture>
+            <source srcSet="/images/stock/logo.avif" type="image/avif" />
+            <img src="/images/stock/logo.png" alt="Logo" className={styles.logoImage} />
+          </picture>
           <span className={styles.logoText}>RANKING APP</span>
         </button>
 
@@ -49,10 +60,10 @@ export default function Navbar({ setPage, searchQuery, setSearchQuery, user = nu
           </div>
 
           {
-            decodedJwt && (
+            user && (
               <p className={styles.welcomeMessage}>
-                Hola, {decodedJwt.username}
-                </p>
+                Hola, {user.username}
+              </p>
             )
           }
 
