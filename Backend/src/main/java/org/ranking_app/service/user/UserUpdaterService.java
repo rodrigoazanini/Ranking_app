@@ -44,23 +44,4 @@ public class UserUpdaterService {
 
         return jpaUserRepository.save(user);
     }
-
-    public User adminUpdate(AdminRequest adminRequest, Long id, HttpServletRequest httpRequest) {
-        User authenticatedUser = userFinderService.findAuthenticatedUser(httpRequest);
-        if (authenticatedUser.getAdmin()) {
-            User user = userFinderService.find(id);
-
-            if (adminRequest.getUserName() != null && !adminRequest.getUserName().isBlank()) {
-                user.setUserName(adminRequest.getUserName());
-            }
-
-            if (adminRequest.getAdmin() != null) {
-                user.setAdmin(adminRequest.getAdmin());
-            }
-            return jpaUserRepository.save(user);
-        }
-
-        throw new SecurityException("Acceso denegado");
-    }
-
 }

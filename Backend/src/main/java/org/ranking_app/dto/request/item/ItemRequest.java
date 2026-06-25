@@ -26,9 +26,12 @@ public class ItemRequest {
     @Nullable
     private Boolean suggested;
 
+    @NotNull(message = "La imagen es obligatoria")
+    private String imageUrl;
+
     @Nullable
     private Long categoryId;
-
+    //TODO quizas popularlo en el controller a partir del token
     // Deberia quitarse?, ya que el usuario se obtiene del token de autenticación
     @Nullable
     private Long userId;
@@ -41,6 +44,7 @@ public class ItemRequest {
         Double weight,
         Boolean enabled,
         Boolean suggested,
+        String imageUrl,
         Long categoryId,
         Long userId
     ) {
@@ -50,6 +54,7 @@ public class ItemRequest {
         this.weight = weight;
         this.enabled = enabled;
         this.suggested = suggested;
+        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
         this.userId = userId;
     }
@@ -76,6 +81,10 @@ public class ItemRequest {
 
     public Boolean getSuggested() {
         return suggested;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Long getCategoryId() {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import itemDefault from "../../images/item_default.png";
 import styles from "./CreateUpdateItemForm.module.css";
 import { itemService } from "../../services/itemService";
 import { categoryService } from "../../services/categoryService";
+import { uploadImageService } from "../../services/uploadImageService";
 
 export function CreateUpdateItemForm({ editItem, isAdmin }) {
     const [name, setName] = useState(editItem?.name || "");
@@ -16,6 +16,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 ? String(editItem.categoryId)
                 : ""
     );
+    const [image, setImage] = useState("");
     const [enabled, setEnabled] = useState(editItem?.enabled ?? true);
 
 
@@ -43,7 +44,18 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
         event.preventDefault();
 
         // TODO: Validar ID de categoria
-        if (!name || !description || !weight || !brand || !categoryId) return;
+        if (!name || !description || !weight || !brand || !categoryId || (!image && !editItem?.imageUrl)) return;
+
+        let imageUrl = editItem?.imageUrl || "";
+
+        if (image) {
+            const formData = new FormData();
+            formData.append("image", image);
+            const uploadImage = await uploadImageService.uploadImage(formData);
+            imageUrl = uploadImage?.imageUrl || uploadImage;
+        }
+
+        if (!imageUrl) return;
 
         const result = editItem
             ? await itemService.updateItem(editItem.id, {
@@ -52,7 +64,8 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 weight,
                 brand,
                 categoryId: Number(categoryId),
-                enabled
+                enabled,
+                imageUrl
             })
             : await itemService.createItem({
                 name,
@@ -60,8 +73,8 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 weight,
                 brand,
                 categoryId: Number(categoryId),
-                userId: 1, // TODO: Eliminarlo y hacer que el backend lo asigne segun el token
                 enabled,
+                imageUrl,
                 suggested: !isAdmin
             });
 
@@ -133,13 +146,16 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
 
             <div className={styles["right-section"]}>
                 <div className={styles["image-preview"]}>
-                    <img id="preview" src={itemDefault} alt="Preview" />
+                    <picture>
+                        <source srcSet="/images/stock/item_default.avif" type="image/avif" />
+                        <img id="preview" src="/images/stock/item_default.png" alt="Preview" />
+                    </picture>
                 </div>
 
                 <label>Imagen</label>
 
                 <label className={styles["upload-box"]}>
-                    <input type="file" accept="image/*" id="imageInput" />
+                    <input type="file" onChange={(e) => { setImage(e.target.files[0]) }} accept="image/*" id="imageInput" />
                     <span className={styles["upload-icon"]}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />

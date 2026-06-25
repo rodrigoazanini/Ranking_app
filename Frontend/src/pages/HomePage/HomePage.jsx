@@ -44,16 +44,22 @@ export default function HomePage({ searchQuery }) {
           </div>
         </div>
 
+        <picture>
+          <source srcSet={"./images/stock/HERO3.avif"} type="image/avif" />
+          <img
+            src="./images/stock/HERO3.png"
+            alt="Hero"
+            className={styles.heroImage}
+          />
+        </picture>
 
-        {/* Banner 2*/}
-        <img
-          src="../../assets/HERO3.png"
+        {/* <img
+          src="./public/image/stock/HERO3.png"
           alt="Hero"
-          className={styles.hero}
-        />
-      </div>
+          className={styles.heroImage}
+        /> */}
 
-      {/* Grilla de prodcutos*/}
+      </div>
 
       <div className={styles.gridContainer}>
         {mock_items.map(item => (
@@ -66,13 +72,16 @@ export default function HomePage({ searchQuery }) {
       </div>
 
 
-      {/* Banner 3*/}
-      <img
-        src="../../assets/HERO2.png"
-        alt="Hero"
-        className={styles.hero}
-      />
+      <picture>
+        <source srcSet={"./images/stock/HERO2.avif"} type="image/avif" />
+        <img
+          src="./images/stock/HERO2.png"
+          alt="Hero"
+          className={styles.heroImage}
+        />
+      </picture>
 
+    </div>
     </div>
   );
 }

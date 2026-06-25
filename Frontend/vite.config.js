@@ -9,9 +9,10 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] })
   ], // Hacer el request para el backend  
 server: {
+    host: '127.0.0.1',
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:8091',
         changeOrigin: true,
       }
     }

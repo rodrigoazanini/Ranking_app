@@ -157,6 +157,7 @@ public class Seeder implements CommandLineRunner {
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
+                            "",//TODO nose si esto va a explotar cambiarlo por un placeholder
                             category.getId(),
                             null
                     ),
