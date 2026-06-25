@@ -13,7 +13,7 @@ const MOCK_FAVORITES  = [
   { id:5, name:"Bizcochos Canale",   brand:"Canale",     image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg_93DQl1CU1qA0YkB80-XhP_ACxHH9pVwMg&s" },
 ];
 
-export default function UserProfilePage({ setPage, setSelectedItem }) {
+export function UserProfilePage({ setPage, setSelectedItem }) {
   const [activeTab, setActiveTab] = useState("reviews");
   const [myReviews]               = useState(MOCK_MY_REVIEWS);
   const [favorites, setFavorites] = useState(MOCK_FAVORITES);

@@ -9,7 +9,7 @@
   border-radius: 20px;
   display: block;
   margin: 20px 0;
-  position: relative; /* antes: absolute */
+  position: relative; 
 }
 
 .heroTitle {

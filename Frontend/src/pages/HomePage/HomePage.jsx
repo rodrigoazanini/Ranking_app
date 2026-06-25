@@ -3,6 +3,7 @@ import ItemCard from '../../components/ItemCard/ItemCard';
 import { mock_items } from '../../data/mockData';
 import Btn from '../../components/Btn/Btn';
 import { useNavigate } from 'react-router-dom';
+import {AdminPage} from '../AdminPage/AdminPage.jsx'
 
 export default function HomePage({ searchQuery }) {
   // TODO: reemplazar por → useEffect(() => api.get('/items').then(...), [])
@@ -82,6 +83,6 @@ export default function HomePage({ searchQuery }) {
       </picture>
 
     </div>
-    </div>
+    
   );
 }
