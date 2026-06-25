@@ -1,13 +1,25 @@
+import { API_URL, getHeaders } from "./apiService";
+
 async function uploadImage(formData) {
 	const response = await fetch(`${API_URL}/images/upload`, {
 		method: "POST",
 		headers: {
-			...getHeaders(),
-			"Content-Type": 'multipart/form-data'
+			authorization: `Bearer ${localStorage.getItem("token")}`,
 		},
 		body: formData,
 	});
-	return await response.json();
+
+	if (!response.ok) {
+		const errorText = await response.text();
+		throw new Error(errorText || "Failed to upload image");
+	}
+
+	const responseText = await response.text();
+	try {
+		return JSON.parse(responseText);
+	} catch {
+		return { imageUrl: responseText };
+	}
 }
 
 export const uploadImageService = {

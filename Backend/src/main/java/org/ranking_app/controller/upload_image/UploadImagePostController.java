@@ -6,13 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/images")
@@ -24,14 +21,18 @@ public class UploadImagePostController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "File is empty"));
         }
 
         String fileName = uploadImageService.upload(file);
+        String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/images/uploads/")
+                .path(fileName)
+                .toUriString();
 
-        return ResponseEntity.ok(fileName);
+        return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
     }
 }

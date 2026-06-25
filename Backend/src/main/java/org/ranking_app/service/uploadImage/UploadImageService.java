@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,8 +19,7 @@ public class UploadImageService {
     public String upload(MultipartFile file) throws IOException {
 
         //TODO no devolver string sino crear un imageResponse(Filename)
-        // 2. Ensure the upload directory exists
-        Path uploadPath = Paths.get("/public/images/uploads"); //TODO invertigar donde va
+        Path uploadPath = Paths.get(System.getProperty("user.dir"), "src", "main", "resources", "static", "images", "uploads");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
