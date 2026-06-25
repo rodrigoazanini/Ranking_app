@@ -7,6 +7,8 @@
     rankingAvg: 4.8,
     priceMin: 1800,
     priceMax: 2500,
+    enabled: true,
+    suggested: false,
     image: "./public/Mock_Images/AGUILA MINITORTA.jpg",
     description: "Mini torta sabor brownie rellena y cubierta con chocolate Águila."
   },
@@ -18,6 +20,8 @@
     rankingAvg: 3,
     priceMin: 1200,
     priceMax: 1700,
+    enabled: true,
+    suggested: false,
     image: "./public/Mock_Images/COCALATA.webp",
     description: "Gaseosa Coca-Cola original en lata de 354 ml."
   },
@@ -29,6 +33,8 @@
     rankingAvg: 4.2,
     priceMin: 900,
     priceMax: 1400,
+     enabled: true,
+     suggested: false,
     image: "./public/Mock_Images/DISCOS ARROZ JAMON.jpg",
     description: "Snacks de arroz sabor jamón, livianos y crocantes."
   },
@@ -40,6 +46,8 @@
     rankingAvg: null,
     priceMin: 1100,
     priceMax: 1600,
+     enabled: true,
+     suggested: false,
     image: "./public/Mock_Images/GALLO POCHOCLO.jpg",
     description: "Pochoclos caramelizados listos para consumir."
   },
@@ -51,6 +59,8 @@
     rankingAvg: 4.7,
     priceMin: 700,
     priceMax: 1200,
+     enabled: true,
+     suggested: false,
     image: "./public/Mock_Images/MOGULOSITOS.webp",
     description: "Gomitas con forma de ositos y sabores frutales surtidos."
   },
@@ -62,6 +72,8 @@
     rankingAvg: 3.5,
     priceMin: 2500,
     priceMax: 3500,
+     enabled: false,
+     suggested: false,
     image: "./public/Mock_Images/PRINGLES CREMA.jpg",
     description: "Papas fritas Pringles sabor crema y cebolla en tubo."
   },

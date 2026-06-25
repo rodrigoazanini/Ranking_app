@@ -4,21 +4,36 @@
   padding: 32px 20px;
 }
 
-.hero {
+.heroContainer {
+  justify-content: center;
+  height: 220px;
+  position: relative;
+}
+
+.heroBanner {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  margin: 20px 0;
+}
+
+.heroTitle {
+  position: absolute;
+  width: 100%;
+  color: white;
+  text-align: center;
+  font-size: 64px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.heroImage {
   width: 100%;
   border-radius: 20px;
   display: block;
   margin: 20px 0;
   position: relative; 
-}
-
-.heroTitle {
-  text-align: center;
-  color: #FFFFFF;
-  font-size: 72px;
-  font-weight: 800;
-  line-height: 1.1;
-  margin: 20px 0;
 }
 
 .heroSubtitle {
