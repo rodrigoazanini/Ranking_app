@@ -19,6 +19,7 @@ import org.ranking_app.service.review.ReviewCreatorService;
 import org.ranking_app.service.user.UserCreatorService;
 import org.ranking_app.service.user_item_favorite.UserItemFavoriteCreatorService;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,6 +92,7 @@ public class Seeder implements CommandLineRunner {
     private final JpaItemRepository jpaItemRepository;
     private final JpaReviewRepository jpaReviewRepository;
     private final JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Seeder(
             UserCreatorService userCreatorService,
@@ -102,7 +104,8 @@ public class Seeder implements CommandLineRunner {
             JpaCategoryRepository jpaCategoryRepository,
             JpaItemRepository jpaItemRepository,
             JpaReviewRepository jpaReviewRepository,
-            JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository
+            JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository,
+            PasswordEncoder passwordEncoder
     ) {
         this.userCreatorService = userCreatorService;
         this.categoryCreatorService = categoryCreatorService;
@@ -114,6 +117,7 @@ public class Seeder implements CommandLineRunner {
         this.jpaItemRepository = jpaItemRepository;
         this.jpaReviewRepository = jpaReviewRepository;
         this.jpaUserItemFavoriteRepository = jpaUserItemFavoriteRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -123,12 +127,14 @@ public class Seeder implements CommandLineRunner {
             return;
         }
 
-        User adminUser = userCreatorService.create(new UserRequest(
+        User adminUser = User.fromRequest(new UserRequest(
                 "admin",
                 "admin@test.com",
-                "12345678",
+                passwordEncoder.encode("12345678"),
                 true
         ));
+        adminUser.setAdmin(true);
+        jpaUserRepository.save(adminUser);
 
         List<User> users = new ArrayList<>();
         users.add(adminUser);
@@ -157,7 +163,7 @@ public class Seeder implements CommandLineRunner {
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
-                            "",//TODO nose si esto va a explotar cambiarlo por un placeholder
+                            "http://localhost:8091/Backend/uploads/images/item_default_backend.png",
                             category.getId(),
                             null
                     ),
@@ -183,7 +189,7 @@ public class Seeder implements CommandLineRunner {
         }
 
         userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
-                items.get(0).getId(),
+                items.getFirst().getId(),
                 adminUser.getId()
         ));
     }
