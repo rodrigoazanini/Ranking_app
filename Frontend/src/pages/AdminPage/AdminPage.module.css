@@ -35,6 +35,41 @@
     border-bottom: 1px solid #DDE7EF;
 }
 
+.paginationRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 12px 20px 0;
+}
+
+.paginationBtn {
+    border: 1px solid #DDE7EF;
+    background: #FFFFFF;
+    color: #1A2A36;
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.paginationBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.paginationInfo {
+    font-size: 13px;
+    color: #5B6B7A;
+    font-weight: 700;
+}
+
+.empty {
+    padding: 20px 24px 24px;
+    color: #5B6B7A;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
