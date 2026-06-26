@@ -15,6 +15,7 @@ target/
 *.iml
 *.ipr
 /Backend/src/main/resources/static/images
+/backend/uploads
 
 ### Eclipse ###
 .apt_generated

@@ -9,21 +9,18 @@ function getFileExtension(filename) {
     return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
 }
 
-export function CreateUpdateItemForm({ editItem, isAdmin }) {
-    const [name, setName] = useState(editItem?.name || "");
-    const [description, setDescription] = useState(editItem?.description || "");
-    const [weight, setWeight] = useState(editItem?.weight || 0);
-    const [brand, setBrand] = useState(editItem?.brand || "");
-    const [categoryId, setCategoryId] = useState(
-        editItem?.categoryResponse?.id
-            ? String(editItem.categoryResponse.id)
-            : editItem?.categoryId
-                ? String(editItem.categoryId)
-                : ""
-    );
-    const [imageUrl, setImageUrl] = useState(editItem?.imageUrl ?? "");
+export function CreateUpdateItemForm({ ItemId, isAdmin }) {
+    const [editItem, setEditItem] = useState(null)
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [weight, setWeight] = useState(0);
+    const [brand, setBrand] = useState("");
+    const [previewUrl, setPreviewUrl] = useState("");
+    const [previewType, setPreviewType] = useState("");
+    const [categoryId, setCategoryId] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
     const [imageFile, setImageFile] = useState("")
-    const [enabled, setEnabled] = useState(editItem?.enabled ?? true);
+    const [enabled, setEnabled] = useState(true);
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -41,9 +38,78 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
     }, []);
 
     useEffect(() => {
-        const currentCategoryId = editItem?.categoryResponse?.id ?? editItem?.categoryId ?? "";
-        setCategoryId(currentCategoryId ? String(currentCategoryId) : "");
-    }, [editItem]);
+        if (!ItemId) {
+            setEditItem(null);
+            setName("");
+            setDescription("");
+            setWeight(0);
+            setBrand("");
+            setCategoryId("");
+            setImageUrl("");
+            setImageFile("");
+            setEnabled(true);
+            setPreviewUrl("");
+            setPreviewType("");
+            return;
+        }
+
+        let isMounted = true;
+
+        async function loadItem() {
+            try {
+                const itemSearch = await itemService.getItem(ItemId);
+                if (!isMounted) return;
+
+                setEditItem(itemSearch);
+                setName(itemSearch?.name ?? "");
+                setDescription(itemSearch?.description ?? "");
+                setWeight(itemSearch?.weight ?? 0);
+                setBrand(itemSearch?.brand ?? "");
+                setEnabled(itemSearch?.enabled ?? true);
+                setCategoryId(
+                    itemSearch?.categoryResponse?.id
+                        ? String(itemSearch.categoryResponse.id)
+                        : itemSearch?.categoryId
+                            ? String(itemSearch.categoryId)
+                            : ""
+                );
+                setImageUrl(itemSearch?.imageUrl ?? "");
+            } catch (error) {
+                console.error("Failed to load item", error);
+            }
+        }
+
+        loadItem();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [ItemId]);
+
+    useEffect(() => {
+        if (!imageUrl) {
+            setPreviewUrl("");
+            setPreviewType("");
+            return;
+        }
+
+        setPreviewUrl(imageUrl);
+        setPreviewType(`image/${getFileExtension(imageUrl)}`);
+    }, [imageUrl]);
+
+    function handleImageSelection(event) {
+        const file = event.target.files?.[0];
+        if (!file) {
+            setImageFile("");
+            setPreviewUrl(imageUrl);
+            setPreviewType(imageUrl ? `image/${getFileExtension(imageUrl)}` : "");
+            return;
+        }
+
+        setImageFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setPreviewType(file.type || "image/*");
+    }
 
     async function onSubmit(event) {
         event.preventDefault();
@@ -51,18 +117,23 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
         // TODO: Validar ID de categoria
         if (!name || !description || !weight || !brand || !categoryId) return;
 
+        let finalImageUrl = imageUrl;
+
         if (imageFile) {
             const formData = new FormData();
             formData.append("image", imageFile);
             const uploadImage = await uploadImageService.uploadImage(formData);
-            if (uploadImage.imageUrl) setImageUrl(uploadImage.imageUrl);
-            else {
+
+            if (!uploadImage?.imageUrl) {
                 alert("algo salio mal");
+                return;
             }
+
+            finalImageUrl = uploadImage.imageUrl;
+            setImageUrl(finalImageUrl);
         }
-        console.log("antes del check");
-        if (!imageUrl) return;
-        console.log("despues del check");
+
+        if (!finalImageUrl) return;
 
         const result = editItem
             ? await itemService.updateItem(editItem.id, {
@@ -72,7 +143,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 brand,
                 categoryId: Number(categoryId),
                 enabled,
-                imageUrl
+                imageUrl: finalImageUrl
             })
             : await itemService.createItem({
                 name,
@@ -81,7 +152,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 brand,
                 categoryId: Number(categoryId),
                 enabled,
-                imageUrl,
+                imageUrl: finalImageUrl,
                 suggested: !isAdmin
             });
 
@@ -150,16 +221,21 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
             <div className={styles["right-section"]}>
                 <div className={styles["image-preview"]}>
                     <picture>
-                        <source srcSet={imageUrl} type={"image/" + getFileExtension(imageUrl)}></source>
+                        {previewType ? <source srcSet={previewUrl} type={previewType} /> : null}
                         <source srcSet="/images/stock/item_default.avif" type="image/avif" />
-                        <img id="preview" src="/images/stock/item_default.png" alt="Preview" />
+                        <img id="preview" src={previewUrl || "/images/stock/item_default.png"} alt="Preview" />
                     </picture>
                 </div>
 
                 <label>Imagen</label>
 
                 <label className={styles["upload-box"]}>
-                    <input type="file" onChange={(e) => { setImageFile(e.target.files[0]) }} accept="image/*" id="imageInput" />
+                    <input
+                        type="file"
+                        onChange={handleImageSelection}
+                        accept=".png,.jpg,.jpeg,.webp,.avif,image/png,image/jpeg,image/webp,image/avif"
+                        id="imageInput"
+                    />
                     <span className={styles["upload-icon"]}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />

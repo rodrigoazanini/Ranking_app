@@ -10,10 +10,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/images")
 public class UploadImagePostController {
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("png", "jpg", "jpeg", "webp", "avif");
+    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of("image/png", "image/jpg", "image/jpeg", "image/webp", "image/avif");
+
     private final UploadImageService uploadImageService;
 
     public UploadImagePostController(UploadImageService uploadImageService) {
@@ -27,9 +31,18 @@ public class UploadImagePostController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "File is empty"));
         }
 
+        String originalFileName = file.getOriginalFilename();
+        String extension = originalFileName != null ? originalFileName.substring(originalFileName.lastIndexOf('.') + 1).toLowerCase() : "";
+        String contentType = file.getContentType() != null ? file.getContentType().toLowerCase() : "";
+
+        if (!ALLOWED_EXTENSIONS.contains(extension) || (!contentType.isBlank() && !ALLOWED_CONTENT_TYPES.contains(contentType))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Unsupported file type. Allowed types: png, jpg, jpeg, webp, avif"));
+        }
+
         String fileName = uploadImageService.upload(file);
         String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/images/uploads/")
+                .path("/uploads/images/")
                 .path(fileName)
                 .toUriString();
 
