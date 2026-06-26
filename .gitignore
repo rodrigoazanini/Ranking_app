@@ -10,9 +10,11 @@ target/
 .idea/compiler.xml
 .idea/libraries/
 .idea
+/Backend/.idea
 *.iws
 *.iml
 *.ipr
+/Backend/src/main/resources/static/images
 
 ### Eclipse ###
 .apt_generated

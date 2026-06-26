@@ -9,16 +9,17 @@ async function uploadImage(formData) {
 		body: formData,
 	});
 
-	if (!response.ok) {
-		const errorText = await response.text();
-		throw new Error(errorText || "Failed to upload image");
-	}
-
-	const responseText = await response.text();
 	try {
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(errorText || "Failed to upload image");
+		}
+
+		const responseText = await response.text();
+		console.log(JSON.parse(responseText));
 		return JSON.parse(responseText);
 	} catch {
-		return { imageUrl: responseText };
+		return { imageUrl: null };
 	}
 }
 

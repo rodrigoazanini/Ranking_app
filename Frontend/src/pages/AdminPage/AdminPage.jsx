@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styles from "./AdminPage.module.css";
 import Btn from "../../components/Btn/Btn";
-import { MOCK_ITEMS } from "../../data/mockData";
+import { mock_items } from "../../data/mockData";
 
-export default function AdminItemsPage({ setPage, setSelectedItem }) {
+export function AdminPage({ setPage, setSelectedItem }) {
   // TODO: reemplazar por → useEffect(() => api.get('/items/all').then(...), [])
-  const [items, setItems] = useState(MOCK_ITEMS);
+  const [items, setItems] = useState(mock_items);
 
   const handleNew = () => { setSelectedItem(null); setPage("new"); };
 

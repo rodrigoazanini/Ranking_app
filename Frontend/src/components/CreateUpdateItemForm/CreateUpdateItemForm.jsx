@@ -4,6 +4,11 @@ import { itemService } from "../../services/itemService";
 import { categoryService } from "../../services/categoryService";
 import { uploadImageService } from "../../services/uploadImageService";
 
+function getFileExtension(filename) {
+    // Returns everything after the last dot, or an empty string if no dot exists
+    return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
+}
+
 export function CreateUpdateItemForm({ editItem, isAdmin }) {
     const [name, setName] = useState(editItem?.name || "");
     const [description, setDescription] = useState(editItem?.description || "");
@@ -16,9 +21,9 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 ? String(editItem.categoryId)
                 : ""
     );
-    const [image, setImage] = useState("");
+    const [imageUrl, setImageUrl] = useState(editItem?.imageUrl ?? "");
+    const [imageFile, setImageFile] = useState("")
     const [enabled, setEnabled] = useState(editItem?.enabled ?? true);
-
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -44,18 +49,20 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
         event.preventDefault();
 
         // TODO: Validar ID de categoria
-        if (!name || !description || !weight || !brand || !categoryId || (!image && !editItem?.imageUrl)) return;
+        if (!name || !description || !weight || !brand || !categoryId) return;
 
-        let imageUrl = editItem?.imageUrl || "";
-
-        if (image) {
+        if (imageFile) {
             const formData = new FormData();
-            formData.append("image", image);
+            formData.append("image", imageFile);
             const uploadImage = await uploadImageService.uploadImage(formData);
-            imageUrl = uploadImage?.imageUrl || uploadImage;
+            if (uploadImage.imageUrl) setImageUrl(uploadImage.imageUrl);
+            else {
+                alert("algo salio mal");
+            }
         }
-
+        console.log("antes del check");
         if (!imageUrl) return;
+        console.log("despues del check");
 
         const result = editItem
             ? await itemService.updateItem(editItem.id, {
@@ -121,10 +128,6 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                         onChange={(e) => setBrand(e.target.value)}
                     />
                 </div>
-
-                {
-                    // Category select
-                }
                 <div>
                     <label>Categoria</label>
                     <select
@@ -147,6 +150,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
             <div className={styles["right-section"]}>
                 <div className={styles["image-preview"]}>
                     <picture>
+                        <source srcSet={imageUrl} type={"image/" + getFileExtension(imageUrl)}></source>
                         <source srcSet="/images/stock/item_default.avif" type="image/avif" />
                         <img id="preview" src="/images/stock/item_default.png" alt="Preview" />
                     </picture>
@@ -155,7 +159,7 @@ export function CreateUpdateItemForm({ editItem, isAdmin }) {
                 <label>Imagen</label>
 
                 <label className={styles["upload-box"]}>
-                    <input type="file" onChange={(e) => { setImage(e.target.files[0]) }} accept="image/*" id="imageInput" />
+                    <input type="file" onChange={(e) => { setImageFile(e.target.files[0]) }} accept="image/*" id="imageInput" />
                     <span className={styles["upload-icon"]}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
