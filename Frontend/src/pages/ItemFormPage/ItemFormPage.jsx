@@ -7,15 +7,26 @@ import styles from "../ItemFormPage/ItemFormPage.module.css";
 export function ItemFormPage() {
     const { id } = useParams();
     const location = useLocation();
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         const decodedJwt = token ? jwtDecode(token) : null;
+        const role = decodedJwt?.role || decodedJwt?.roles || decodedJwt?.isAdmin;
+
+        if (typeof role === "string") {
+            setIsAdmin(role.toLowerCase() === "admin");
+            return;
+        }
+
+        setIsAdmin(Boolean(role));
     }, [location]);
+
+    const effectiveIsAdmin = Boolean(location.state?.fromAdmin || isAdmin);
 
     return (
         <main className={styles.page}>
-            <CreateUpdateItemForm isAdmin={decodedJwt.Admin} ItemId={id} />
+            <CreateUpdateItemForm isAdmin={effectiveIsAdmin} ItemId={id} />
         </main>
     );
 }
