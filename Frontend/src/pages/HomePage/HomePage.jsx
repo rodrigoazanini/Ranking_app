@@ -3,6 +3,7 @@ import ItemCard from '../../components/ItemCard/ItemCard';
 import { mock_items } from '../../data/mockData';
 import Btn from '../../components/Btn/Btn';
 import { useNavigate } from 'react-router-dom';
+import {AdminPage} from '../AdminPage/AdminPage.jsx'
 
 export default function HomePage({ searchQuery }) {
   // TODO: reemplazar por → useEffect(() => api.get('/items').then(...), [])
@@ -17,17 +18,16 @@ export default function HomePage({ searchQuery }) {
     <div className={styles.homePage}>
       <div className={styles.itemContainer}>
 
-        <div className={styles.heroTitle}>
-          <h1>Ranking App</h1>
-        </div>
+<div className={styles.heroContainer}>
+      <img className={styles.heroBanner}src="../public/images/stock/BANNER.avif" alt="BannerHeroFondo" />
+    <h1 className= {styles.heroTitle}>Bienvenido a Ranking App!</h1>
+</div>
 
-        <div className={styles.heroSubtitle}>
-          <p>Reseña tu producto favorito para que llegue al top!</p>
-        </div>
+        {/* Tops*/}
 
         <div className={styles.topListContainer}>
           <div className={styles.topList}>
-            <h1> ⭐Top 5 Productos⭐ </h1>
+            <h1> ⭐Top 5 Productos </h1>
             {top5Items.map((item) => (
               <div key={item.id}>
                 {item.name} - ⭐ {item.rankingAvg}
@@ -37,7 +37,7 @@ export default function HomePage({ searchQuery }) {
 
 
           <div className={styles.topList}>
-            <h1> ⭐Top 5 Productos⭐ </h1>
+            <h1> 👤Top 5 Usuarios </h1>
             {top5Items.map((item) => (
               <div key={item.id}>
                 {item.name} - ⭐ {item.rankingAvg}
@@ -64,16 +64,15 @@ export default function HomePage({ searchQuery }) {
       </div>
 
       <div className={styles.gridContainer}>
-        <div className={styles.grid}>
-          {mock_items.map(item => (
-            <ItemCard
-              key={item.id}
-              item={item}
-              onClick={item => navigate(`/item/${item.id}`)}
-            />
-          ))}
-        </div>
+        {mock_items.map(item => (
+          <ItemCard
+            key={item.id}
+            item={item}
+            onClick={item => navigate(`/item/${item.id}`)}
+          />
+        ))}
       </div>
+
 
       <picture>
         <source srcSet={"./images/stock/HERO2.avif"} type="image/avif" />
@@ -85,5 +84,6 @@ export default function HomePage({ searchQuery }) {
       </picture>
 
     </div>
+    
   );
 }
