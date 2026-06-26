@@ -67,7 +67,11 @@ export default function ItemDetailPage() {
     setTimeout(() => setSubmitted(false), 3000);
   };
 
+console.log(item.image);
+
   return (
+
+   
     <div className={styles.page}>
       <button
         className={styles.backBtn}

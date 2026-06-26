@@ -21,7 +21,6 @@ export default function HomePage({ searchQuery }) {
 <div className={styles.heroContainer}>
       <img className={styles.heroBanner}src="../public/images/stock/BANNER.avif" alt="BannerHeroFondo" />
     <h1 className= {styles.heroTitle}>Bienvenido a Ranking App!</h1>
-
 </div>
 
         {/* Tops*/}

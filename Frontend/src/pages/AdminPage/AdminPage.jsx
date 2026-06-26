@@ -2,12 +2,17 @@ import { useState } from "react";
 import styles from "./AdminPage.module.css";
 import Btn from "../../components/Btn/Btn";
 import { mock_items } from "../../data/mockData";
+import { useNavigate } from 'react-router-dom';
 
-export function AdminPage({ setPage, setSelectedItem }) {
+//agregar useeffect para pedir el token o buscarlo en el local storage y hacer un redireccionamiento al /home
+//CAMBIAR A NAVIGATE
+export function AdminPage({ setPage}) {
   // TODO: reemplazar por → useEffect(() => api.get('/items/all').then(...), [])
   const [items, setItems] = useState(mock_items);
 
-  const handleNew = () => { setSelectedItem(null); setPage("new"); };
+  const  SelectedItem =  setSelectedItem  
+
+  const handleNew = () => { setSelectedItem(null); setPage("new"); };  ///navigate
 
   const handleEdit = (item) => { setSelectedItem(item); setPage("edit"); };
 
@@ -67,9 +72,9 @@ export function AdminPage({ setPage, setSelectedItem }) {
 					<div className={styles.rowActions}>
 					  <button className={styles.editBtn} onClick={() => handleEdit(item)}>✏️ Editar</button>
 					  {item.suggested && !item.enabled && (
-						<button className={styles.approveBtn} onClick={() => handleApprove(item.id)}>✓ Aprobar</button>
+						<button className={styles.approveBtn} onClick={() => handleApprove(item.id)}>Aprobar</button>
 					  )}
-					  <button className={styles.deleteBtn} onClick={() => handleDelete(item.id)}>🗑 Eliminar</button>
+					  <button className={styles.deleteBtn} onClick={() => handleDelete(item.id)}>Eliminar</button>
 					</div>
 				  </td>
 				</tr>
