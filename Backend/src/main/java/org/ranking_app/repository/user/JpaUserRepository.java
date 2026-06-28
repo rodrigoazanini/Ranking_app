@@ -2,6 +2,7 @@ package org.ranking_app.repository.user;
 
 import org.ranking_app.model.review.Review;
 import org.ranking_app.model.user.User;
+import org.ranking_app.repository.user.TopUserReviewCountProjection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -26,11 +27,11 @@ public interface JpaUserRepository extends JpaRepository<User, Long>, JpaSpecifi
     List<Review> findReviewsByUserId(@Param("userId") Long userId);
 
     @Query("""
-        SELECT u
+        SELECT u.username as userName, COUNT(r.id) as reviewCount
         FROM User u
-        LEFT JOIN org.ranking_app.model.review.Review r ON r.user = u
-        GROUP BY u
-        ORDER BY COUNT(r.id) DESC, u.id DESC
+        INNER JOIN org.ranking_app.model.review.Review r ON r.user = u
+        GROUP BY u.username
+        ORDER BY COUNT(r.id) DESC, u.username ASC
         """)
-    List<User> findTopUsersByReviewCount(Pageable pageable);
+    List<TopUserReviewCountProjection> findTopUsersByReviewCount(Pageable pageable);
 }

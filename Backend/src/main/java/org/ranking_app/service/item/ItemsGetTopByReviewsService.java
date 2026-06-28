@@ -16,7 +16,6 @@ public class ItemsGetTopByReviewsService {
     }
 
     public List<Item> findTopItemsByReviewCount(int quantity) {
-        int safeQuantity = Math.max(1, quantity);
-        return jpaItemRepository.findTopItemsByReviewCount(PageRequest.of(0, safeQuantity));
+        return jpaItemRepository.findTopItemsByReviewCount(PageRequest.of(0, Math.max(1, quantity)));
     }
 }

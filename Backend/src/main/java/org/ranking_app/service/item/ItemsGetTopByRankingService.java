@@ -16,7 +16,6 @@ public class ItemsGetTopByRankingService {
     }
 
     public List<Item> findTopItemsByRanking(int quantity) {
-        int safeQuantity = Math.max(1, quantity);
-        return jpaItemRepository.findTopItemsByRanking(PageRequest.of(0, safeQuantity));
+        return jpaItemRepository.findTopItemsByRanking(PageRequest.of(0, Math.max(1, quantity)));
     }
 }

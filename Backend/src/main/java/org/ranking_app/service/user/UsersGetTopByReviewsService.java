@@ -1,7 +1,8 @@
 package org.ranking_app.service.user;
 
-import org.ranking_app.model.user.User;
+import org.ranking_app.dto.response.user.TopUserReviewCountResponse;
 import org.ranking_app.repository.user.JpaUserRepository;
+import org.ranking_app.repository.user.TopUserReviewCountProjection;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,10 @@ public class UsersGetTopByReviewsService {
         this.jpaUserRepository = jpaUserRepository;
     }
 
-    public List<User> findTopUsersByReviewCount(int quantity) {
-        int safeQuantity = Math.max(1, quantity);
-        return jpaUserRepository.findTopUsersByReviewCount(PageRequest.of(0, safeQuantity));
+    public List<TopUserReviewCountResponse> findTopUsersByReviewCount(int quantity) {
+        return jpaUserRepository.findTopUsersByReviewCount(PageRequest.of(0, Math.max(1, quantity)))
+                .stream()
+                .map(TopUserReviewCountResponse::fromProjection)
+                .toList();
     }
 }

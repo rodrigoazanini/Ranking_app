@@ -20,6 +20,11 @@ async function getItems(page = 0, size = 10) {
 	return await response.json();
 }
 
+async function getLatestItems(page = 0, size = 10) {
+	const response = await fetch(`${API_URL}/items/latest?page=${page}&size=${size}`);
+	return await response.json();
+}
+
 async function getTopItemsByRanking(quantity = 10) {
 	const response = await fetch(`${API_URL}/items/top/ranking?quantity=${quantity}`);
 	return await response.json();
@@ -63,6 +68,7 @@ export const itemService = {
 	getTopItemsByRanking,
 	getTopItemsByReviews,
 	getTopItemsByDate,
+	getLatestItems,
 	createItem,
 	updateItem,
 	deleteItem

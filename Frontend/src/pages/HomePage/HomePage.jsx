@@ -17,18 +17,19 @@ export default function HomePage() {
       try {
         const rankingAmount = 5;
         const reviewsAmount = 5;
-        const uploadedAmount = 5;
+        const latestAmount = 5;
         const today = new Date().toISOString().slice(0, 10);
 
         const [rankingItems, rankedUsers, uploadedItems] = await Promise.all([
           itemService.getTopItemsByRanking(rankingAmount),
           userService.getTopUsersByReviews(reviewsAmount),
-          itemService.getTopItemsByDate(uploadedAmount, today),
+          itemService.getLatestItems(latestAmount),
+          
         ]);
 
         setTopItemsByRanking(rankingItems);
         setTopUsersByReviews(rankedUsers);
-        setLastItemsUploaded(uploadedItems);
+        setLastItemsUploaded(Array.isArray(uploadedItems?.content) ? uploadedItems.content : []);
       } catch (error) {
         console.error('Error loading homepage data:', error);
       }
@@ -60,9 +61,9 @@ export default function HomePage() {
 
           <div className={styles.topList}>
             <h1> 👤Top 5 Usuarios </h1>
-            {topUsersByReviews.map((item) => (
-              <div key={item.id}>
-                {item.name} - ⭐ {item.rankingAvg}
+            {topUsersByReviews.map((user) => (
+              <div key={user.username}>
+                ⭐ {user.username} - {user.reviewCount}
               </div>
             ))}
           </div>
