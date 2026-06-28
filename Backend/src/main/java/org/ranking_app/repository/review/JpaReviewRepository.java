@@ -8,19 +8,28 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface JpaReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
     @Query("""
-    SELECT
-        MIN(CASE WHEN r.date < :cutoffDate THEN r.price END),
-        MAX(CASE WHEN r.date < :cutoffDate THEN r.price END),
-        AVG(r.ranking)
-    FROM Review r
-    WHERE r.item.id = :itemId
-""")
+        SELECT
+            MIN(CASE WHEN r.date < :cutoffDate THEN r.price END),
+            MAX(CASE WHEN r.date < :cutoffDate THEN r.price END),
+            AVG(r.ranking)
+        FROM Review r
+        WHERE r.item.id = :itemId
+    """)
     ReviewItemStatsProjection findItemStatsByItemId(
             @Param("itemId") Long itemId,
             @Param("cutoffDate") LocalDate cutoffDate
     );
+
+    @Query("""
+        SELECT r
+        FROM Review r
+        WHERE r.user.id = :userId
+        ORDER BY r.date DESC, r.id DESC
+        """)
+    List<Review> findReviewsByUserId(@Param("userId") Long userId);
 }

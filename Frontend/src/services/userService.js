@@ -11,10 +11,6 @@ async function getUsers(page = 0, size = 10) {
 	return await response.json();
 }
 
-async function getUserReviews(userId) {
-	const response = await fetch(`${API_URL}/users/${userId}/reviews`);
-	return await response.json();
-}
 
 async function getTopUsersByReviews(quantity = 10) {
 	const response = await fetch(`${API_URL}/users/top/reviews?quantity=${quantity}`);
@@ -53,7 +49,6 @@ async function deleteUser(id) {
 export const userService = {
 	getUser,
 	getUsers,
-	getUserReviews,
 	getTopUsersByReviews,
 	updateUser,
     updateUserAdmin,
