@@ -7,7 +7,7 @@ export default function ItemCard({ item, onClick }) {
   return (
     <div className={styles.card} onClick={() => onClick(item)}>
       <div className={styles.imageWrapper}>
-        <img src={item.image} alt={item.name} className={styles.image} />
+        <img src={item.imageUrl} alt={item.name} className={styles.image} />
         <span className={styles.categoryBadge}>{item.category}</span>
       </div>
       <div className={styles.info}>
