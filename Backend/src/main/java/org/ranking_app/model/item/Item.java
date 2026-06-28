@@ -6,6 +6,8 @@ import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.model.category.Category;
 import org.ranking_app.model.user.User;
 
+import java.util.Date;
+
 @Entity
 @Table(name="items")
 public class Item {
@@ -46,6 +48,10 @@ public class Item {
 
     @Column(nullable = false) //TODO agregar NotBlank
     private String imageUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt = new Date();
 
     @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
@@ -179,6 +185,13 @@ public class Item {
     }
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Category getCategory() {

@@ -20,6 +20,21 @@ async function getItems(page = 0, size = 10) {
 	return await response.json();
 }
 
+async function getTopItemsByRanking(quantity = 10) {
+	const response = await fetch(`${API_URL}/items/top/ranking?quantity=${quantity}`);
+	return await response.json();
+}
+
+async function getTopItemsByReviews(quantity = 10) {
+	const response = await fetch(`${API_URL}/items/top/reviews?quantity=${quantity}`);
+	return await response.json();
+}
+
+async function getTopItemsByDate(quantity = 10, date) {
+	const response = await fetch(`${API_URL}/items/top/date?quantity=${quantity}&date=${date}`);
+	return await response.json();
+}
+
 async function updateItem(id, data) {
 	const response = await fetch(`${API_URL}/items/${id}`, {
 		method: "PUT",
@@ -45,6 +60,9 @@ async function deleteItem(id) {
 export const itemService = {
 	getItem,
 	getItems,
+	getTopItemsByRanking,
+	getTopItemsByReviews,
+	getTopItemsByDate,
 	createItem,
 	updateItem,
 	deleteItem

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 public class ItemCreatorService {
     private final JpaItemRepository jpaItemRepository;
@@ -42,9 +44,10 @@ public class ItemCreatorService {
                 categoryFinderService.find(request.getCategoryId()) : null;
 
         Item item = Item.fromRequest(request);
+        item.setCreatedAt(new Date());
         if (!suggestedBy.getAdmin()) {
             item.setEnabled(false); // los ítems sugeridos por usuarios no admin deben estar deshabilitados por defecto
-            item.setSuggested(true);//
+            item.setSuggested(true);
         } else {
             item.setSuggested(false);
         }

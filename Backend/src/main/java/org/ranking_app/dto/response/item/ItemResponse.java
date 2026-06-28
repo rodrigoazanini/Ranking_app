@@ -60,8 +60,8 @@ public class ItemResponse {
                 item.getEnabled(),
                 item.getSuggested(),
                 item.getImageUrl(),
-                CategoryResponse.fromEntity(item.getCategory()),
-                UserResponse.fromEntity(item.getSuggested_by())
+                item.getCategory() != null ? CategoryResponse.fromEntity(item.getCategory()) : null,
+                item.getSuggested_by() != null ? UserResponse.fromEntity(item.getSuggested_by()) : null
         );
     }
 

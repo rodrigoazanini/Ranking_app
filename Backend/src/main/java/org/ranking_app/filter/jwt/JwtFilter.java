@@ -31,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 method.equals("OPTIONS")
                 || path.startsWith("/api/auth")
                 || (path.startsWith("/api/users") && method.equals("POST"))
+                || (path.startsWith("/api/users") && method.equals("GET"))
                 || (path.startsWith("/api/items") && method.equals("GET"))
                 || (path.startsWith("/api/categories") && method.equals("GET"))
                 || (method.equals("GET") && (path.startsWith("/uploads/images") || path.contains("/uploads/images")))
