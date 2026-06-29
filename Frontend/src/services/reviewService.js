@@ -11,7 +11,9 @@ async function getReviews(page = 0, size = 10) {
 }
 
 async function getReviewsByUserId(userId) {
-	const response = await fetch(`${API_URL}/reviews/u:${userId}/`);
+		const response = await fetch(`${API_URL}/reviews/user/${userId}`, {
+		headers: getHeaders(),
+	});
 	return await response.json();
 }
 

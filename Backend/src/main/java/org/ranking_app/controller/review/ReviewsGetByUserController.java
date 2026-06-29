@@ -19,7 +19,7 @@ public class ReviewsGetByUserController {
         this.reviewsGetByUserFinderService = reviewsGetByUserFinderService;
     }
 
-    @GetMapping("/u:{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsByUser(@PathVariable Long userId) {
         List<ReviewResponse> response = reviewsGetByUserFinderService.findReviewsByUserId(userId)
                 .stream()

@@ -163,7 +163,7 @@ public class Seeder implements CommandLineRunner {
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
-                            "http://localhost:8091/Backend/uploads/images/item_default_backend.png",
+                            "http://localhost:8091/uploads/images/item_default_backend.png",
                             category.getId(),
                             null
                     ),
