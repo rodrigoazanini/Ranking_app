@@ -1,10 +1,3 @@
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 32px 20px;
-}
-
-/* Encabezado del perfil */
 .header {
   background: #FFFFFF;
   border-radius: 20px;
@@ -20,7 +13,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: #DDE7EF;
+  background: rgb(173, 167, 166);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,20 +22,21 @@
 }
 
 .userName {
-  font-family: 'Baloo 2', sans-serif;
-  font-size: 22px;
+  font-size: 36px;
   font-weight: 800;
   color: #1A2A36;
+  margin: 0;
+  line-height: 1.1;
 }
 
 .userEmail {
-  font-size: 14px;
+  font-size: 16px;
   color: #8A9BAE;
-  font-weight: 600;
-  margin-top: 2px;
+  margin: 0;
+  line-height: 1.1;
 }
 
-/* Tabs */
+
 .tabs {
   display: flex;
   gap: 8px;
@@ -53,33 +47,26 @@
   padding: 10px 24px;
   border-radius: 50px;
   border: 2px solid #DDE7EF;
-  background: transparent;
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 800;
-  color: #8A9BAE;
+  color: #145d7c;
+  background-color: #2196C9;
   cursor: pointer;
   transition: all 0.15s;
 }
 
-.tab:hover {
-  border-color: #2196C9;
-  color: #2196C9;
-}
-
 .tab.active {
-  background: #2196C9;
+  background: #ffffff;
   border-color: #2196C9;
-  color: #FFFFFF;
+  color: salmon;
 }
 
-/* Contenido de cada tab */
 .tabContent {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Empty state */
 .empty {
   background: #FFFFFF;
   border-radius: 16px;
@@ -88,16 +75,9 @@
   text-align: center;
   color: #8A9BAE;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 24px;
 }
 
-.emptyIcon {
-  font-size: 40px;
-  display: block;
-  margin-bottom: 12px;
-}
-
-/* ── TAB: MIS RESEÑAS ───────────────────────────────── */
 .reviewItem {
   background: #FFFFFF;
   border-radius: 16px;
@@ -155,7 +135,6 @@
   font-weight: 700;
 }
 
-/* ── TAB: FAVORITOS ─────────────────────────────────── */
 .favGrid {
   display: flex;
   flex-wrap: wrap;
@@ -201,7 +180,6 @@
   font-weight: 600;
 }
 
-/* Botón eliminar favorito */
 .removeFavBtn {
   position: absolute;
   top: 8px;
@@ -218,7 +196,52 @@
   justify-content: center;
 }
 
-.removeFavBtn:hover {
-  background: #FEE2E5;
-  border-color: #F05A6A;
+
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 24px 20px;
+  width: min(340px, 90vw);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  box-shadow: #222;
 }
+
+.modalText {
+  font-size: 1rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  color: #222;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modalBtnConfirm {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  background-color: #e53935;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Botón "No" – cancelar */
+.modalBtnCancel {
+  flex: 1;
+  padding: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
