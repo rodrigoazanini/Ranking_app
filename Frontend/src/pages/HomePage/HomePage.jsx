@@ -43,8 +43,8 @@ export default function HomePage() {
       <div className={styles.itemContainer}>
 
         <div className={styles.heroContainer}>
-          <img className={styles.heroBanner} src="../public/images/stock/BANNER.avif" alt="BannerHeroFondo" />
-          <h1 className={styles.heroTitle}>Bienvenido a Ranking App!</h1>
+          <img className={styles.heroBanner} src="../public/images/stock/BANNER.webp" alt="BannerHeroFondo" />
+          <p className={styles.heroTitle}>Bienvenido a Ranking App!</p>
         </div>
 
         {/* Tops*/}

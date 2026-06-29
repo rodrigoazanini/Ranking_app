@@ -8,7 +8,6 @@ import { itemService } from "../../services/itemService";
 void mock_items;
 
 //agregar useeffect para pedir el token o buscarlo en el local storage y hacer un redireccionamiento al /home
-//CAMBIAR A NAVIGATE
 export function AdminPage() {
 	const navigate = useNavigate();
 	const [items, setItems] = useState([]);
