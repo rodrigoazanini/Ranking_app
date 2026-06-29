@@ -12,6 +12,7 @@ public class ItemResponse {
     private Double weight;
     private Double priceMin;
     private Double priceMax;
+    private Double rankingAvg;
     private Boolean enabled;
     private Boolean suggested;
     private String imageUrl;
@@ -28,6 +29,7 @@ public class ItemResponse {
         Double weight,
         Double priceMin,
         Double priceMax,
+        Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
         String imageUrl,
@@ -41,6 +43,7 @@ public class ItemResponse {
         this.weight = weight;
         this.priceMin = priceMin;
         this.priceMax = priceMax;
+        this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
         this.imageUrl = imageUrl;
@@ -57,6 +60,7 @@ public class ItemResponse {
                 item.getWeigth(),
                 item.getPriceMin(),
                 item.getPriceMax(),
+                item.getRankingAvg(),
                 item.getEnabled(),
                 item.getSuggested(),
                 item.getImageUrl(),
@@ -77,9 +81,13 @@ public class ItemResponse {
         return description;
     }
 
-    public String getBrand() { return brand; }
+    public String getBrand() { 
+        return brand; 
+    }
 
-    public Double getWeight() { return weight; }
+    public Double getWeight() { 
+        return weight;
+    }
 
     public Double getPriceMin() {
         return priceMin;
@@ -87,6 +95,10 @@ public class ItemResponse {
 
     public Double getPriceMax() {
         return priceMax;
+    }
+
+    public Double getRankingAvg() {
+        return rankingAvg;
     }
 
     public Boolean getEnabled() {
@@ -97,7 +109,9 @@ public class ItemResponse {
         return suggested;
     }
 
-    public String getImageUrl() { return imageUrl; }
+    public String getImageUrl() { 
+        return imageUrl; 
+    }
 
     public  CategoryResponse getCategoryResponse() {
         return categoryResponse;
@@ -106,5 +120,4 @@ public class ItemResponse {
     public UserResponse getUserResponse() {
         return userResponse;
     }
-
 }

@@ -1,6 +1,6 @@
 package org.ranking_app.controller.item;
 
-import org.ranking_app.dto.response.item.ItemResponse;
+import org.ranking_app.dto.response.item.ItemReviewsResponse;
 import org.ranking_app.model.item.Item;
 import org.ranking_app.service.item.ItemFinderService;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +20,10 @@ public class ItemGetController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemResponse> find(@PathVariable Long id) {
+    public ResponseEntity<ItemReviewsResponse> find(@PathVariable Long id) {
        Item item = itemFinderService.find(id);
 
-       ItemResponse response = ItemResponse.fromEntity(item);
+       ItemReviewsResponse response = ItemReviewsResponse.fromEntity(item);
 
        return ResponseEntity.ok(response);
     }

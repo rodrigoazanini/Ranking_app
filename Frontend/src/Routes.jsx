@@ -3,6 +3,15 @@ import { getUser } from "./services/apiService";
 
 export function PublicRoute() {
 	const user = getUser();
+	return (
+		<div className="mainWrapper">
+			<Outlet />
+		</div>
+	)
+}
+
+export function AuthRoute() {
+	const user = getUser();
 	if (user) return <Navigate to="/" />;
 	return (
 		<div className="mainWrapper">

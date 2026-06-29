@@ -7,14 +7,7 @@ import org.ranking_app.model.review.Review;
 
 import java.util.Date;
 
-public class ReviewResponse {
-    private Long id;
-    private String comment;
-    private Double ranking;
-    private Double price;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    private Date date;
+public class ReviewResponse extends ReviewSummaryResponse{
 
     private ItemResponse itemResponse;
     private UserResponse userResponse;
@@ -31,14 +24,9 @@ public class ReviewResponse {
         UserResponse userResponse
 
     ) {
-        this.id = id;
-        this.comment = comment;
-        this.ranking = ranking;
-        this.price = price;
-        this.date = date;
+        super (id, comment, ranking, price, date);
         this.itemResponse = itemResponse;
         this.userResponse = userResponse;
-
     }
 
     static public ReviewResponse fromEntity(Review review) {
@@ -51,26 +39,6 @@ public class ReviewResponse {
                 ItemResponse.fromEntity(review.getItem()),
                 UserResponse.fromEntity(review.getUser())
         );
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public Double getRanking() {
-        return ranking;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public Date getDate() {
-        return date;
     }
 
     public ItemResponse getItemResponse() {

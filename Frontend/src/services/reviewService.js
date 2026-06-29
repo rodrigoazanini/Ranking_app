@@ -17,6 +17,13 @@ async function getReviewsByUserId(userId) {
 	return await response.json();
 }
 
+async function getReviewsByItemId(itemId) {
+		const response = await fetch(`${API_URL}/reviews/item/${itemId}`, {
+		headers: getHeaders(),
+	});
+	return await response.json();
+}
+
 async function createReview(data) {
 	const response = await fetch(`${API_URL}/reviews`, {
 		method: "POST",
@@ -53,4 +60,5 @@ export const reviewService = {
 	updateReview,
 	deleteReview,
 	getReviewsByUserId,
+	getReviewsByItemId,
 };

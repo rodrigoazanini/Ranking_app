@@ -10,7 +10,7 @@ function getFileExtension(filename) {
 }
 
 export function CreateUpdateItemForm({ ItemId, isAdmin }) {
-    const [editItem, setEditItem] = useState(null)
+    const [editItem, setEditItem] = useState(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [weight, setWeight] = useState(0);
@@ -19,7 +19,7 @@ export function CreateUpdateItemForm({ ItemId, isAdmin }) {
     const [previewType, setPreviewType] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const [imageFile, setImageFile] = useState("")
+    const [imageFile, setImageFile] = useState("");
     const [enabled, setEnabled] = useState(true);
 
     const [categories, setCategories] = useState([]);

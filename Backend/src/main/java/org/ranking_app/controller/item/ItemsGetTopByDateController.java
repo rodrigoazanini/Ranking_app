@@ -34,7 +34,7 @@ public class ItemsGetTopByDateController {
                 .map(ItemResponse::fromEntity)
                 .toList();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response); // TODO change to itemSummaryResponse when its made
     }
 
     private Date parseDate(String date) {

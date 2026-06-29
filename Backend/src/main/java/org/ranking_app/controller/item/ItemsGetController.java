@@ -1,6 +1,6 @@
 package org.ranking_app.controller.item;
 
-import org.ranking_app.dto.response.item.ItemResponse;
+import org.ranking_app.dto.response.item.ItemReviewsResponse;
 import org.ranking_app.model.item.Item;
 import org.ranking_app.service.item.ItemsSearcherService;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class ItemsGetController {
 
     @GetMapping
     //items?page=2&size=5
-    public ResponseEntity<Page<ItemResponse>> search(
+    public ResponseEntity<Page<ItemReviewsResponse>> search(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -34,7 +34,7 @@ public class ItemsGetController {
 
         return ResponseEntity.ok(
                 items.map(
-                        product -> ItemResponse.fromEntity(product)
+                        product -> ItemReviewsResponse.fromEntity(product)
                 )
         );
     }

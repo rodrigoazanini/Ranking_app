@@ -7,6 +7,7 @@ import org.ranking_app.dto.request.user.UserRequest;
 import org.ranking_app.dto.request.user_item_favorite.UserItemFavoriteRequest;
 import org.ranking_app.model.category.Category;
 import org.ranking_app.model.item.Item;
+import org.ranking_app.model.review.Review;
 import org.ranking_app.model.user.User;
 import org.ranking_app.repository.category.JpaCategoryRepository;
 import org.ranking_app.repository.item.JpaItemRepository;
@@ -15,6 +16,7 @@ import org.ranking_app.repository.user.JpaUserRepository;
 import org.ranking_app.repository.user_item_favorite.JpaUserItemFavoriteRepository;
 import org.ranking_app.service.category.CategoryCreatorService;
 import org.ranking_app.service.item.ItemCreatorService;
+import org.ranking_app.service.item.ItemUpdaterService;
 import org.ranking_app.service.review.ReviewCreatorService;
 import org.ranking_app.service.user.UserCreatorService;
 import org.ranking_app.service.user_item_favorite.UserItemFavoriteCreatorService;
@@ -93,6 +95,7 @@ public class Seeder implements CommandLineRunner {
     private final JpaReviewRepository jpaReviewRepository;
     private final JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ItemUpdaterService itemUpdaterService;
 
     public Seeder(
             UserCreatorService userCreatorService,
@@ -105,8 +108,8 @@ public class Seeder implements CommandLineRunner {
             JpaItemRepository jpaItemRepository,
             JpaReviewRepository jpaReviewRepository,
             JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository,
-            PasswordEncoder passwordEncoder
-    ) {
+            PasswordEncoder passwordEncoder,
+            ItemUpdaterService itemUpdaterService) {
         this.userCreatorService = userCreatorService;
         this.categoryCreatorService = categoryCreatorService;
         this.itemCreatorService = itemCreatorService;
@@ -118,6 +121,7 @@ public class Seeder implements CommandLineRunner {
         this.jpaReviewRepository = jpaReviewRepository;
         this.jpaUserItemFavoriteRepository = jpaUserItemFavoriteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.itemUpdaterService = itemUpdaterService;
     }
 
     @Override
@@ -177,16 +181,31 @@ public class Seeder implements CommandLineRunner {
         for (int i = 0; i < 20; i++) {
             Item item = reviewItems.get(i % reviewItems.size());
             User reviewer = users.get(ThreadLocalRandom.current().nextInt(users.size()));
-
-            reviewCreatorService.create(new ReviewRequest(
+            Double randomRanking = randomRanking();
+            Double randomPrice = randomPrice();
+            Review review = reviewCreatorService.create(new ReviewRequest(
                     randomReviewComment(i),
-                    randomRanking(),
-                    randomPrice(),
+                    randomRanking,
+                    randomPrice,
                     item.getId(),
                     reviewer.getId(),
                     randomRecentDate()
             ));
+            Double itemRankingAvg = item.getRankingAvg();
+            if (itemRankingAvg == null)
+                item.setRankingAvg(randomRanking);
+            else {
+                int reviewCount = item.getReviews().size();
+                double newAvg = (itemRankingAvg * reviewCount + randomRanking)
+                        / (reviewCount + 1);
+                item.setRankingAvg(newAvg);
+            }
+            if (item.getPriceMin() == null || item.getPriceMin() > randomPrice)
+                item.setPriceMin(randomPrice);
+            if (item.getPriceMax() == null || item.getPriceMax() < randomPrice)
+                item.setPriceMax(randomPrice);
         }
+        jpaItemRepository.saveAll(reviewItems);
 
         userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
                 items.getFirst().getId(),

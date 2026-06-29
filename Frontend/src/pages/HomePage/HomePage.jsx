@@ -85,7 +85,7 @@ export default function HomePage() {
           <ItemCard
             key={item.id}
             item={item}
-            onClick={item => navigate(`/item/${item.id}`)}
+            onClick={item => navigate(`/items/${item.id}`)}
           />
         ))}
       </div>

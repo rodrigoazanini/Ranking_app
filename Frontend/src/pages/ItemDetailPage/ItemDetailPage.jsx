@@ -1,16 +1,41 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ItemDetailPage.module.css";
 import { mock_items, mock_reviews } from "../../data/mockData";
 import Stars from "../../components/Stars/Stars";
 import Btn from "../../components/Btn/Btn";
 import ReviewOver from "../../components/ReviewOver/ReviewOver";
+import { itemService } from "../../services/itemService";
+import { reviewService } from "../../services/reviewService";
+import { getUser } from "../../services/apiService";
 
 export default function ItemDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const item = mock_items.find((p) => p.id === Number(id));
+  const [item, setItem] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [fav, setFav] = useState(false);
+
+  const [newReview, setNewReview] = useState({
+    comment: "",
+    ranking: 0,
+    price: "",
+  });
+
+  useEffect(() => {
+    async function loadItem() {
+      try {
+        const response = await itemService.getItem(id);
+        setItem(response ? response : null);
+      } catch (err) {
+        console.error("Failed to load item:", err);
+        setItem(null);
+      }
+    }
+    loadItem();
+  }, [id]);
 
   if (!item) {
     return (
@@ -23,32 +48,12 @@ export default function ItemDetailPage() {
     );
   }
 
-  const [reviews, setReviews] = useState(
-    mock_reviews.filter((r) => r.itemId === item.id)
-  );
-
-  const [newReview, setNewReview] = useState({
-    comment: "",
-    ranking: 0,
-    price: "",
-  });
-
-  const [submitted, setSubmitted] = useState(false);
-  const [fav, setFav] = useState(false);
-
-  const hasReviews = reviews.length > 0;
-
-  const avgRanking = hasReviews
-    ? reviews.reduce((acc, r) => acc + r.ranking, 0) / reviews.length
-    : 0;
-
   const submitReview = () => {
     if (!newReview.comment || !newReview.ranking) return;
 
     const review = {
-      id: Date.now(),
       itemId: item.id,
-      userName: "Unnamed User",
+      userName: getUser,
       ranking: newReview.ranking,
       comment: newReview.comment,
       price: parseFloat(newReview.price) || 0,
@@ -67,23 +72,21 @@ export default function ItemDetailPage() {
     setTimeout(() => setSubmitted(false), 3000);
   };
 
-console.log(item.image);
-
   return (
 
-   
+
     <div className={styles.page}>
       <button
         className={styles.backBtn}
         onClick={() => navigate("/")}
       >
-       Volver
+        Volver
       </button>
 
       <div className={styles.productCard}>
         <div className={styles.imageWrapper}>
           <img
-            src={item.image}
+            src={item.imageUrl}
             alt={item.name}
             className={styles.image}
           />
@@ -109,31 +112,27 @@ console.log(item.image);
 
           <h1 className={styles.productName}>{item.name}</h1>
 
-          {hasReviews ? (
-            <>
-              <div className={styles.ratingRow}>
-                <Stars value={avgRanking} size={22} />
+          <div className={styles.priceBox}>
+            <p className={styles.priceLabel}>RANGO DE PRECIO</p>
 
-                <span className={styles.ratingValue}>
-                  {avgRanking.toFixed(1)}
-                </span>
+            <p className={styles.priceValue}>
+              ${item.priceMin?.toLocaleString()} – $
+              {item.priceMax?.toLocaleString()}
+            </p>
+          </div>
 
-                <span className={styles.ratingCount}>
-                  ({reviews.length} reseñas)
-                </span>
-              </div>
+          {item.reviews.length > 0 ? (
+            <div className={styles.ratingRow}>
+              <Stars value={item.rankingAvg} size={22} />
 
-              <div className={styles.priceBox}>
-                <p className={styles.priceLabel}>
-                  RANGO DE PRECIO
-                </p>
+              <span className={styles.ratingValue}>
+                {item.rankingAvg.toFixed(1)}
+              </span>
 
-                <p className={styles.priceValue}>
-                  ${item.priceMin?.toLocaleString()} – $
-                  {item.priceMax?.toLocaleString()}
-                </p>
-              </div>
-            </>
+              <span className={styles.ratingCount}>
+                ({item.reviews.length} reseñas)
+              </span>
+            </div>
           ) : (
             <p className={styles.noReviews}>
               ¡Sé el primero en reseñarlo!
@@ -237,12 +236,12 @@ console.log(item.image);
 
       {/* Lista de reseñas */}
       <h3 className={styles.reviewsTitle}>
-        Reseñas ({reviews.length})
+        Reseñas ({item.reviews.length})
       </h3>
 
       <div className={styles.reviewsList}>
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
+        {item.reviews.length > 0 ? (
+          item.reviews.map((review) => (
             <ReviewOver
               key={review.id}
               review={review}

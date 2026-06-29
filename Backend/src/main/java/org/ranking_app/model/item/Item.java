@@ -4,9 +4,11 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.model.category.Category;
+import org.ranking_app.model.review.Review;
 import org.ranking_app.model.user.User;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="items")
@@ -68,6 +70,9 @@ public class Item {
             foreignKey = @ForeignKey(name = "fk_item_suggested_by_user")
     )
     private User suggested_by;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     public Item() {}
 
@@ -206,6 +211,13 @@ public class Item {
     }
     public void setSuggested_by(User suggested_by) {
         this.suggested_by = suggested_by;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
 

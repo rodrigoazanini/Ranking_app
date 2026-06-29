@@ -28,6 +28,6 @@ public class ItemsGetTopByRankingController {
                 .map(ItemResponse::fromEntity)
                 .toList();
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response); // TODO change to itemSummaryResponse when its made
     }
 }
