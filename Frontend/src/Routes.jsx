@@ -1,8 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { getUser } from "./services/apiService";
 
 export function PublicRoute() {
-	const token = localStorage.getItem("token");
-	if (token) return <Navigate to="/" />;
+	const user = getUser();
+	if (user) return <Navigate to="/" />;
 	return (
 		<div className="mainWrapper">
 			<Outlet />
@@ -11,8 +12,8 @@ export function PublicRoute() {
 }
 
 export function PrivateRoute() {
-	const token = localStorage.getItem("token");
-	if (!token) return <Navigate to="/auth/login" />;
+	const user = getUser();
+	if (!user) return <Navigate to="/auth/login" />;
 	return (
 		<div className="mainWrapper">
 			<Outlet />

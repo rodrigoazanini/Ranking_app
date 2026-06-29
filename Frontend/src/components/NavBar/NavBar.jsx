@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
-import { jwtDecode } from "jwt-decode";
+import { getUser } from "../../services/apiService";
 
 export default function Navbar({ searchQuery, setSearchQuery }) {
 
@@ -32,9 +32,7 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
 
   const location = useLocation()
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const decodedJwt = token ? jwtDecode(token) : null;
-    setUser(decodedJwt);
+    setUser(getUser());
   }, [location])
 
   return (
