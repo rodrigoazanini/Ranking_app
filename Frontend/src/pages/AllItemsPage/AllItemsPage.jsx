@@ -4,7 +4,7 @@ import styles from "./AllItemsPage.module.css";
 import ItemCard from "../../components/ItemCard/ItemCard";
 import { itemService } from "../../services/itemService";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 export function AllItemsPage() {
   const navigate = useNavigate();

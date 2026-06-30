@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import styles from "./CreateUpdateItemForm.module.css";
 import { itemService } from "../../services/itemService";
 import { categoryService } from "../../services/categoryService";
@@ -21,6 +22,7 @@ export function CreateUpdateItemForm({ ItemId, isAdmin }) {
     const [imageUrl, setImageUrl] = useState("");
     const [imageFile, setImageFile] = useState("");
     const [enabled, setEnabled] = useState(true);
+    const navigate = useNavigate();
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -158,7 +160,12 @@ export function CreateUpdateItemForm({ ItemId, isAdmin }) {
 
         // TODO: Mostrar error en la interfaz
         if (!result) return;
-
+            
+        if(isAdmin){
+            navigate("/admin/items");
+        } else {
+            navigate("/");
+        }
         // TODO: Redirigir a la pagina del item creado/actualizado
         //if(isAdmin) navigate("/admin/items");
         //else navigate("/items");
