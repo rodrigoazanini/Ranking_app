@@ -14,11 +14,12 @@ import java.util.List;
 public interface JpaReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
     @Query("""
         SELECT
-            MIN(CASE WHEN r.date < :cutoffDate THEN r.price END),
-            MAX(CASE WHEN r.date < :cutoffDate THEN r.price END),
-            AVG(r.ranking)
+            MIN(r.price) AS priceMin,
+            MAX(r.price) AS priceMax,
+            AVG(r.ranking) AS rankingAvg
         FROM Review r
         WHERE r.item.id = :itemId
+        AND r.date >= :cutoffDate
     """)
     ReviewItemStatsProjection findItemStatsByItemId(
             @Param("itemId") Long itemId,
@@ -32,4 +33,12 @@ public interface JpaReviewRepository extends JpaRepository<Review, Long>, JpaSpe
         ORDER BY r.date DESC, r.id DESC
         """)
     List<Review> findReviewsByUserId(@Param("userId") Long userId);
+
+    @Query("""
+        SELECT r
+        FROM Review r
+        WHERE r.item.id = :itemId
+        ORDER BY r.date DESC, r.id DESC
+        """)
+    List<Review> findReviewsByItemId(@Param("itemId") Long itemId);
 }

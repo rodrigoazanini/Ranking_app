@@ -11,16 +11,18 @@ async function getReviews(page = 0, size = 10) {
 }
 
 async function getReviewsByUserId(userId) {
-		const response = await fetch(`${API_URL}/reviews/user/${userId}`, {
+	const response = await fetch(`${API_URL}/reviews/user/${userId}`, {
 		headers: getHeaders(),
 	});
+	if (!response.ok) throw new Error("Error al cargar reseñas del usuario");
 	return await response.json();
 }
 
 async function getReviewsByItemId(itemId) {
-		const response = await fetch(`${API_URL}/reviews/item/${itemId}`, {
+	const response = await fetch(`${API_URL}/reviews/item/${itemId}`, {
 		headers: getHeaders(),
 	});
+	if (!response.ok) throw new Error("Error al cargar reseñas del producto");
 	return await response.json();
 }
 

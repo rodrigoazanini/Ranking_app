@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./ItemDetailPage.module.css";
-import { mock_items, mock_reviews } from "../../data/mockData";
 import Stars from "../../components/Stars/Stars";
 import Btn from "../../components/Btn/Btn";
 import ReviewOver from "../../components/ReviewOver/ReviewOver";
 import { itemService } from "../../services/itemService";
 import { reviewService } from "../../services/reviewService";
+import { favoriteService } from "../../services/favoriteService";
 import { getUser } from "../../services/apiService";
 
 export default function ItemDetailPage() {
@@ -17,6 +17,7 @@ export default function ItemDetailPage() {
   const [reviews, setReviews] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [fav, setFav] = useState(false);
+  const [favId, setFavId] = useState(null);
 
   const [newReview, setNewReview] = useState({
     comment: "",
@@ -29,6 +30,14 @@ export default function ItemDetailPage() {
       try {
         const response = await itemService.getItem(id);
         setItem(response ? response : null);
+
+        const user = getUser();
+        const result = await favoriteService.isFavorited(user.id, id);
+        setFav(result.isFavorited);
+        setFavId(result.favoriteId || null);
+
+        const reviewsData = await reviewService.getReviewsByItemId(id);
+        setReviews(reviewsData || []);
       } catch (err) {
         console.error("Failed to load item:", err);
         setItem(null);
@@ -48,38 +57,58 @@ export default function ItemDetailPage() {
     );
   }
 
-  const submitReview = () => {
+  const toggleFavorite = async () => {
+    try {
+      const user = getUser();
+      if (fav) {
+        await favoriteService.removeFavorite(favId);
+        setFavId(null);
+      } else {
+        const result = await favoriteService.addFavorite(item.id, user.id);
+        setFavId(result.id);
+      }
+      setFav((prev) => !prev);
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    }
+  };
+
+  const submitReview = async () => {
     if (!newReview.comment || !newReview.ranking) return;
 
-    const review = {
-      itemId: item.id,
-      userName: getUser,
-      ranking: newReview.ranking,
-      comment: newReview.comment,
-      price: parseFloat(newReview.price) || 0,
-      date: new Date().toISOString().split("T")[0],
-    };
+    try {
+      const user = getUser();
+      const data = {
+        comment: newReview.comment,
+        ranking: newReview.ranking,
+        price: parseFloat(newReview.price) || 0,
+        itemId: item.id,
+        userId: user.id,
+        date: new Date().toISOString().split("T")[0],
+      };
 
-    setReviews((prev) => [review, ...prev]);
+      const created = await reviewService.createReview(data);
+      setReviews((prev) => [created, ...prev]);
 
-    setNewReview({
-      comment: "",
-      ranking: 0,
-      price: "",
-    });
+      const refreshed = await itemService.getItem(id);
+      if (refreshed) setItem(refreshed);
 
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+      setNewReview({
+        comment: "",
+        ranking: 0,
+        price: "",
+      });
+
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (err) {
+      console.error("Error creating review:", err);
+    }
   };
 
   return (
-
-
     <div className={styles.page}>
-      <button
-        className={styles.backBtn}
-        onClick={() => navigate("/")}
-      >
+      <button className={styles.backBtn} onClick={() => navigate("/")}>
         Volver
       </button>
 
@@ -91,10 +120,7 @@ export default function ItemDetailPage() {
             className={styles.image}
           />
 
-          <button
-            className={styles.favBtn}
-            onClick={() => setFav((prev) => !prev)}
-          >
+          <button className={styles.favBtn} onClick={toggleFavorite}>
             {fav ? "❤️" : "🤍"}
           </button>
         </div>
@@ -102,7 +128,7 @@ export default function ItemDetailPage() {
         <div className={styles.productInfo}>
           <div className={styles.badges}>
             <span className={styles.badgeCategory}>
-              {item.categoryResponse?.name}
+              {item.categoryResponse?.name || "Sin categoría"}
             </span>
 
             <span className={styles.badgeBrand}>
@@ -121,7 +147,7 @@ export default function ItemDetailPage() {
             </p>
           </div>
 
-          {item.reviews.length > 0 ? (
+          {item.reviews.length > 0 && item.rankingAvg != null ? (
             <div className={styles.ratingRow}>
               <Stars value={item.rankingAvg} size={22} />
 
@@ -145,10 +171,7 @@ export default function ItemDetailPage() {
             </p>
           )}
 
-          <Btn
-            variant="primary"
-            onClick={() => setFav((prev) => !prev)}
-          >
+          <Btn variant="primary" onClick={toggleFavorite}>
             {fav
               ? "❤️ En favoritos"
               : "🤍 Agregar a favoritos"}
@@ -235,12 +258,12 @@ export default function ItemDetailPage() {
       </div>
 
       <h3 className={styles.reviewsTitle}>
-        Reseñas ({item.reviews.length})
+        Reseñas ({reviews.length})
       </h3>
 
       <div className={styles.reviewsList}>
-        {item.reviews.length > 0 ? (
-          item.reviews.map((review) => (
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
             <ReviewOver
               key={review.id}
               review={review}

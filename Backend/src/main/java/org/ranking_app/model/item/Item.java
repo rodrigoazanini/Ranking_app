@@ -6,7 +6,9 @@ import org.ranking_app.dto.request.item.ItemRequest;
 import org.ranking_app.model.category.Category;
 import org.ranking_app.model.review.Review;
 import org.ranking_app.model.user.User;
+import org.ranking_app.model.user_item_favorite.UserItemFavorite;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +74,10 @@ public class Item {
     private User suggested_by;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserItemFavorite> favorites = new ArrayList<>();
 
     public Item() {}
 
@@ -220,5 +225,11 @@ public class Item {
         this.reviews = reviews;
     }
 
+    public List<UserItemFavorite> getFavorites() {
+        return favorites;
+    }
+    public void setFavorites(List<UserItemFavorite> favorites) {
+        this.favorites = favorites;
+    }
 
 }

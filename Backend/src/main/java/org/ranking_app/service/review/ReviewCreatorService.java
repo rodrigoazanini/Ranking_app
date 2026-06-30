@@ -20,9 +20,9 @@ public class ReviewCreatorService {
     private final UserFinderService userFinderService;
 
     public ReviewCreatorService(
-        JpaReviewRepository jpaReviewRepository,
-        ItemFinderService itemFinderService,
-        UserFinderService userFinderService
+            JpaReviewRepository jpaReviewRepository,
+            ItemFinderService itemFinderService,
+            UserFinderService userFinderService
     ) {
         this.jpaReviewRepository = jpaReviewRepository;
         this.itemFinderService = itemFinderService;
@@ -34,24 +34,24 @@ public class ReviewCreatorService {
         Item item = itemFinderService.find(request.getItemId());
         User user = userFinderService.find(request.getUserId());
 
-        // Estuve pensando y no tendria sentido mostrar el min y max historico dada la inflacion de argentina jaja saludos
+        Review review = Review.fromRequest(request, item, user);
+        Review savedReview = jpaReviewRepository.saveAndFlush(review);
+
         LocalDate cutoffDate = LocalDate.now().minusDays(30);
         ReviewItemStatsProjection stats = jpaReviewRepository.findItemStatsByItemId(item.getId(), cutoffDate);
 
-        Review review = Review.fromRequest(request, item, user);
+        Double priceMin = (stats != null && stats.getPriceMin() != null) ? stats.getPriceMin() : item.getPriceMin();
+        if (priceMin == null) priceMin = savedReview.getPrice();
 
-//        if (item.getPriceMin() == null || item.getPriceMin() > review.getPrice()){
-//            item.setPriceMin(review.getPrice());
-//        }
-//        if (item.getPriceMax() == null || item.getPriceMax() < review.getPrice()){
-//            item.setPriceMax(review.getPrice());
-//        }
+        Double priceMax = (stats != null && stats.getPriceMax() != null) ? stats.getPriceMax() : item.getPriceMax();
+        if (priceMax == null) priceMax = savedReview.getPrice();
 
-        item.setPriceMin(stats != null ? stats.getPriceMin() : review.getPrice());
-        item.setPriceMax(stats != null ? stats.getPriceMax() : review.getPrice());
-        item.setRankingAvg(stats != null ? stats.getRankingAvg() : review.getRanking());
+        Double rankingAvg = (stats != null && stats.getRankingAvg() != null) ? stats.getRankingAvg() : item.getRankingAvg();
+        if (rankingAvg == null) rankingAvg = savedReview.getRanking();
 
-        Review savedReview = jpaReviewRepository.saveAndFlush(review);
+        item.setPriceMin(priceMin);
+        item.setPriceMax(priceMax);
+        item.setRankingAvg(rankingAvg);
 
         return savedReview;
     }

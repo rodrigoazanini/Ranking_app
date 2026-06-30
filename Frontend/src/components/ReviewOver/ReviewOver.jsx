@@ -6,7 +6,7 @@ export default function ReviewOver({ review }) {
     <div className={styles.card}>
       <div className={styles.header}>
         <div>
-          <p className={styles.userName}>{review.userName}</p>
+          <p className={styles.userName}>{review.userResponse?.username || review.userName}</p>
           <Stars value={review.ranking} size={16} />
         </div>
         <div>

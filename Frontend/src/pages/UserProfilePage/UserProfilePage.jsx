@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./UserProfilePage.module.css";
 import Stars from "../../components/Stars/Stars";
-import { API_URL, getHeaders, getUser } from "../../services/apiService";
+import { getUser } from "../../services/apiService";
+import { userService } from "../../services/userService";
+import { favoriteService } from "../../services/favoriteService";
 
 export function UserProfilePage() {
   const navigate = useNavigate();
@@ -15,41 +17,21 @@ export function UserProfilePage() {
   const [confirmRemoveId, setConfirmRemoveId] = useState(null);
 
   useEffect(() => {
-    fetchUser();
-    fetchMyReviews();
-    fetchFavorites();
+    const loadData = async () => {
+      try {
+        const decodedUser = getUser();
+        setUser(decodedUser);
+
+        const profileData = await userService.getUserProfile();
+        setMyReviews(profileData.reviews);
+        setFavorites(profileData.favorites);
+      } catch (err) {
+        console.error("Error loading user data:", err);
+      }
+    };
+
+    loadData();
   }, []);
-
-  const fetchUser = async () => {
-    try {
-      const decoded = getUser();
-      setUser(decoded);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchMyReviews = async () => {
-    try {
-      const res = await fetch(`${API_URL}/reviews/my`, { headers: getHeaders() });
-      if (!res.ok) throw new Error("Error al cargar reseñas");
-      const data = await res.json();
-      setMyReviews(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchFavorites = async () => {
-    try {
-      const res = await fetch(`${API_URL}/favorites`, { headers: getHeaders() });
-      if (!res.ok) throw new Error("Error al cargar favoritos");
-      const data = await res.json();
-      setFavorites(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const handleRemoveClick = (itemId) => {
     setConfirmRemoveId(itemId);
@@ -57,16 +39,12 @@ export function UserProfilePage() {
 
   const confirmRemove = async () => {
     try {
-      const res = await fetch(`${API_URL}/favorites/${confirmRemoveId}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      });
-      if (!res.ok) throw new Error("Error al eliminar favorito");
+      await favoriteService.removeFavorite(confirmRemoveId);
       setFavorites((prev) => prev.filter((item) => item.id !== confirmRemoveId));
     } catch (err) {
       console.error(err);
     } finally {
-      setConfirmRemoveId(null); 
+      setConfirmRemoveId(null);
     }
   };
 
@@ -75,7 +53,9 @@ export function UserProfilePage() {
   };
 
   const goToItem = (item) => {
-    navigate(`/item/${item.id}`);
+    if (item && item.id) {
+      navigate(`/items/${item.id}`);
+    }
   };
 
   return (
@@ -102,7 +82,7 @@ export function UserProfilePage() {
       <div className={styles.header}>
         <div className={styles.avatar}>👤</div>
         <div>
-          <p className={styles.userName}>{user?.name ?? "Username"}</p>
+          <p className={styles.userName}>{user?.username ?? "Username"}</p>
           <p className={styles.userEmail}>{user?.email ?? "Username@Email"}</p>
         </div>
       </div>
@@ -136,7 +116,7 @@ export function UserProfilePage() {
                 onClick={() => goToItem(r.item)}
               >
                 <img
-                  src={r.item.image}
+                  src={r.item.imageUrl}
                   alt={r.item.name}
                   className={styles.reviewItemImage}
                 />
@@ -169,24 +149,24 @@ export function UserProfilePage() {
             </div>
           ) : (
             <div className={styles.favGrid}>
-              {favorites.map((item) => (
-                <div key={item.id} className={styles.favCard}>
+              {favorites.map((fav) => (
+                <div key={fav.id} className={styles.favCard}>
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={fav.item.imageUrl}
+                    alt={fav.item.name}
                     className={styles.favImage}
-                    onClick={() => goToItem(item)}
+                    onClick={() => goToItem(fav.item)}
                   />
                   <button
                     className={styles.removeFavBtn}
-                    onClick={() => handleRemoveClick(item.id)}  // ← abre modal
+                    onClick={() => handleRemoveClick(fav.id)}
                     title="Eliminar de favoritos"
                   >
                     ✕
                   </button>
-                  <div className={styles.favInfo} onClick={() => goToItem(item)}>
-                    <p className={styles.favName}>{item.name}</p>
-                    <p className={styles.favBrand}>{item.brand}</p>
+                  <div className={styles.favInfo} onClick={() => goToItem(fav.item)}>
+                    <p className={styles.favName}>{fav.item.name}</p>
+                    <p className={styles.favBrand}>{fav.item.brand}</p>
                   </div>
                 </div>
               ))}

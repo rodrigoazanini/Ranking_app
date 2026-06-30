@@ -4,7 +4,10 @@ import org.ranking_app.model.user_item_favorite.UserItemFavorite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 @Repository
 public interface JpaUserItemFavoriteRepository extends JpaRepository<UserItemFavorite, Long>, JpaSpecificationExecutor<UserItemFavorite> {
+    boolean existsByUserIdAndItemId(Long userId, Long itemId);
+    Optional<UserItemFavorite> findByUserIdAndItemId(Long userId, Long itemId);
 }

@@ -167,7 +167,7 @@ public class Seeder implements CommandLineRunner {
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
-                            "http://localhost:8091/uploads/images/item_default_backend.png",
+                            "http://localhost:8091/uploads/images/item_default_backend.jpg",
                             category.getId(),
                             null
                     ),
@@ -183,7 +183,7 @@ public class Seeder implements CommandLineRunner {
             User reviewer = users.get(ThreadLocalRandom.current().nextInt(users.size()));
             Double randomRanking = randomRanking();
             Double randomPrice = randomPrice();
-            Review review = reviewCreatorService.create(new ReviewRequest(
+            reviewCreatorService.create(new ReviewRequest(
                     randomReviewComment(i),
                     randomRanking,
                     randomPrice,
@@ -191,25 +191,17 @@ public class Seeder implements CommandLineRunner {
                     reviewer.getId(),
                     randomRecentDate()
             ));
-            Double itemRankingAvg = item.getRankingAvg();
-            if (itemRankingAvg == null)
-                item.setRankingAvg(randomRanking);
-            else {
-                int reviewCount = item.getReviews().size();
-                double newAvg = (itemRankingAvg * reviewCount + randomRanking)
-                        / (reviewCount + 1);
-                item.setRankingAvg(newAvg);
-            }
-            if (item.getPriceMin() == null || item.getPriceMin() > randomPrice)
-                item.setPriceMin(randomPrice);
-            if (item.getPriceMax() == null || item.getPriceMax() < randomPrice)
-                item.setPriceMax(randomPrice);
         }
         jpaItemRepository.saveAll(reviewItems);
 
         userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
                 items.getFirst().getId(),
                 adminUser.getId()
+        ));
+
+        userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
+                items.get(1).getId(),
+                users.get(1).getId()
         ));
     }
 

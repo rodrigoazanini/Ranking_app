@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.ranking_app.dto.request.user.UserRequest;
+import org.ranking_app.model.user_item_favorite.UserItemFavorite;
+import org.ranking_app.model.review.Review;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -28,6 +31,12 @@ public class User {
 
     @Column(nullable = false)
     private Boolean admin;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<UserItemFavorite> favorites;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     public User() {}
 
@@ -88,5 +97,19 @@ public class User {
     }
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public List<UserItemFavorite> getFavorites() {
+        return favorites;
+    }
+    public void setFavorites(List<UserItemFavorite> favorites) {
+        this.favorites = favorites;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

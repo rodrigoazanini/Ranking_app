@@ -46,6 +46,14 @@ async function deleteUser(id) {
 	return await response.json();
 }
 
+async function getUserProfile() {
+	const response = await fetch(`${API_URL}/users/profile`, {
+		headers: getHeaders(),
+	});
+	if (!response.ok) throw new Error("Error al cargar perfil");
+	return await response.json();
+}
+
 export const userService = {
 	getUser,
 	getUsers,
@@ -53,4 +61,5 @@ export const userService = {
 	updateUser,
     updateUserAdmin,
 	deleteUser,
+	getUserProfile,
 };
