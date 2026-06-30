@@ -1,6 +1,6 @@
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { PublicRoute, PrivateRoute } from "./Routes.jsx";
+import { PublicRoute, AuthRoute, PrivateRoute } from "./Routes.jsx";
 import { Layout } from "./components/Layout/Layout.jsx";
 import { ItemFormPage } from "./pages/ItemFormPage/ItemFormPage.jsx";
 import { AdminPage } from "./pages/AdminPage/AdminPage.jsx";
