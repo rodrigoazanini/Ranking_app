@@ -29,7 +29,7 @@ export function AdminPage() {
 				setItems(content);
 				setTotalPages(response?.totalPages ?? 1);
 			} catch (error) {
-				console.error("Failed to load admin items", error);
+				console.error("No se pudo cargar los items", error);
 				setItems([]);
 				setTotalPages(1);
 			} finally {
