@@ -9,7 +9,6 @@ import { RegisterPage } from "./pages/RegisterPage/RegisterPage.jsx";
 import { UserProfilePage } from "./pages/UserProfilePage/UserProfilePage.jsx";
 import ItemDetailPage from "./pages/ItemDetailPage/ItemDetailPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
-import { AuthRoute } from "./Routes.jsx";
 
 export function App() {
 	return (
