@@ -1,9 +1,10 @@
 import styles from './HomePage.module.css';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { itemService } from '../../services/itemService.js';
 import { userService } from '../../services/userService.js';
+
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -11,14 +12,28 @@ export default function HomePage() {
   const [topItemsByRanking, setTopItemsByRanking] = useState([]);
   const [topUsersByReviews, setTopUsersByReviews] = useState([]);
   const [lastItemsUploaded, setLastItemsUploaded] = useState([]);
+  const scrollRef = useRef(null);
+  const scrollLeft = () => {
+  scrollRef.current.scrollBy({
+    left: -300,
+    behavior: "smooth",
+  });
+};
+
+const scrollRight = () => {
+  scrollRef.current.scrollBy({
+    left: 300,
+    behavior: "smooth",
+  });
+};
 
   useEffect(() => {
     async function loadTops() {
       try {
         const rankingAmount = 5;
         const reviewsAmount = 5;
-        const latestAmount = 5;
-        const today = new Date().toISOString().slice(0, 10);
+        const latestAmount = 15;
+        const today = new Date().toISOString().slice(0, 15);
 
         const [rankingItems, rankedUsers, uploadedItems] = await Promise.all([
           itemService.getTopItemsByRanking(rankingAmount),
@@ -63,7 +78,7 @@ export default function HomePage() {
             <h1> 👤Top 5 Usuarios </h1>
             {topUsersByReviews.map((user) => (
               <div key={user.username}>
-                ⭐ {user.username} - {user.reviewCount}
+                {user.username} - {user.reviewCount} reseñas
               </div>
             ))}
           </div>
@@ -80,15 +95,46 @@ export default function HomePage() {
 
       </div>
 
-      <div className={styles.gridContainer}>
-        {lastItemsUploaded.map(item => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onClick={item => navigate(`/items/${item.id}`)}
-          />
-        ))}
-      </div>
+
+
+<div className={styles.gridContainer}>
+
+  <p className={styles.lastItemsUploadedTitle}>
+    <b>Últimos productos agregados:</b>
+  </p>
+
+  <div className={styles.carouselContainer}>
+
+    <button
+      className={styles.arrowLeft}
+      onClick={scrollLeft}
+    >
+      ◀
+    </button>
+
+    <div
+      ref={scrollRef}
+      className={styles.itemsGrid}
+    >
+      {lastItemsUploaded.map(item => (
+        <ItemCard
+          key={item.id}
+          item={item}
+          onClick={item => navigate(`/items/${item.id}`)}
+        />
+      ))}
+    </div>
+
+    <button
+      className={styles.arrowRight}
+      onClick={scrollRight}
+    >
+      ▶
+    </button>
+
+  </div>
+
+</div>
 
       <picture>
         <source srcSet={"./images/stock/HERO2.avif"} type="image/avif" />
@@ -101,3 +147,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+

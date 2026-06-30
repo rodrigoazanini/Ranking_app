@@ -68,11 +68,42 @@
 
 .gridContainer {
   background: white;
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
   border-radius: 20px;
-  margin: 20px 0;
+  padding: 20px;
+}
+
+.lastItemsUploadedTitle {
+  margin-bottom: 20px;
+  font-size: 24px;
+  
+}
+
+ .carouselContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemsGrid {
+  display: flex;
+  gap: 16px;
+  overflow-x: hidden; 
+  scroll-behavior: smooth;
+  flex: 1;
+}
+
+.arrowLeft,.arrowRight {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #f2f2f2;
+  font-size: 20px;
+  transition: .2s;
+}
+
+.arrowLeft:hover,
+.arrowRight:hover {
+  background: #ddd;
 }

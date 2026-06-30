@@ -45,7 +45,7 @@ public class Item {
     @Column(nullable = false)
     private Boolean enabled;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // Perdón era mas facil hacer el filtro en el front con el nullable en true
     private Boolean suggested;
 
     @Column(nullable = false) //TODO agregar NotBlank
