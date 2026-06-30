@@ -224,6 +224,7 @@
 }
 
 .previewGrid {
+  overflow: hidden;
   display: grid;
   flex: content;
   grid-template-columns: repeat(10, 1fr);

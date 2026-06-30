@@ -7,7 +7,7 @@ import ReviewOver from "../../components/ReviewOver/ReviewOver";
 import { itemService } from "../../services/itemService";
 import { reviewService } from "../../services/reviewService";
 import { favoriteService } from "../../services/favoriteService";
-import { getUser } from "../../services/apiService";
+import { getUser, getRole } from "../../services/apiService";
 
 export default function ItemDetailPage() {
   const { id } = useParams();
@@ -25,16 +25,23 @@ export default function ItemDetailPage() {
     price: "",
   });
 
+
+const role = getRole();
+const isAdmin = role === true;
+
   useEffect(() => {
     async function loadItem() {
       try {
         const response = await itemService.getItem(id);
         setItem(response ? response : null);
 
-        const user = getUser();
-        const result = await favoriteService.isFavorited(user.id, id);
-        setFav(result.isFavorited);
-        setFavId(result.favoriteId || null);
+        // Solo cargamos favorito si no es admin
+        if (!isAdmin) {
+          const user = getUser();
+          const result = await favoriteService.isFavorited(user.id, id);
+          setFav(result.isFavorited);
+          setFavId(result.favoriteId || null);
+        }
 
         const reviewsData = await reviewService.getReviewsByItemId(id);
         setReviews(reviewsData || []);
@@ -93,16 +100,11 @@ export default function ItemDetailPage() {
       const refreshed = await itemService.getItem(id);
       if (refreshed) setItem(refreshed);
 
-      setNewReview({
-        comment: "",
-        ranking: 0,
-        price: "",
-      });
-
+      setNewReview({ comment: "", ranking: 0, price: "" });
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
-      console.error("Error creating review:", err);
+      console.error("Error creando reseña", err);
     }
   };
 
@@ -114,15 +116,14 @@ export default function ItemDetailPage() {
 
       <div className={styles.productCard}>
         <div className={styles.imageWrapper}>
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            className={styles.image}
-          />
+          <img src={item.imageUrl} alt={item.name} className={styles.image} />
 
-          <button className={styles.favBtn} onClick={toggleFavorite}>
-            {fav ? "❤️" : "🤍"}
-          </button>
+          {/* Botón favorito en la imagen — solo para no admins */}
+          {!isAdmin && (
+            <button className={styles.favBtn} onClick={toggleFavorite}>
+              {fav ? "❤️" : "🤍"}
+            </button>
+          )}
         </div>
 
         <div className={styles.productInfo}>
@@ -130,144 +131,99 @@ export default function ItemDetailPage() {
             <span className={styles.badgeCategory}>
               {item.categoryResponse?.name || "Sin categoría"}
             </span>
-
-            <span className={styles.badgeBrand}>
-              {item.brand}
-            </span>
+            <span className={styles.badgeBrand}>{item.brand}</span>
           </div>
 
           <h1 className={styles.productName}>{item.name}</h1>
 
           <div className={styles.priceBox}>
             <p className={styles.priceLabel}>RANGO DE PRECIO</p>
-
             <p className={styles.priceValue}>
-              ${item.priceMin?.toLocaleString()} – $
-              {item.priceMax?.toLocaleString()}
+              ${item.priceMin?.toLocaleString()} – ${item.priceMax?.toLocaleString()}
             </p>
           </div>
 
           {item.reviews.length > 0 && item.rankingAvg != null ? (
             <div className={styles.ratingRow}>
               <Stars value={item.rankingAvg} size={22} />
-
-              <span className={styles.ratingValue}>
-                {item.rankingAvg.toFixed(1)}
-              </span>
-
-              <span className={styles.ratingCount}>
-                ({item.reviews.length} reseñas)
-              </span>
+              <span className={styles.ratingValue}>{item.rankingAvg.toFixed(1)}</span>
+              <span className={styles.ratingCount}>({item.reviews.length} reseñas)</span>
             </div>
           ) : (
-            <p className={styles.noReviews}>
-              ¡Sé el primero en reseñarlo!
-            </p>
+            <p className={styles.noReviews}>¡Sé el primero en reseñarlo!</p>
           )}
 
           {item.description && (
-            <p className={styles.description}>
-              {item.description}
-            </p>
+            <p className={styles.description}>{item.description}</p>
           )}
 
-          <Btn variant="primary" onClick={toggleFavorite}>
-            {fav
-              ? "❤️ En favoritos"
-              : "🤍 Agregar a favoritos"}
+          {/* Botón "Agregar a favoritos" — solo para no admins */}
+          {!isAdmin && (
+            <Btn variant="primary" onClick={toggleFavorite}>
+              {fav ? "❤️ En favoritos" : "🤍 Agregar a favoritos"}
+            </Btn>
+          )}
+        </div>
+      </div>
+
+      {/* Formulario de reseña — solo para no admins */}
+      {!isAdmin && (
+        <div className={styles.reviewForm}>
+          <h3 className={styles.reviewFormTitle}>Escribir una reseña</h3>
+
+          <div className={styles.fieldGroup}>
+            <p className={styles.fieldLabel}>Tu puntuación</p>
+            <Stars
+              value={newReview.ranking}
+              size={32}
+              interactive
+              onChange={(value) => setNewReview({ ...newReview, ranking: value })}
+            />
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel}>Precio que pagaste ($)</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              className={styles.priceInput}
+              placeholder="Ej: 650"
+              value={newReview.price}
+              onChange={(e) => setNewReview({ ...newReview, price: e.target.value })}
+            />
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel}>Comentario</label>
+            <textarea
+              rows={4}
+              className={styles.textarea}
+              placeholder="Escribí tu reseña acá"
+              value={newReview.comment}
+              onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+            />
+          </div>
+
+          {submitted && (
+            <p className={styles.successMsg}>¡Reseña publicada con éxito!</p>
+          )}
+
+          <Btn
+            variant="coral"
+            onClick={submitReview}
+            disabled={!newReview.comment || !newReview.ranking}
+          >
+            Publicar reseña
           </Btn>
         </div>
-      </div>
+      )}
 
-
-      <div className={styles.reviewForm}>
-        <h3 className={styles.reviewFormTitle}>
-          Escribir una reseña
-        </h3>
-
-        <div className={styles.fieldGroup}>
-          <p className={styles.fieldLabel}>Tu puntuación</p>
-
-          <Stars
-            value={newReview.ranking}
-            size={32}
-            interactive
-            onChange={(value) =>
-              setNewReview({
-                ...newReview,
-                ranking: value,
-              })
-            }
-          />
-        </div>
-
-        <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
-            Precio que pagaste ($)
-          </label>
-
-          <input
-            type="text"
-            inputMode="numeric"
-            className={styles.priceInput}
-            placeholder="Ej: 650"
-            value={newReview.price}
-            onChange={(e) =>
-              setNewReview({
-                ...newReview,
-                price: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
-            Comentario
-          </label>
-
-          <textarea
-            rows={4}
-            className={styles.textarea}
-            placeholder="Escribí tu reseña acá"
-            value={newReview.comment}
-            onChange={(e) =>
-              setNewReview({
-                ...newReview,
-                comment: e.target.value,
-              })
-            }
-          />
-        </div>
-
-        {submitted && (
-          <p className={styles.successMsg}>
-            ¡Reseña publicada con éxito!
-          </p>
-        )}
-
-        <Btn
-          variant="coral"
-          onClick={submitReview}
-          disabled={
-            !newReview.comment || !newReview.ranking
-          }
-        >
-          Publicar reseña
-        </Btn>
-      </div>
-
-      <h3 className={styles.reviewsTitle}>
-        Reseñas ({reviews.length})
-      </h3>
+      <h3 className={styles.reviewsTitle}>Reseñas ({reviews.length})</h3>
 
       <div className={styles.reviewsList}>
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <ReviewOver
-              key={review.id}
-              review={review}
-            />
+            <ReviewOver key={review.id} review={review} />
           ))
         ) : (
           <p>Aún no hay reseñas para este producto.</p>
