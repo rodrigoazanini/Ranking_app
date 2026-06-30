@@ -28,7 +28,7 @@ public class ItemReviewsResponse extends ItemResponse {
         UserResponse userResponse,
         List<ReviewSummaryResponse> reviews
     ) {
-        super(id, name, description, brand, weight, priceMin, priceMax, rankingAvg, enabled, suggested, imageUrl, categoryResponse, userResponse);
+        super(id, name, imageUrl, description, brand, weight, priceMin, priceMax, rankingAvg, enabled, suggested, categoryResponse, userResponse);
         this.reviews = reviews;
     }    
 

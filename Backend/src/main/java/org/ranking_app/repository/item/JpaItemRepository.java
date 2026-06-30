@@ -1,6 +1,7 @@
 package org.ranking_app.repository.item;
 
 import org.ranking_app.model.item.Item;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -34,6 +35,24 @@ public interface JpaItemRepository extends JpaRepository<Item, Long>, JpaSpecifi
         ORDER BY COUNT(r.id) DESC, COALESCE(i.rankingAvg, 0) DESC, i.id DESC
         """)
     List<Item> findTopItemsByReviewCount(Pageable pageable);
+
+    @Query("""
+        SELECT i
+        FROM Item i
+        WHERE (:pattern IS NULL OR LOWER(i.name) LIKE :pattern)
+          AND (:brand IS NULL OR LOWER(i.brand) LIKE LOWER(:brand))
+          AND (:suggested IS NULL OR i.suggested = :suggested)
+          AND (:enabled IS NULL OR i.enabled = :enabled)
+          AND (:category IS NULL OR LOWER(i.category.name) LIKE LOWER(:category))
+        """)
+    Page<Item> findByFilters(
+            @Param("pattern") String pattern,
+            @Param("brand") String brand,
+            @Param("suggested") Boolean suggested,
+            @Param("enabled") Boolean enabled,
+            @Param("category") String category,
+            Pageable pageable
+    );
 
     @Query("""
         SELECT i

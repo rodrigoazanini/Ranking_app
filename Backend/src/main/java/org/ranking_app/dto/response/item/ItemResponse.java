@@ -4,9 +4,7 @@ import org.ranking_app.dto.response.category.CategoryResponse;
 import org.ranking_app.dto.response.user.UserResponse;
 import org.ranking_app.model.item.Item;
 
-public class ItemResponse {
-    private Long id;
-    private String name;
+public class ItemResponse extends ItemSummaryResponse {
     private String description;
     private String brand;
     private Double weight;
@@ -15,7 +13,6 @@ public class ItemResponse {
     private Double rankingAvg;
     private Boolean enabled;
     private Boolean suggested;
-    private String imageUrl;
     private CategoryResponse categoryResponse;
     private UserResponse userResponse;
 
@@ -23,7 +20,8 @@ public class ItemResponse {
 
     public ItemResponse(
         Long id,
-        String name, 
+        String name,
+        String imageUrl,
         String description,
         String brand,
         Double weight,
@@ -32,12 +30,10 @@ public class ItemResponse {
         Double rankingAvg,
         Boolean enabled,
         Boolean suggested,
-        String imageUrl,
         CategoryResponse categoryResponse,
         UserResponse userResponse
     ) {
-        this.id = id;
-        this.name = name;
+        super(id, name, imageUrl);
         this.description = description;
         this.brand = brand;
         this.weight = weight;
@@ -46,7 +42,6 @@ public class ItemResponse {
         this.rankingAvg = rankingAvg;
         this.enabled = enabled;
         this.suggested = suggested;
-        this.imageUrl = imageUrl;
         this.categoryResponse = categoryResponse;
         this.userResponse = userResponse;
     }
@@ -55,6 +50,7 @@ public class ItemResponse {
         return new ItemResponse(
                 item.getId(),
                 item.getName(),
+                item.getImageUrl(),
                 item.getDescription(),
                 item.getBrand(),
                 item.getWeigth(),
@@ -63,18 +59,9 @@ public class ItemResponse {
                 item.getRankingAvg(),
                 item.getEnabled(),
                 item.getSuggested(),
-                item.getImageUrl(),
                 item.getCategory() != null ? CategoryResponse.fromEntity(item.getCategory()) : null,
                 item.getSuggested_by() != null ? UserResponse.fromEntity(item.getSuggested_by()) : null
         );
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getDescription() {
@@ -109,11 +96,7 @@ public class ItemResponse {
         return suggested;
     }
 
-    public String getImageUrl() { 
-        return imageUrl; 
-    }
-
-    public  CategoryResponse getCategoryResponse() {
+    public CategoryResponse getCategoryResponse() {
         return categoryResponse;
     }
 

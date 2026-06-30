@@ -28,10 +28,14 @@ export function AdminPage() {
 
   // Filtros
   const [search,    setSearch]    = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [brand,     setBrand]     = useState("");
+  const [debouncedBrand, setDebouncedBrand] = useState("");
   const [category,  setCategory]  = useState("");
+  const [debouncedCategory, setDebouncedCategory] = useState("");
   const [suggested, setSuggested] = useState("");
   const [enabled,   setEnabled]   = useState("");
+  const [debounceTimer, setDebounceTimer] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +43,23 @@ export function AdminPage() {
     async function loadItems() {
       try {
         setLoading(true);
-        const response = await itemService.getItems(page, pageSize);
+
+        const hasFilters = debouncedSearch || debouncedBrand || debouncedCategory || suggested || enabled;
+        let response;
+
+        if (hasFilters) {
+          const filters = {
+            query: debouncedSearch,
+            brand: debouncedBrand || null,
+            category: debouncedCategory || null,
+            suggested: suggested === "" ? null : (suggested === "approved" || suggested === "pending" ? true : null),
+            enabled: enabled === "" ? null : (enabled === "true" ? true : enabled === "false" ? false : null)
+          };
+          response = await itemService.searchItems("/items/search/filter", filters, page, pageSize);
+        } else {
+          response = await itemService.getItems(page, pageSize);
+        }
+
         if (!isMounted) return;
         setItems(Array.isArray(response?.content) ? response.content : []);
         setTotalPages(response?.totalPages ?? 1);
@@ -54,32 +74,77 @@ export function AdminPage() {
 
     loadItems();
     return () => { isMounted = false; };
-  }, [page]);
+  }, [page, debouncedSearch, debouncedBrand, debouncedCategory, suggested, enabled]);
 
-  // ── Filtrado en memoria ─────────────────────────────────────────────────
-  const filteredItems = items.filter((item) => {
-    if (search && !item.name?.toLowerCase().includes(search.toLowerCase()))
-      return false;
-    if (brand && !item.brand?.toLowerCase().includes(brand.toLowerCase()))
-      return false;
-    if (category) {
-      const catName = item.categoryResponse?.name || item.category || "";
-      if (!catName.toLowerCase().includes(category.toLowerCase())) return false;
+  useEffect(() => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
     }
-    if (suggested) {
-      if (suggested === "own"      && item.suggested)               return false;
-      if (suggested === "approved" && (!item.suggested || !item.enabled)) return false;
-      if (suggested === "pending"  && (!item.suggested || item.enabled))  return false;
-    }
-    if (enabled === "true"  && !item.enabled)  return false;
-    if (enabled === "false" &&  item.enabled)  return false;
-    return true;
-  });
 
-  const hasActiveFilters = search || brand || category || suggested || enabled;
+    if (search.trim().length > 0 && search.trim().length < 3) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPageNumber(0);
+    }, 500);
+
+    setDebounceTimer(timer);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [search]);
+
+  useEffect(() => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    if (brand.trim().length > 0 && brand.trim().length < 3) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedBrand(brand);
+      setPageNumber(0);
+    }, 500);
+
+    setDebounceTimer(timer);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [brand]);
+
+  useEffect(() => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    if (category.trim().length > 0 && category.trim().length < 3) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedCategory(category);
+      setPageNumber(0);
+    }, 500);
+
+    setDebounceTimer(timer);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [category]);
+
+  const hasActiveFilters = debouncedSearch || debouncedBrand || debouncedCategory || suggested || enabled;
 
   const clearFilters = () => {
-    setSearch(""); setBrand(""); setCategory("");
+    setSearch(""); setDebouncedSearch("");
+    setBrand(""); setDebouncedBrand("");
+    setCategory(""); setDebouncedCategory("");
     setSuggested(""); setEnabled("");
   };
 
@@ -174,7 +239,7 @@ export function AdminPage() {
 
         {loading ? (
           <p className={styles.empty}>Cargando productos...</p>
-        ) : filteredItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <p className={styles.empty}>No hay productos que coincidan.</p>
         ) : (
           <table>
@@ -188,7 +253,7 @@ export function AdminPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredItems.map((item) => (
+              {items.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <p className={styles.itemName}>{item.name}</p>

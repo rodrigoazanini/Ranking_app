@@ -5,6 +5,7 @@ import org.ranking_app.model.item.Item;
 import org.ranking_app.model.user.User;
 import org.ranking_app.repository.item.JpaItemRepository;
 import org.ranking_app.service.user.UserFinderService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,7 @@ public class ItemDeleterService {
         this.userFinderService = userFinderService;
     }
 
+    @CacheEvict(value = {"searchCache", "navBarSearchCache"}, allEntries = true)
     public void delete(Long id, HttpServletRequest httpRequest) {
         Item item = itemFinderService.find(id);
 

@@ -60,7 +60,39 @@ async function deleteItem(id) {
 	return await response.json();
 }
 
+async function searchItems(endpoint, filters = {}, page = 0, size = 5) {
+	const params = buildParams(filters, page, size);
+	const url = `${API_URL}${endpoint}?${params.toString()}`;
+	console.log('Search URL:', url);
+	console.log('Filters:', filters);
 
+	const response = await fetch(url, {
+		method: "GET"
+	});
+
+	if (!response.ok) {
+		const errorData = await response.json();
+		console.error('API Error:', errorData);
+		throw new Error(`Request failed: ${response.status}`);
+	}
+
+	return response.json();
+}
+
+function buildParams(filters = {}, page = 0, size = 5) {
+	const params = new URLSearchParams();
+
+	Object.entries(filters).forEach(([key, value]) => {
+		if (value !== undefined && value !== null && value !== '') {
+			params.append(key, value);
+		}
+	});
+
+	params.append('page', page);
+	params.append('size', size);
+
+	return params;
+}
 
 export const itemService = {
 	getItem,
@@ -69,6 +101,7 @@ export const itemService = {
 	getTopItemsByReviews,
 	getTopItemsByDate,
 	getLatestItems,
+	searchItems,
 	createItem,
 	updateItem,
 	deleteItem

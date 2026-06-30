@@ -8,6 +8,7 @@ import org.ranking_app.repository.item.JpaItemRepository;
 import org.ranking_app.service.category.CategoryFinderService;
 import org.ranking_app.service.user.UserFinderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class ItemUpdaterService {
         this.userFinderService = userFinderService;
     }
 
+    @CacheEvict(value = {"searchCache", "navBarSearchCache"}, allEntries = true)
     @Transactional
     public Item update(ItemRequest itemRequest, Long id, HttpServletRequest httpRequest) {
         Item item = itemFinderService.find(id);

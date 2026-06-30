@@ -29,12 +29,12 @@ public class ItemsGetLatestController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Item> items = itemsSearcherService.findAll(pageable);
 
         return ResponseEntity.ok(
                 items.map(
-                        product -> ItemReviewsResponse.fromEntity(product)
+                        item -> ItemReviewsResponse.fromEntity(item)
                 )
         );
     }

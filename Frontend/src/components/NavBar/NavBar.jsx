@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import NavbarMenu from "./NavbarMenu";
 import { getUser } from "../../services/apiService";
+import { itemService } from "../../services/itemService";
 
 export default function Navbar({ searchQuery, setSearchQuery }) {
 
@@ -10,6 +11,9 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
   const navigate = useNavigate();
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
+  const [searchResults, setSearchResults] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [debounceTimer, setDebounceTimer] = useState(null);
 
   const [user, setUser] = useState(null)
 
@@ -28,11 +32,45 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
     if (searchQuery === undefined) {
       setLocalSearch(nextValue);
     }
+
+    // Clear previous timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    // Check minimum 3 characters
+    if (nextValue.trim().length < 3) {
+      setSearchResults([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    // Debounce API call by 500ms
+    const timer = setTimeout(async () => {
+      try {
+        const results = await itemService.searchItems('/items/search', { query: nextValue }, 0, 5);
+        setSearchResults(results.content || []);
+        setShowDropdown(true);
+      } catch (error) {
+        console.error('Search error:', error);
+        console.log('Query sent:', nextValue);
+        setSearchResults([]);
+      }
+    }, 500);
+
+    setDebounceTimer(timer);
+  }
+
+  function handleItemClick(itemId) {
+    navigate(`/items/${itemId}`);
+    setShowDropdown(false);
+    setLocalSearch("");
   }
 
   const location = useLocation()
   useEffect(() => {
     setUser(getUser());
+    setShowDropdown(false);
   }, [location])
 
   return (
@@ -55,6 +93,22 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
               onChange={handleSearchChange}
               placeholder="Buscar productos"
             />
+            {showDropdown && searchResults.length > 0 && (
+              <div className={styles.searchDropdown}>
+                {searchResults.map((item) => (
+                  <button
+                    key={item.id}
+                    className={styles.searchResultItem}
+                    onClick={() => handleItemClick(item.id)}
+                  >
+                    <span className={styles.itemName}>{item.name}</span>
+                    {item.rankingAvg && (
+                      <span className={styles.itemRating}>⭐ {item.rankingAvg.toFixed(1)}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {

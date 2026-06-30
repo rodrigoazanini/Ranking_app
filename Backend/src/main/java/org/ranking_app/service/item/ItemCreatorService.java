@@ -8,6 +8,7 @@ import org.ranking_app.service.category.CategoryFinderService;
 import org.ranking_app.repository.item.JpaItemRepository;
 import org.ranking_app.service.user.UserFinderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public class ItemCreatorService {
     }
 
     // Método privado para crear un ítem con un usuario sugerente específico (útil para pruebas o casos especiales como el seeder)
+    @CacheEvict(value = {"searchCache", "navBarSearchCache"}, allEntries = true)
     @Transactional
     public Item create(ItemRequest request, User suggestedBy) {
         Category category = request.getCategoryId() != null ?

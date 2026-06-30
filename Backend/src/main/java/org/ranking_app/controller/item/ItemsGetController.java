@@ -34,7 +34,7 @@ public class ItemsGetController {
 
         return ResponseEntity.ok(
                 items.map(
-                        product -> ItemReviewsResponse.fromEntity(product)
+                        item -> ItemReviewsResponse.fromEntity(item)
                 )
         );
     }
