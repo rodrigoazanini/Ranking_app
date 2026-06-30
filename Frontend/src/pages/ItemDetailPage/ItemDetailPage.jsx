@@ -102,7 +102,7 @@ export default function ItemDetailPage() {
         <div className={styles.productInfo}>
           <div className={styles.badges}>
             <span className={styles.badgeCategory}>
-              {item.category}
+              {item.categoryResponse?.name}
             </span>
 
             <span className={styles.badgeBrand}>
@@ -156,7 +156,7 @@ export default function ItemDetailPage() {
         </div>
       </div>
 
-      {/* Formulario de reseña */}
+
       <div className={styles.reviewForm}>
         <h3 className={styles.reviewFormTitle}>
           Escribir una reseña
@@ -234,7 +234,6 @@ export default function ItemDetailPage() {
         </Btn>
       </div>
 
-      {/* Lista de reseñas */}
       <h3 className={styles.reviewsTitle}>
         Reseñas ({item.reviews.length})
       </h3>

@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { itemService } from '../../services/itemService.js';
 import { userService } from '../../services/userService.js';
 
+const GRID_PREVIEW = 9;
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -13,33 +14,20 @@ export default function HomePage() {
   const [topUsersByReviews, setTopUsersByReviews] = useState([]);
   const [lastItemsUploaded, setLastItemsUploaded] = useState([]);
   const scrollRef = useRef(null);
-  const scrollLeft = () => {
-  scrollRef.current.scrollBy({
-    left: -300,
-    behavior: "smooth",
-  });
-};
 
-const scrollRight = () => {
-  scrollRef.current.scrollBy({
-    left: 300,
-    behavior: "smooth",
-  });
-};
+  const scrollLeft  = () => scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  const scrollRight = () => scrollRef.current.scrollBy({ left:  300, behavior: "smooth" });
+
+ const RANK_SIZES = [20, 18, 16, 14, 13];
+
 
   useEffect(() => {
     async function loadTops() {
       try {
-        const rankingAmount = 5;
-        const reviewsAmount = 5;
-        const latestAmount = 10;
-        const today = new Date().toISOString().slice(0, 10);
-
         const [rankingItems, rankedUsers, uploadedItems] = await Promise.all([
-          itemService.getTopItemsByRanking(rankingAmount),
-          userService.getTopUsersByReviews(reviewsAmount),
-          itemService.getLatestItems(0,latestAmount),
-          
+          itemService.getTopItemsByRanking(5),
+          userService.getTopUsersByReviews(5),
+          itemService.getLatestItems(0, 15),
         ]);
 
         setTopItemsByRanking(rankingItems);
@@ -53,10 +41,6 @@ const scrollRight = () => {
     loadTops();
   }, []);
 
-
-
-  console.log(lastItemsUploaded);
-
   return (
     <div className={styles.homePage}>
       <div className={styles.itemContainer}>
@@ -65,60 +49,54 @@ const scrollRight = () => {
           <img className={styles.heroBanner} src="../public/images/stock/BANNER.webp" alt="BannerHeroFondo" />
           <p className={styles.heroTitle}>Bienvenido a Ranking App!</p>
         </div>
+  </div>
 
-
-        <div className={styles.topListContainer}>
-          <div className={styles.topList}>
-            <h1> ⭐Top 5 Productos </h1>
-            {topItemsByRanking.map((item) => (
-              <div key={item.id}>
-                {item.name} - ⭐ {item.rankingAvg}
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.topList}>
-            <h1> 👤Top 5 Usuarios </h1>
-            {topUsersByReviews.map((user) => (
-              <div key={user.username}>
-                {user.username} - {user.reviewCount} reseñas
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <picture>
-          <source srcSet={"./images/stock/HERO3.avif"} type="image/avif" />
-          <img
-            src="./images/stock/HERO3.png"
-            alt="Hero"
-            className={styles.heroImage}
-          />
-        </picture>
-
+<div className={styles.topListContainer}>
+  <div className={styles.topList}>
+    <h1>⭐ Top 5 Productos</h1>
+    {topItemsByRanking.map((item, index) => (
+      <div
+        key={item.id}
+        className={styles.topItem}
+        style={{ fontSize: RANK_SIZES[index] }}
+        onClick={() => navigate(`/items/${item.id}`)}
+      >
+        <span className={styles.topRank}>{index + 1}</span>
+        <span className={styles.topName}>{item.name}</span>
+        <span className={styles.topScore}>⭐ {item.rankingAvg}</span>
       </div>
+    ))}
+  </div>
 
+  <div className={styles.topList}>
+    <h1>👤 Top 5 Usuarios</h1>
+    {topUsersByReviews.map((user, index) => (
+      <div
+        key={user.username}
+        className={styles.topItem}
+        style={{ fontSize: RANK_SIZES[index] }}
+      >
+        <span className={styles.topRank}>{index + 1}</span>
+        <span className={styles.topName}>{user.username}</span>
+        <span className={styles.topScore}>{user.reviewCount} reseñas</span>
+      </div>
+    ))}
+  </div>
+</div>
 
+<picture>
+  <source srcSet={"./images/stock/HERO3.avif"} type="image/avif" />
+  <img src="./images/stock/HERO3.png" alt="Hero" className={styles.heroImage} />
+</picture>
 
 <div className={styles.gridContainer}>
-
   <p className={styles.lastItemsUploadedTitle}>
     <b>Últimos productos agregados:</b>
   </p>
 
   <div className={styles.carouselContainer}>
-
-    <button
-      className={styles.arrowLeft}
-      onClick={scrollLeft}
-    >
-      ◀
-    </button>
-
-    <div
-      ref={scrollRef}
-      className={styles.itemsGrid}
-    >
+    <button className={styles.arrowLeft} onClick={scrollLeft}>◀</button>
+    <div ref={scrollRef} className={styles.itemsGrid}>
       {lastItemsUploaded.map(item => (
         <ItemCard
           key={item.id}
@@ -127,28 +105,42 @@ const scrollRight = () => {
         />
       ))}
     </div>
-
-    <button
-      className={styles.arrowRight}
-      onClick={scrollRight}
-    >
-      ▶
-    </button>
-
+    <button className={styles.arrowRight} onClick={scrollRight}>▶</button>
   </div>
-
 </div>
 
-      <picture>
+ <picture>
         <source srcSet={"./images/stock/HERO2.avif"} type="image/avif" />
-        <img
-          src="./images/stock/HERO2.png"
-          alt="Hero"
-          className={styles.heroImage}
-        />
+        <img src="./images/stock/HERO2.png" alt="Hero" className={styles.heroImage} />
       </picture>
+
+
+      <div className={styles.gridContainer}>
+        <p className={styles.lastItemsUploadedTitle}>
+          <b>Productos destacados:</b>
+        </p>
+
+        <div className={styles.previewGrid}>
+          {lastItemsUploaded.slice(0, GRID_PREVIEW).map(item => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              onClick={item => navigate(`/items/${item.id}`)}
+            />
+          ))}
+        </div>
+
+        <div className={styles.allItemsBtnWrapper}>
+          <button
+            className={styles.allItemsBtn}
+            onClick={() => navigate("/items")}
+          >
+            Todos los productos
+          </button>
+        </div>
+      </div>
+
+     
     </div>
   );
 }
-
-

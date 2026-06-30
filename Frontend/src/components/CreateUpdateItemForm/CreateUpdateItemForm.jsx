@@ -125,7 +125,7 @@ export function CreateUpdateItemForm({ ItemId, isAdmin }) {
             const uploadImage = await uploadImageService.uploadImage(formData);
 
             if (!uploadImage?.imageUrl) {
-                alert("algo salio mal");
+                alert("Algo salio mal");
                 return;
             }
 

@@ -9,6 +9,7 @@ import { RegisterPage } from "./pages/RegisterPage/RegisterPage.jsx";
 import { UserProfilePage } from "./pages/UserProfilePage/UserProfilePage.jsx";
 import ItemDetailPage from "./pages/ItemDetailPage/ItemDetailPage.jsx";
 import HomePage from "./pages/HomePage/HomePage.jsx";
+import {AllItemsPage} from "./pages/AllItemsPage/AllItemsPage.jsx";
 
 export function App() {
 	return (
@@ -21,6 +22,7 @@ export function App() {
 					<Route element={<PublicRoute />}>
 						<Route path="/" element={<HomePage />} />
 						<Route path="/items/:id" element={<ItemDetailPage />} />
+						<Route path="/items" element={<AllItemsPage />} />
 					</Route>
 
 					<Route element={<AuthRoute />}>
