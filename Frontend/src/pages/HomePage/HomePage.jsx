@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { itemService } from '../../services/itemService.js';
 import { userService } from '../../services/userService.js';
 
-const GRID_PREVIEW = 9;
+const GRID_PREVIEW = 10;
 
 export default function HomePage() {
   const navigate = useNavigate();
