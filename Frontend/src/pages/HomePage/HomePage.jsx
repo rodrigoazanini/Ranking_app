@@ -32,13 +32,13 @@ const scrollRight = () => {
       try {
         const rankingAmount = 5;
         const reviewsAmount = 5;
-        const latestAmount = 15;
-        const today = new Date().toISOString().slice(0, 15);
+        const latestAmount = 10;
+        const today = new Date().toISOString().slice(0, 10);
 
         const [rankingItems, rankedUsers, uploadedItems] = await Promise.all([
           itemService.getTopItemsByRanking(rankingAmount),
           userService.getTopUsersByReviews(reviewsAmount),
-          itemService.getLatestItems(latestAmount),
+          itemService.getLatestItems(0,latestAmount),
           
         ]);
 
@@ -53,6 +53,10 @@ const scrollRight = () => {
     loadTops();
   }, []);
 
+
+
+  console.log(lastItemsUploaded);
+
   return (
     <div className={styles.homePage}>
       <div className={styles.itemContainer}>
@@ -62,7 +66,6 @@ const scrollRight = () => {
           <p className={styles.heroTitle}>Bienvenido a Ranking App!</p>
         </div>
 
-        {/* Tops*/}
 
         <div className={styles.topListContainer}>
           <div className={styles.topList}>
