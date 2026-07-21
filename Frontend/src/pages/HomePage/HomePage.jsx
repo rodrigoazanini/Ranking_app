@@ -46,7 +46,7 @@ export default function HomePage() {
       <div className={styles.itemContainer}>
 
         <div className={styles.heroContainer}>
-          <img className={styles.heroBanner} src="../public/images/stock/BANNER.webp" alt="BannerHeroFondo" />
+          <img className={styles.heroImage} src="../public/images/stock/BANNER.webp" alt="BannerHeroFondo" />
           <p className={styles.heroTitle}>Bienvenido a Ranking App!</p>
         </div>
   </div>
@@ -69,7 +69,7 @@ export default function HomePage() {
   </div>
 
   <div className={styles.topList}>
-    <h1>👤 Top 5 Usuarios</h1>
+    <h1 classname={styles.topListTitle}>👤 Top 5 Usuarios</h1>
     {topUsersByReviews.map((user, index) => (
       <div
         key={user.username}

@@ -2,9 +2,16 @@
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: #66ccff;
+  background: #fde255;
   padding: 0px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
+
+*{
+  box-sizing: border-box;
+}
+
 
 input, textarea, select { font-family: 'Nunito', sans-serif; }
 button { cursor: pointer; font-family: 'Nunito', sans-serif; }
