@@ -18,6 +18,7 @@ export default function ItemDetailPage() {
   const [submitted, setSubmitted] = useState(false);
   const [fav, setFav] = useState(false);
   const [favId, setFavId] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   const [newReview, setNewReview] = useState({
     comment: "",
@@ -25,9 +26,8 @@ export default function ItemDetailPage() {
     price: "",
   });
 
-
-const role = getRole();
-const isAdmin = role === true;
+  const role = getRole();
+  const isAdmin = role === true;
 
   useEffect(() => {
     async function loadItem() {
@@ -35,7 +35,6 @@ const isAdmin = role === true;
         const response = await itemService.getItem(id);
         setItem(response ? response : null);
 
-        // Solo cargamos favorito si no es admin
         if (!isAdmin) {
           const user = getUser();
           const result = await favoriteService.isFavorited(user.id, id);
@@ -108,126 +107,235 @@ const isAdmin = role === true;
     }
   };
 
+  // --- Datos derivados para la sidebar ---
+  const reviewsWithPrice = reviews.filter((r) => r.price);
+  const avgPrice =
+    reviewsWithPrice.length > 0
+      ? reviewsWithPrice.reduce((sum, r) => sum + r.price, 0) / reviewsWithPrice.length
+      : item.priceMin != null && item.priceMax != null
+      ? (item.priceMin + item.priceMax) / 2
+      : null;
+
+  const rankingPosition = item.rankingPosition ?? null;
+
+  const shareUrl = window.location.href;
+  const shareText = `Mirá "${item.name}" en Ranking App`;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("No se pudo copiar el link:", err);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <button className={styles.backBtn} onClick={() => navigate("/")}>
         Volver
       </button>
 
-      <div className={styles.productCard}>
-        <div className={styles.imageWrapper}>
-          <img src={item.imageUrl} alt={item.name} className={styles.image} />
+      <div className={styles.layout}>
+        {/* ---------- COLUMNA PRINCIPAL ---------- */}
+        <div className={styles.main}>
+          <div className={styles.productCard}>
+            <div className={styles.imageWrapper}>
+              <img src={item.imageUrl} alt={item.name} className={styles.image} />
 
-          {/* Botón favorito en la imagen — solo para no admins */}
-          {!isAdmin && (
-            <button className={styles.favBtn} onClick={toggleFavorite}>
-              {fav ? "❤️" : "🤍"}
-            </button>
-          )}
-        </div>
-
-        <div className={styles.productInfo}>
-          <div className={styles.badges}>
-            <span className={styles.badgeCategory}>
-              {item.categoryResponse?.name || "Sin categoría"}
-            </span>
-            <span className={styles.badgeBrand}>{item.brand}</span>
-          </div>
-
-          <h1 className={styles.productName}>{item.name}</h1>
-
-          <div className={styles.priceBox}>
-            <p className={styles.priceLabel}>RANGO DE PRECIO</p>
-            <p className={styles.priceValue}>
-              ${item.priceMin?.toLocaleString()} – ${item.priceMax?.toLocaleString()}
-            </p>
-          </div>
-
-          {item.reviews.length > 0 && item.rankingAvg != null ? (
-            <div className={styles.ratingRow}>
-              <Stars value={item.rankingAvg} size={22} />
-              <span className={styles.ratingValue}>{item.rankingAvg.toFixed(1)}</span>
-              <span className={styles.ratingCount}>({item.reviews.length} reseñas)</span>
+              {!isAdmin && (
+                <button className={styles.favBtn} onClick={toggleFavorite}>
+                  {fav ? "❤️" : "🤍"}
+                </button>
+              )}
             </div>
-          ) : (
-            <p className={styles.noReviews}>¡Sé el primero en reseñarlo!</p>
-          )}
 
-          {item.description && (
-            <p className={styles.description}>{item.description}</p>
-          )}
+            <div className={styles.productInfo}>
+              <div className={styles.badges}>
+                <span className={styles.badgeCategory}>
+                  {item.categoryResponse?.name || "Sin categoría"}
+                </span>
+                <span className={styles.badgeBrand}>{item.brand}</span>
+              </div>
 
-          {/* Botón "Agregar a favoritos" — solo para no admins */}
+              <h1 className={styles.productName}>{item.name}</h1>
+
+              {item.reviews.length > 0 && item.rankingAvg != null ? (
+                <div className={styles.ratingRow}>
+                  <Stars value={item.rankingAvg} size={22} />
+                  <span className={styles.ratingValue}>{item.rankingAvg.toFixed(1)}</span>
+                  <span className={styles.ratingCount}>({item.reviews.length} reseñas)</span>
+                </div>
+              ) : (
+                <p className={styles.noReviews}>¡Sé el primero en reseñarlo!</p>
+              )}
+
+              <div className={styles.priceBox}>
+                <p className={styles.priceLabel}>RANGO DE PRECIO</p>
+                <p className={styles.priceValue}>
+                  ${item.priceMin?.toLocaleString()} – ${item.priceMax?.toLocaleString()}
+                </p>
+              </div>
+
+              {item.description && (
+                <p className={styles.description}>{item.description}</p>
+              )}
+
+              {!isAdmin && (
+                <Btn variant="primary" onClick={toggleFavorite}>
+                  {fav ? "❤️ En favoritos" : "🤍 Agregar a favoritos"}
+                </Btn>
+              )}
+            </div>
+          </div>
+
           {!isAdmin && (
-            <Btn variant="primary" onClick={toggleFavorite}>
-              {fav ? "❤️ En favoritos" : "🤍 Agregar a favoritos"}
-            </Btn>
+            <div className={styles.reviewForm}>
+              <h3 className={styles.reviewFormTitle}>Escribir una reseña</h3>
+
+              <div className={styles.reviewFormGrid}>
+                <div className={styles.fieldGroup}>
+                  <p className={styles.fieldLabel}>Tu puntuación</p>
+                  <Stars
+                    value={newReview.ranking}
+                    size={28}
+                    interactive
+                    onChange={(value) => setNewReview({ ...newReview, ranking: value })}
+                  />
+                </div>
+
+                <div className={styles.fieldGroup}>
+                  <label className={styles.fieldLabel}>Precio que pagaste ($)</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    className={styles.priceInput}
+                    placeholder="Ej: 650"
+                    value={newReview.price}
+                    onChange={(e) => setNewReview({ ...newReview, price: e.target.value })}
+                  />
+                </div>
+
+                <div className={`${styles.fieldGroup} ${styles.commentField}`}>
+                  <label className={styles.fieldLabel}>Comentario</label>
+                  <textarea
+                    rows={3}
+                    className={styles.textarea}
+                    placeholder="Contanos tu experiencia con este producto..."
+                    value={newReview.comment}
+                    onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              {submitted && (
+                <p className={styles.successMsg}>¡Reseña publicada con éxito!</p>
+              )}
+
+              <Btn
+                variant="coral"
+                onClick={submitReview}
+                disabled={!newReview.comment || !newReview.ranking}
+              >
+                Publicar reseña ➤
+              </Btn>
+            </div>
           )}
+
+          <h3 className={styles.reviewsTitle}>Reseñas ({reviews.length})</h3>
+
+          <div className={styles.reviewsList}>
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <ReviewOver key={review.id} review={review} />
+              ))
+            ) : (
+              <p>Aún no hay reseñas para este producto.</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Formulario de reseña — solo para no admins */}
-      {!isAdmin && (
-        <div className={styles.reviewForm}>
-          <h3 className={styles.reviewFormTitle}>Escribir una reseña</h3>
-
-          <div className={styles.fieldGroup}>
-            <p className={styles.fieldLabel}>Tu puntuación</p>
-            <Stars
-              value={newReview.ranking}
-              size={32}
-              interactive
-              onChange={(value) => setNewReview({ ...newReview, ranking: value })}
-            />
+        {/* ---------- SIDEBAR ---------- */}
+        <aside className={styles.sidebar}>
+          <div className={styles.statCard}>
+            <div className={`${styles.statIcon} ${styles.statIconPink}`}>🏆</div>
+            <div>
+              <p className={styles.statLabel}>POSICIÓN EN EL RANKING</p>
+              <p className={styles.statValuePink}>
+                {rankingPosition ? `#${rankingPosition}` : "—"}
+              </p>
+              <p className={styles.statSub}>
+                en {item.categoryResponse?.name || "su categoría"}
+              </p>
+            </div>
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Precio que pagaste ($)</label>
-            <input
-              type="text"
-              inputMode="numeric"
-              className={styles.priceInput}
-              placeholder="Ej: 650"
-              value={newReview.price}
-              onChange={(e) => setNewReview({ ...newReview, price: e.target.value })}
-            />
+          <div className={styles.statCard}>
+            <div className={`${styles.statIcon} ${styles.statIconYellow}`}>🏷️</div>
+            <div>
+              <p className={styles.statLabel}>PRECIO PROMEDIO</p>
+              <p className={styles.statValue}>
+                {avgPrice != null ? `$${avgPrice.toLocaleString()}` : "—"}
+              </p>
+              <p className={styles.statSub}>Basado en reseñas de usuarios</p>
+            </div>
           </div>
 
-          <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Comentario</label>
-            <textarea
-              rows={4}
-              className={styles.textarea}
-              placeholder="Escribí tu reseña acá"
-              value={newReview.comment}
-              onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-            />
+          <div className={styles.statCard}>
+            <div className={`${styles.statIcon} ${styles.statIconBlue}`}>💬</div>
+            <div>
+              <p className={styles.statLabel}>CANTIDAD DE RESEÑAS</p>
+              <p className={styles.statValue}>{reviews.length}</p>
+              <p className={styles.statSub}>Reseñas verificadas</p>
+            </div>
           </div>
 
-          {submitted && (
-            <p className={styles.successMsg}>¡Reseña publicada con éxito!</p>
-          )}
-
-          <Btn
-            variant="coral"
-            onClick={submitReview}
-            disabled={!newReview.comment || !newReview.ranking}
-          >
-            Publicar reseña
-          </Btn>
-        </div>
-      )}
-
-      <h3 className={styles.reviewsTitle}>Reseñas ({reviews.length})</h3>
-
-      <div className={styles.reviewsList}>
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <ReviewOver key={review.id} review={review} />
-          ))
-        ) : (
-          <p>Aún no hay reseñas para este producto.</p>
-        )}
+          <div className={styles.shareCard}>
+            <h4 className={styles.shareTitle}>Compartí este producto</h4>
+            <p className={styles.shareSub}>
+              Ayudá a otros usuarios a encontrar los mejores precios
+            </p>
+            <div className={styles.shareIcons}>
+              <a
+                className={`${styles.shareIcon} ${styles.shareWhatsapp}`}
+                href={`https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Compartir por WhatsApp"
+              >
+                💬
+              </a>
+              <a
+                className={`${styles.shareIcon} ${styles.shareFacebook}`}
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Compartir en Facebook"
+              >
+                f
+              </a>
+              <a
+                className={`${styles.shareIcon} ${styles.shareTwitter}`}
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Compartir en X"
+              >
+                𝕏
+              </a>
+              <button
+                className={`${styles.shareIcon} ${styles.shareLink}`}
+                onClick={handleCopyLink}
+                aria-label="Copiar enlace"
+                type="button"
+              >
+                🔗
+              </button>
+            </div>
+            {copied && <p className={styles.copiedMsg}>¡Enlace copiado!</p>}
+          </div>
+        </aside>
       </div>
     </div>
   );
