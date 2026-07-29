@@ -51,7 +51,7 @@ public class ItemsSearcherService {
                 pattern,
                 null,
                 null,
-                null,
+                true, // navbar search solo muestra items habilitados
                 null,
                 pageable
         );
