@@ -36,52 +36,192 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 public class Seeder implements CommandLineRunner {
     private static final String[] CATEGORY_NAMES = {
-            "dulces",
-            "snacks",
+            "alfajores",
+            "Barras de cereal",
+            "Bombones",
             "caramelos",
-            "chocolates",
             "chicles",
-            "gomitas",
+            "chocolates",
             "chupetines",
-            "paletas",
             "confites",
-            "alfajores"
+            "dulces",
+            "gomitas",
+            "Obleas",
+            "paletas",
+            "pastillas de menta",
+            "snacks",
+            "Turrones"
     };
 
     private static final String[] ITEM_NAMES = {
-            "Chocolatina Milka",
-            "Chocolate Arcor",
             "Alfajor Jorgito",
             "Alfajor Havanna",
+
+            "Barra de cereal Cereal Mix",
+            "Barra de cereal Nature Valley",
+
+            "Bombón Bon o Bon",
+            "Bombón Ferrero Rocher",
+
+            "Caramelo Media Hora",
+            "Caramelo Sugus",
+
+            "Chicle Beldent",
+            "Chicle Topline",
+
+            "Chocolate Águila",
+            "Chocolate Milka",
+
+            "Chupetín Pico Dulce",
+            "Chupetín Billiken",
+
+            "Confites Rocklets",
+            "Confites M&M's",
+
+            "Dulce de leche Mardel",
+            "Dulce de membrillo",
+
+            "Gomitas Mogul",
             "Gomitas Fini",
-            "Gomitas Mentos",
-            "Chupetin Vizzio",
-            "Chupetin Pico Dulce",
-            "Confite Sugus",
-            "Confite M and Ms",
-            "Caramelo Bon o Bon",
-            "Caramelo Mantecol",
-            "Paleta Ricolino",
-            "Paleta Vizzio",
-            "Chicle Bubbaloo",
-            "Chicle Adams",
-            "Lays",
-            "Doritos",
-            "Dulce de leche La Serenisima",
-            "Dulce de leche La Paulina"
+
+            "Oblea Bonobon Wafer",
+            "Oblea Arcor",
+
+            "Paleta Pico Dulce",
+            "Paleta Flynn Paff",
+
+            "Pastillas de menta DRF",
+            "Pastillas de menta Menthoplus",
+
+            "Snack Palitos Salados",
+            "Snack Papas Lays",
+
+            "Turrón Arcor",
+            "Turrón Georgalos"
+    };
+
+    private static final String[] ITEM_DESCRIPTIONS = {
+            "Alfajor clásico con relleno de dulce de leche y cobertura de chocolate.",
+            "Alfajor premium elaborado con ingredientes de alta calidad y un sabor tradicional.",
+
+            "Barra de cereal con avena y frutas, ideal para un snack saludable.",
+            "Barra energética con cereales integrales y miel para consumir en cualquier momento.",
+
+            "Bombón de chocolate relleno con crema y maní, de textura suave.",
+            "Bombón de chocolate con avellana entera y relleno cremoso.",
+
+            "Caramelo duro de sabor intenso y larga duración.",
+            "Caramelo masticable con sabores frutales y textura suave.",
+
+            "Chicle de larga duración con refrescante sabor a menta.",
+            "Chicle sin azúcar con sabor intenso y fresco.",
+
+            "Chocolate con leche de textura cremosa y sabor equilibrado.",
+            "Chocolate elaborado con cacao de calidad y un suave toque dulce.",
+
+            "Chupetín con relleno ácido y sabores frutales variados.",
+            "Chupetín clásico ideal para disfrutar en cualquier ocasión.",
+
+            "Confites de chocolate recubiertos con una capa crocante de colores.",
+            "Grageas de chocolate con cobertura crujiente y diferentes sabores.",
+
+            "Dulce tradicional de leche con textura cremosa y sabor intenso.",
+            "Dulce elaborado con membrillo seleccionado, ideal para postres o meriendas.",
+
+            "Gomitas masticables con sabores frutales y una textura suave y divertida.",
+            "Gomitas de sabores variados con colores vibrantes y una consistencia tierna.",
+
+            "Obleas rellenas con crema de cacao y cubiertas con chocolate.",
+            "Oblea liviana y crocante con un delicioso relleno dulce.",
+
+            "Paleta de caramelo con sabores frutales y un toque ácido.",
+            "Paleta clásica de caramelo duro con sabor intenso y duradero.",
+
+            "Pastillas refrescantes de menta para un aliento fresco.",
+            "Pastillas sabor menta con efecto refrescante de larga duración.",
+
+            "Snack salado y crocante, ideal para compartir o disfrutar entre comidas.",
+            "Papas fritas crocantes elaboradas con ingredientes seleccionados.",
+
+            "Turrón de maní con textura crocante y sabor tradicional.",
+            "Turrón clásico elaborado con maní tostado y miel."
+    };
+
+    private static final String[] ITEM_BRAND = {
+            "Jorgito",
+            "Havanna",
+
+            "Cereal Mix",
+            "Nature Valley",
+
+            "Arcor",
+            "Ferrero",
+
+            "Media Hora",
+            "Arcor",
+
+            "Beldent",
+            "Topline",
+
+            "Águila",
+            "Milka",
+
+            "Pico Dulce",
+            "Billiken",
+
+            "Rocklets",
+            "M&M's",
+
+            "La Serenísima",
+            "Ledesma",
+
+            "Arcor",
+            "Bon o Bon",
+
+            "Mogul",
+            "Fini",
+
+            "Pico Dulce",
+            "Flynn Paff",
+
+            "DRF",
+            "Menthoplus",
+
+            "Lay's",
+            "Pehuamar",
+
+            "Arcor",
+            "Georgalos"
     };
 
     private static final String[] REVIEW_COMMENTS = {
-            "Great taste",
-            "Good value",
-            "Would buy again",
-            "Solid product",
-            "Very sweet",
-            "Nice texture",
-            "Fresh and simple",
-            "Recommended",
-            "Average but fine",
-            "Happy with it"
+            "Buen sabor.",
+            "Buena relación calidad-precio.",
+            "Lo compraria otra vez.",
+            "Muy dulce",
+            "Buena textura",
+            "Fresco y sencillo",
+            "Recomendado",
+            "Excelente producto, superó mis expectativas.",
+            "Muy buena calidad, lo recomiendo.",
+            "Cumple perfectamente con lo que promete.",
+            "La relación calidad-precio es excelente.",
+            "Llegó en perfectas condiciones y funciona muy bien.",
+            "No está mal, pero esperaba un poco más.",
+            "El diseño es muy bonito y práctico.",
+            "Después de varias semanas de uso sigue como nuevo.",
+            "Fácil de usar y de muy buena calidad.",
+            "El envío fue rápido y el producto excelente.",
+            "Es aceptable, aunque tiene algunos detalles mejorables.",
+            "No cumplió del todo con mis expectativas.",
+            "La calidad podría ser mejor por el precio.",
+            "Tuve algunos problemas al principio, pero luego funcionó bien.",
+            "Muy satisfecho con la compra.",
+            "Definitivamente volvería a comprar este producto.",
+            "El acabado es excelente y se siente resistente.",
+            "No lo recomendaría, esperaba una mejor experiencia.",
+            "Buen producto, aunque el precio es un poco elevado.",
+            "Cinco estrellas, volvería a comprar sin dudarlo."
     };
 
     private final UserCreatorService userCreatorService;
@@ -95,7 +235,6 @@ public class Seeder implements CommandLineRunner {
     private final JpaReviewRepository jpaReviewRepository;
     private final JpaUserItemFavoriteRepository jpaUserItemFavoriteRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ItemUpdaterService itemUpdaterService;
 
     public Seeder(
             UserCreatorService userCreatorService,
@@ -121,7 +260,6 @@ public class Seeder implements CommandLineRunner {
         this.jpaReviewRepository = jpaReviewRepository;
         this.jpaUserItemFavoriteRepository = jpaUserItemFavoriteRepository;
         this.passwordEncoder = passwordEncoder;
-        this.itemUpdaterService = itemUpdaterService;
     }
 
     @Override
@@ -135,8 +273,7 @@ public class Seeder implements CommandLineRunner {
                 "admin",
                 "admin@test.com",
                 passwordEncoder.encode("12345678"),
-                true
-        ));
+                true));
         adminUser.setAdmin(true);
         jpaUserRepository.save(adminUser);
 
@@ -147,8 +284,7 @@ public class Seeder implements CommandLineRunner {
                     "user" + i,
                     "user" + i + "@test.com",
                     "12345678",
-                    false
-            )));
+                    false)));
         }
 
         List<Category> categories = new ArrayList<>();
@@ -158,21 +294,19 @@ public class Seeder implements CommandLineRunner {
 
         List<Item> items = new ArrayList<>();
         for (int i = 0; i < ITEM_NAMES.length; i++) {
-            Category category = categories.get(ThreadLocalRandom.current().nextInt(categories.size()));
+            Category category = categories.get(i / 2);
             Item item = itemCreatorService.create(
                     new ItemRequest(
                             ITEM_NAMES[i],
-                            "Description for " + ITEM_NAMES[i],
-                            "Brand " + (i + 1),
+                            ITEM_DESCRIPTIONS[i],
+                            ITEM_BRAND[i],
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
                             "http://localhost:8091/uploads/images/item_default_backend.jpg",
                             category.getId(),
-                            null
-                    ),
-                    adminUser
-            );
+                            null),
+                    adminUser);
             items.add(item);
         }
 
@@ -189,20 +323,17 @@ public class Seeder implements CommandLineRunner {
                     randomPrice,
                     item.getId(),
                     reviewer.getId(),
-                    randomRecentDate()
-            ));
+                    randomRecentDate()));
         }
         jpaItemRepository.saveAll(reviewItems);
 
         userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
                 items.getFirst().getId(),
-                adminUser.getId()
-        ));
+                adminUser.getId()));
 
         userItemFavoriteCreatorService.create(new UserItemFavoriteRequest(
                 items.get(1).getId(),
-                users.get(1).getId()
-        ));
+                users.get(1).getId()));
     }
 
     private String randomReviewComment(int index) {
