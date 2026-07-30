@@ -258,18 +258,6 @@ export default function ItemDetailPage() {
 
         {/* ---------- SIDEBAR ---------- */}
         <aside className={styles.sidebar}>
-          <div className={styles.statCard}>
-            <div className={`${styles.statIcon} ${styles.statIconPink}`}>🏆</div>
-            <div>
-              <p className={styles.statLabel}>POSICIÓN EN EL RANKING</p>
-              <p className={styles.statValuePink}>
-                {rankingPosition ? `#${rankingPosition}` : "—"}
-              </p>
-              <p className={styles.statSub}>
-                en {item.categoryResponse?.name || "su categoría"}
-              </p>
-            </div>
-          </div>
 
           <div className={styles.statCard}>
             <div className={`${styles.statIcon} ${styles.statIconYellow}`}>🏷️</div>
