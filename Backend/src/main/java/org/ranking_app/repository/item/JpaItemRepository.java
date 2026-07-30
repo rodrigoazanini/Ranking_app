@@ -58,8 +58,7 @@ public interface JpaItemRepository extends JpaRepository<Item, Long>, JpaSpecifi
         SELECT i
         FROM Item i
         WHERE i.enabled = true
-          AND i.createdAt <= :date
-        ORDER BY i.createdAt DESC, i.id DESC
+        ORDER BY i.id DESC
         """)
-    List<Item> findLatestItemsUploadedUpTo(@Param("date") Date date, Pageable pageable);
+    Page<Item> findLatestEnabledItems(Pageable pageable);
 }
