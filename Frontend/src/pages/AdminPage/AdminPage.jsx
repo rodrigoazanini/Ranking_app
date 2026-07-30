@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "./AdminPage.module.css";
 import Btn from "../../components/Btn/Btn";
+import FilterInput from "../../components/Filters/FilterInput/FilterInput";
+import FilterSelect from "../../components/Filters/FilterSelect/FilterSelect";
+import FilterComboBox from "../../components/Filters/FilterComboBox/FilterComboBox";
 import { useNavigate } from 'react-router-dom';
 import { itemService } from "../../services/itemService";
-
-const SUGGESTED_OPTIONS = [
-  { value: "",         label: "Todos" },
-  { value: "approved", label: "Aprobado" },
-  { value: "pending",  label: "En revisión" },
-  { value: "own",      label: "Propio" },
-];
-
-const ENABLED_OPTIONS = [
-  { value: "",      label: "Todos" },
-  { value: "true",  label: "Activo" },
-  { value: "false", label: "Inactivo" },
-];
+import { categoryService } from "../../services/categoryService";
+import { SUGGESTED_OPTIONS, ENABLED_OPTIONS } from "../../components/Filters/Options/Options";
 
 export function AdminPage() {
   const navigate = useNavigate();
@@ -27,15 +19,25 @@ export function AdminPage() {
   const pageSize = 10;
 
   // Filtros
-  const [search,    setSearch]    = useState("");
+  const [filters, setFilters] = useState({
+    search: "",
+    brand: "",
+    category: "",
+    suggested: "",
+    enabled: "",
+  });
+  const [categories, setCategories] = useState([]);
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [brand,     setBrand]     = useState("");
   const [debouncedBrand, setDebouncedBrand] = useState("");
-  const [category,  setCategory]  = useState("");
   const [debouncedCategory, setDebouncedCategory] = useState("");
-  const [suggested, setSuggested] = useState("");
-  const [enabled,   setEnabled]   = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
+
+  const updateFilter = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -44,18 +46,18 @@ export function AdminPage() {
       try {
         setLoading(true);
 
-        const hasFilters = debouncedSearch || debouncedBrand || debouncedCategory || suggested || enabled;
+        const hasFilters = debouncedSearch || debouncedBrand || debouncedCategory || filters.suggested || filters.enabled;
         let response;
 
         if (hasFilters) {
-          const filters = {
+          const filtersObj = {
             query: debouncedSearch,
             brand: debouncedBrand || null,
             category: debouncedCategory || null,
-            suggested: suggested === "" ? null : (suggested === "approved" || suggested === "pending" ? true : null),
-            enabled: enabled === "" ? null : (enabled === "true" ? true : enabled === "false" ? false : null)
+            suggested: filters.suggested === "" ? null : (filters.suggested === "approved" || filters.suggested === "pending" ? true : null),
+            enabled: filters.enabled === "" ? null : (filters.enabled === "true" ? true : filters.enabled === "false" ? false : null)
           };
-          response = await itemService.searchItems("/items/search/filter", filters, page, pageSize);
+          response = await itemService.searchItems("/items/search/filter", filtersObj, page, pageSize);
         } else {
           response = await itemService.getItems(page, pageSize);
         }
@@ -74,19 +76,19 @@ export function AdminPage() {
 
     loadItems();
     return () => { isMounted = false; };
-  }, [page, debouncedSearch, debouncedBrand, debouncedCategory, suggested, enabled]);
+  }, [page, debouncedSearch, debouncedBrand, debouncedCategory, filters.suggested, filters.enabled]);
 
   useEffect(() => {
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
 
-    if (search.trim().length > 0 && search.trim().length < 3) {
+    if (filters.search.trim().length > 0 && filters.search.trim().length < 3) {
       return;
     }
 
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+      setDebouncedSearch(filters.search);
       setPageNumber(0);
     }, 500);
 
@@ -95,19 +97,19 @@ export function AdminPage() {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [search]);
+  }, [filters.search]);
 
   useEffect(() => {
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
 
-    if (brand.trim().length > 0 && brand.trim().length < 3) {
+    if (filters.brand.trim().length > 0 && filters.brand.trim().length < 3) {
       return;
     }
 
     const timer = setTimeout(() => {
-      setDebouncedBrand(brand);
+      setDebouncedBrand(filters.brand);
       setPageNumber(0);
     }, 500);
 
@@ -116,19 +118,19 @@ export function AdminPage() {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [brand]);
+  }, [filters.brand]);
 
   useEffect(() => {
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
 
-    if (category.trim().length > 0 && category.trim().length < 3) {
+    if (filters.category.trim().length > 0 && filters.category.trim().length < 3) {
       return;
     }
 
     const timer = setTimeout(() => {
-      setDebouncedCategory(category);
+      setDebouncedCategory(filters.category);
       setPageNumber(0);
     }, 500);
 
@@ -137,15 +139,30 @@ export function AdminPage() {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [category]);
+  }, [filters.category]);
 
-  const hasActiveFilters = debouncedSearch || debouncedBrand || debouncedCategory || suggested || enabled;
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await categoryService.getAllCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("No se pudieron cargar las categorías", error);
+      }
+    }
+    loadCategories();
+  }, []);
+
+  const hasActiveFilters = debouncedSearch || debouncedBrand || debouncedCategory || filters.suggested || filters.enabled;
 
   const clearFilters = () => {
-    setSearch(""); setDebouncedSearch("");
-    setBrand(""); setDebouncedBrand("");
-    setCategory(""); setDebouncedCategory("");
-    setSuggested(""); setEnabled("");
+    setFilters({
+      search: "",
+      brand: "",
+      category: "",
+      suggested: "",
+      enabled: "",
+    });
   };
 
   const handleNew     = () => navigate("/items/create", { state: { fromAdmin: true } });
@@ -168,13 +185,12 @@ export function AdminPage() {
         <div className={styles.tableTitleRow}>
           <p className={styles.tableTitle}>Todos los productos</p>
           <div className={styles.searchBox}>
-            <input
-              className={styles.searchInput}
-              type="text"
-              placeholder="🔍 Buscar producto..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+             <FilterInput
+               className={styles.searchInput}
+               value={filters.search}
+               onChange={(value) => updateFilter("search", value)}
+               placeholder="🔍 Buscar producto..."
+             />
           </div>
         </div>
 
@@ -198,38 +214,31 @@ export function AdminPage() {
           </div>
 
           <div className={styles.filtersRow}>
-            <input
-              className={styles.filterInput}
-              type="text"
-              placeholder="Marca"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-            />
-            <input
-              className={styles.filterInput}
-              type="text"
-              placeholder="Categoría"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            />
-            <select
-              className={styles.filterSelect}
-              value={suggested}
-              onChange={(e) => setSuggested(e.target.value)}
-            >
-              {SUGGESTED_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-            <select
-              className={styles.filterSelect}
-              value={enabled}
-              onChange={(e) => setEnabled(e.target.value)}
-            >
-              {ENABLED_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+           <FilterInput
+               className={styles.filterInput}
+               value={filters.brand}
+               onChange={(value) => updateFilter("brand", value)}
+               placeholder="Marca"
+             />
+              <FilterComboBox
+                className={styles.filterInput}
+                value={filters.category}
+                onChange={(value) => updateFilter("category", value)}
+                options={categories.map((c) => ({ value: c.name, label: c.name }))}
+                placeholder="Categoría"
+              />
+             <FilterSelect
+               className={styles.filterSelect}
+               value={filters.suggested}
+               onChange={(value) => updateFilter("suggested", value)}
+               options={SUGGESTED_OPTIONS}
+             />
+             <FilterSelect
+               className={styles.filterSelect}
+               value={filters.enabled}
+               onChange={(value) => updateFilter("enabled", value)}
+               options={ENABLED_OPTIONS}
+             />
             {hasActiveFilters && (
               <button className={styles.clearBtn} onClick={clearFilters}>✕ Limpiar</button>
             )}

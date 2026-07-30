@@ -1,0 +1,9 @@
+.filterSelect {
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #fff;
+  cursor: pointer;
+  width: 200px;
+}
