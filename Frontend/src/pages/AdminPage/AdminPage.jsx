@@ -5,17 +5,14 @@ import FilterInput from "../../components/Filters/FilterInput/FilterInput";
 import FilterSelect from "../../components/Filters/FilterSelect/FilterSelect";
 import FilterComboBox from "../../components/Filters/FilterComboBox/FilterComboBox";
 import { useNavigate } from 'react-router-dom';
-import { itemService } from "../../services/itemService";
 import { categoryService } from "../../services/categoryService";
+import { useItems } from "../../hooks/useItems";
 import { SUGGESTED_OPTIONS, ENABLED_OPTIONS } from "../../components/Filters/Options/Options";
 
 export function AdminPage() {
   const navigate = useNavigate();
 
-  const [items, setItems]           = useState([]);
   const [page, setPageNumber]       = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading]       = useState(true);
   const pageSize = 10;
 
   // Filtros
@@ -39,44 +36,14 @@ export function AdminPage() {
     }));
   };
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadItems() {
-      try {
-        setLoading(true);
-
-        const hasFilters = debouncedSearch || debouncedBrand || debouncedCategory || filters.suggested || filters.enabled;
-        let response;
-
-        if (hasFilters) {
-          const filtersObj = {
-            query: debouncedSearch,
-            brand: debouncedBrand || null,
-            category: debouncedCategory || null,
-            suggested: filters.suggested === "" ? null : (filters.suggested === "approved" || filters.suggested === "pending" ? true : null),
-            enabled: filters.enabled === "" ? null : (filters.enabled === "true" ? true : filters.enabled === "false" ? false : null)
-          };
-          response = await itemService.searchItems("/items/search/filter", filtersObj, page, pageSize);
-        } else {
-          response = await itemService.getItems(page, pageSize);
-        }
-
-        if (!isMounted) return;
-        setItems(Array.isArray(response?.content) ? response.content : []);
-        setTotalPages(response?.totalPages ?? 1);
-      } catch (error) {
-        console.error("No se pudo cargar los items", error);
-        setItems([]);
-        setTotalPages(1);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-
-    loadItems();
-    return () => { isMounted = false; };
-  }, [page, debouncedSearch, debouncedBrand, debouncedCategory, filters.suggested, filters.enabled]);
+  const { items, totalPages, loading, setItems } = useItems({
+    page,
+    pageSize,
+    debouncedSearch,
+    debouncedBrand,
+    debouncedCategory,
+    filters,
+  });
 
   useEffect(() => {
     if (debounceTimer) {

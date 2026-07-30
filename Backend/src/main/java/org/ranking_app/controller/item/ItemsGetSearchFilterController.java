@@ -7,10 +7,10 @@ import org.ranking_app.service.item.ItemsSearcherService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,10 +26,11 @@ public class ItemsGetSearchFilterController {
     public ResponseEntity<Page<ItemResponse>> search(
             @Valid @ModelAttribute ItemSearchFilterRequest request,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest httpRequest
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Item> items = itemsSearcherService.search(request, pageable);
+        Page<Item> items = itemsSearcherService.search(request, pageable, httpRequest);
 
         return ResponseEntity.ok(
                 items.map(ItemResponse::fromEntity)

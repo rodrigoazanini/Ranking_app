@@ -66,8 +66,11 @@ async function searchItems(endpoint, filters = {}, page = 0, size = 5) {
 	console.log('Search URL:', url);
 	console.log('Filters:', filters);
 
+	const token = localStorage.getItem("token");
+	
 	const response = await fetch(url, {
-		method: "GET"
+		method: "GET",
+    	headers: token? getHeaders(): {},
 	});
 
 	if (!response.ok) {

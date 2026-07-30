@@ -72,6 +72,16 @@ public class JwtService {
         return extractUserId(token);
     }
 
+    public boolean hasValidToken(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            return false;
+        }
+
+        return isValid(header.substring(7));
+    }
+
     public boolean isValid(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
