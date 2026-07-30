@@ -47,7 +47,6 @@ public class Seeder implements CommandLineRunner {
             "dulces",
             "gomitas",
             "Obleas",
-            "paletas",
             "pastillas de menta",
             "snacks",
             "Turrones"
@@ -58,7 +57,7 @@ public class Seeder implements CommandLineRunner {
             "Alfajor Havanna",
 
             "Barra de cereal Cereal Mix",
-            "Barra de cereal Nature Valley",
+            "Barra de cereal Cereal Fort",
 
             "Bombón Bon o Bon",
             "Bombón Ferrero Rocher",
@@ -73,10 +72,10 @@ public class Seeder implements CommandLineRunner {
             "Chocolate Milka",
 
             "Chupetín Pico Dulce",
-            "Chupetín Billiken",
+            "Chupetín Pops",
 
             "Confites Rocklets",
-            "Confites M&M's",
+            "Confites Sugus",
 
             "Dulce de leche Mardel",
             "Dulce de membrillo",
@@ -86,9 +85,6 @@ public class Seeder implements CommandLineRunner {
 
             "Oblea Bonobon Wafer",
             "Oblea Arcor",
-
-            "Paleta Pico Dulce",
-            "Paleta Flynn Paff",
 
             "Pastillas de menta DRF",
             "Pastillas de menta Menthoplus",
@@ -123,7 +119,7 @@ public class Seeder implements CommandLineRunner {
             "Chupetín clásico ideal para disfrutar en cualquier ocasión.",
 
             "Confites de chocolate recubiertos con una capa crocante de colores.",
-            "Grageas de chocolate con cobertura crujiente y diferentes sabores.",
+            "Confites de chocolate con cobertura crujiente y diferentes sabores.",
 
             "Dulce tradicional de leche con textura cremosa y sabor intenso.",
             "Dulce elaborado con membrillo seleccionado, ideal para postres o meriendas.",
@@ -133,9 +129,6 @@ public class Seeder implements CommandLineRunner {
 
             "Obleas rellenas con crema de cacao y cubiertas con chocolate.",
             "Oblea liviana y crocante con un delicioso relleno dulce.",
-
-            "Paleta de caramelo con sabores frutales y un toque ácido.",
-            "Paleta clásica de caramelo duro con sabor intenso y duradero.",
 
             "Pastillas refrescantes de menta para un aliento fresco.",
             "Pastillas sabor menta con efecto refrescante de larga duración.",
@@ -167,10 +160,10 @@ public class Seeder implements CommandLineRunner {
             "Milka",
 
             "Pico Dulce",
-            "Billiken",
+            "Pops",
 
             "Rocklets",
-            "M&M's",
+            "Sugus",
 
             "La Serenísima",
             "Ledesma",
@@ -181,17 +174,58 @@ public class Seeder implements CommandLineRunner {
             "Mogul",
             "Fini",
 
-            "Pico Dulce",
-            "Flynn Paff",
-
             "DRF",
             "Menthoplus",
 
+            "Krachitos",
             "Lay's",
-            "Pehuamar",
 
             "Arcor",
             "Georgalos"
+    };
+
+    private static final String[] ITEM_IMAGE_URLS = {
+            "http://localhost:8091/uploads/images/Alfajor_Jorgito.avif",
+            "http://localhost:8091/uploads/images/Alfajor_Havanna.avif",
+
+            "http://localhost:8091/uploads/images/Barra_de_cereal_Cereal_Mix.avif",
+            "http://localhost:8091/uploads/images/Barra_de_cereal_Cereal_Fort.avif",
+
+            "http://localhost:8091/uploads/images/Bombon_BonoBon.avif",
+            "http://localhost:8091/uploads/images/Bombon_Ferrero_Rocher.avif",
+
+            "http://localhost:8091/uploads/images/Caramelo_Media_Hora.avif",
+            "http://localhost:8091/uploads/images/Caramelo_Sugus.avif",
+
+            "http://localhost:8091/uploads/images/Chicle_Beldent.avif",
+            "http://localhost:8091/uploads/images/Chicle_Topline.avif",
+
+            "http://localhost:8091/uploads/images/Chocolate_Aguila.avif",
+            "http://localhost:8091/uploads/images/Chocolate_Milka.avif",
+
+            "http://localhost:8091/uploads/images/Chupetin_Pico_Dulce.avif",
+            "http://localhost:8091/uploads/images/Chupetin_Pops.avif",
+
+            "http://localhost:8091/uploads/images/Confites_Rocklets.avif",
+            "http://localhost:8091/uploads/images/Confites_Sugus.avif",
+
+            "http://localhost:8091/uploads/images/Dulce_de_leche_Mardel.avif",
+            "http://localhost:8091/uploads/images/Dulce_de_membrillo.avif",
+
+            "http://localhost:8091/uploads/images/Gomitas_Mogul.avif",
+            "http://localhost:8091/uploads/images/Gomitas_Fini.avif",
+
+            "http://localhost:8091/uploads/images/Oblea_Bonobon_Wafer.avif",
+            "http://localhost:8091/uploads/images/Oblea_Arcor.avif",
+
+            "http://localhost:8091/uploads/images/Pastillas_de_menta_DRF.avif",
+            "http://localhost:8091/uploads/images/Pastillas_de_menta_Menthoplus.avif",
+
+            "http://localhost:8091/uploads/images/Snack_Palitos_Salados.avif",
+            "http://localhost:8091/uploads/images/Snack_Papas_Lays.avif",
+
+            "http://localhost:8091/uploads/images/Turron_Arcor.avif",
+            "http://localhost:8091/uploads/images/Turron_Georgalos.avif"
     };
 
     private static final String[] REVIEW_COMMENTS = {
@@ -303,7 +337,7 @@ public class Seeder implements CommandLineRunner {
                             randomWeight(),
                             true,
                             ThreadLocalRandom.current().nextBoolean(),
-                            "http://localhost:8091/uploads/images/item_default_backend.jpg",
+                            ITEM_IMAGE_URLS[i],
                             category.getId(),
                             null),
                     adminUser);
