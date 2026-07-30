@@ -63,7 +63,8 @@ export default function HomePage() {
       >
         <span className={styles.topRank}>{index + 1}</span>
         <span className={styles.topName}>{item.name}</span>
-        <span className={styles.topScore}>⭐ {item.rankingAvg}</span>
+        <span className={styles.topScore}>⭐ {item.rankingAvg.toFixed(1)}</span>
+        
       </div>
     ))}
   </div>

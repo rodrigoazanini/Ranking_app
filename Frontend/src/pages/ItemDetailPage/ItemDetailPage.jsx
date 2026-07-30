@@ -19,6 +19,7 @@ export default function ItemDetailPage() {
   const [fav, setFav] = useState(false);
   const [favId, setFavId] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [showIncompletePopup, setShowIncompletePopup] = useState(false);
 
   const [newReview, setNewReview] = useState({
     comment: "",
@@ -79,20 +80,35 @@ export default function ItemDetailPage() {
     }
   };
 
+  const isReviewIncomplete = () => {
+    return (
+      !newReview.comment.trim() ||
+      !newReview.ranking ||
+      newReview.price === "" ||
+      newReview.price === null ||
+      newReview.price === undefined
+    );
+  };
+
   const submitReview = async () => {
-    if (!newReview.comment || !newReview.ranking) return;
+    if (isReviewIncomplete()) {
+      setShowIncompletePopup(true);
+      return;
+    }
 
     try {
       const user = getUser();
+const normalizedPrice = newReview.price.replace(",", ".");
+const price = Number(parseFloat(normalizedPrice).toFixed(2));
+
       const data = {
         comment: newReview.comment,
         ranking: newReview.ranking,
-        price: parseFloat(newReview.price) || 0,
+        price: price,
         itemId: item.id,
         userId: user.id,
         date: new Date().toISOString().split("T")[0],
       };
-
       const created = await reviewService.createReview(data);
       setReviews((prev) => [created, ...prev]);
 
@@ -105,6 +121,17 @@ export default function ItemDetailPage() {
     } catch (err) {
       console.error("Error creando reseña", err);
     }
+  };
+
+  const handleEditReview = () => {
+    // Cierra el popup y deja los datos que ya escribió para que los complete
+    setShowIncompletePopup(false);
+  };
+
+  const handleCancelReview = () => {
+    // Cierra el popup y limpia el formulario, volviendo a la vista normal
+    setShowIncompletePopup(false);
+    setNewReview({ comment: "", ranking: 0, price: "" });
   };
 
   // --- Datos derivados para la sidebar ---
@@ -133,6 +160,25 @@ export default function ItemDetailPage() {
 
   return (
     <div className={styles.page}>
+
+      {showIncompletePopup && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <p className={styles.modalText}>
+              Algunos campos están vacíos, por favor complételos para publicar su reseña
+            </p>
+            <div className={styles.modalActions}>
+              <button className={styles.modalBtnConfirm} onClick={handleEditReview}>
+                Editar reseña
+              </button>
+              <button className={styles.modalBtnCancel} onClick={handleCancelReview}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <button className={styles.backBtn} onClick={() => navigate("/")}>
         Volver
       </button>
@@ -205,15 +251,25 @@ export default function ItemDetailPage() {
                   />
                 </div>
 
-                <div className={styles.fieldGroup}>
+    <div className={styles.fieldGroup}>
                   <label className={styles.fieldLabel}>Precio que pagaste ($)</label>
                   <input
                     type="text"
-                    inputMode="numeric"
+                    inputMode="decimal"
                     className={styles.priceInput}
                     placeholder="Ej: 650"
                     value={newReview.price}
-                    onChange={(e) => setNewReview({ ...newReview, price: e.target.value })}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/[^0-9.,]/g, "");
+
+                      // Reemplaza coma por punto para trabajar internamente
+                      value = value.replace(",", ".");
+
+                      // Solo un punto decimal y hasta 2 decimales
+                      if (/^\d*\.?\d{0,2}$/.test(value)) {
+                        setNewReview({ ...newReview, price: value });
+                      }
+                    }}
                   />
                 </div>
 
@@ -233,11 +289,7 @@ export default function ItemDetailPage() {
                 <p className={styles.successMsg}>¡Reseña publicada con éxito!</p>
               )}
 
-              <Btn
-                variant="coral"
-                onClick={submitReview}
-                disabled={!newReview.comment || !newReview.ranking}
-              >
+              <Btn variant="coral" onClick={submitReview}>
                 Publicar reseña ➤
               </Btn>
             </div>
@@ -264,8 +316,13 @@ export default function ItemDetailPage() {
             <div>
               <p className={styles.statLabel}>PRECIO PROMEDIO</p>
               <p className={styles.statValue}>
-                {avgPrice != null ? `$${avgPrice.toLocaleString()}` : "—"}
-              </p>
+                {avgPrice != null
+                  ? `$${avgPrice.toLocaleString(undefined, {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 2,
+                    })}`
+                  : "—"}
+                              </p>
               <p className={styles.statSub}>Basado en reseñas de usuarios</p>
             </div>
           </div>
