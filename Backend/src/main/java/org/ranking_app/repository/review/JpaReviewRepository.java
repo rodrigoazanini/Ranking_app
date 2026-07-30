@@ -41,4 +41,16 @@ public interface JpaReviewRepository extends JpaRepository<Review, Long>, JpaSpe
         ORDER BY r.date DESC, r.id DESC
         """)
     List<Review> findReviewsByItemId(@Param("itemId") Long itemId);
+
+    @Query("""
+        SELECT r
+        FROM Review r
+        WHERE r.user.id = :userId
+        AND r.item.id = :itemId
+        ORDER BY r.date DESC, r.id DESC
+        """)
+    List<Review> findReviewsByUserIdAndItemId(
+            @Param("userId") Long userId,
+            @Param("itemId") Long itemId
+    );
 }

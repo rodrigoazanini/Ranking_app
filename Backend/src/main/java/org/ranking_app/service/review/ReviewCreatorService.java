@@ -11,7 +11,10 @@ import org.ranking_app.service.user.UserFinderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class ReviewCreatorService {
@@ -22,8 +25,7 @@ public class ReviewCreatorService {
     public ReviewCreatorService(
             JpaReviewRepository jpaReviewRepository,
             ItemFinderService itemFinderService,
-            UserFinderService userFinderService
-    ) {
+            UserFinderService userFinderService) {
         this.jpaReviewRepository = jpaReviewRepository;
         this.itemFinderService = itemFinderService;
         this.userFinderService = userFinderService;
@@ -33,6 +35,19 @@ public class ReviewCreatorService {
     public Review create(ReviewRequest request) {
         Item item = itemFinderService.find(request.getItemId());
         User user = userFinderService.find(request.getUserId());
+        List<Review> existingReviews = jpaReviewRepository.findReviewsByUserIdAndItemId(user.getId(), item.getId());
+
+        Date cutoffReviewedDate = Date.from(
+                LocalDate.now()
+                        .minusDays(7)
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant());
+
+        if (!existingReviews.isEmpty() &&
+                existingReviews.stream().anyMatch(r -> r.getDate().after(cutoffReviewedDate))) {
+            throw new IllegalArgumentException(
+                    "Ya has creado una reseña para este artículo en los últimos 7 días.");
+        }
 
         Review review = Review.fromRequest(request, item, user);
         Review savedReview = jpaReviewRepository.saveAndFlush(review);
@@ -41,13 +56,17 @@ public class ReviewCreatorService {
         ReviewItemStatsProjection stats = jpaReviewRepository.findItemStatsByItemId(item.getId(), cutoffDate);
 
         Double priceMin = (stats != null && stats.getPriceMin() != null) ? stats.getPriceMin() : item.getPriceMin();
-        if (priceMin == null) priceMin = savedReview.getPrice();
+        if (priceMin == null)
+            priceMin = savedReview.getPrice();
 
         Double priceMax = (stats != null && stats.getPriceMax() != null) ? stats.getPriceMax() : item.getPriceMax();
-        if (priceMax == null) priceMax = savedReview.getPrice();
+        if (priceMax == null)
+            priceMax = savedReview.getPrice();
 
-        Double rankingAvg = (stats != null && stats.getRankingAvg() != null) ? stats.getRankingAvg() : item.getRankingAvg();
-        if (rankingAvg == null) rankingAvg = savedReview.getRanking();
+        Double rankingAvg = (stats != null && stats.getRankingAvg() != null) ? stats.getRankingAvg()
+                : item.getRankingAvg();
+        if (rankingAvg == null)
+            rankingAvg = savedReview.getRanking();
 
         item.setPriceMin(priceMin);
         item.setPriceMax(priceMax);
