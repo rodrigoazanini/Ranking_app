@@ -78,7 +78,7 @@ export default function HomePage() {
         style={{ fontSize: RANK_SIZES[index] }}
       >
         <span className={styles.topRank}>{index + 1}</span>
-        <span className={styles.topName}>{user.username}</span>
+        <span className={styles.topName}>{user.username}</span> -
         <span className={styles.topScore}>{user.reviewCount} reseñas</span>
       </div>
     ))}
