@@ -7,7 +7,6 @@ import { itemService } from "../../services/itemService";
 
 export default function Navbar({ searchQuery, setSearchQuery }) {
 
-
   const navigate = useNavigate();
   const [localSearch, setLocalSearch] = useState("");
   const currentSearch = searchQuery !== undefined ? searchQuery : localSearch;
@@ -18,7 +17,6 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
   const [user, setUser] = useState(null)
 
   function handleBrandClick() {
-    ;
     navigate("/");
   }
 
@@ -67,6 +65,21 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
     setLocalSearch("");
   }
 
+  function goToAllItems() {
+    const query = currentSearch.trim();
+    if (!query) return;
+
+    setShowDropdown(false);
+    navigate(`/items?search=${encodeURIComponent(query)}`);
+  }
+
+  function handleSearchKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      goToAllItems();
+    }
+  }
+
   const location = useLocation()
   useEffect(() => {
     setUser(getUser());
@@ -86,11 +99,20 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
 
         <div className={styles.actions}>
           <div className={styles.searchWrapper}>
+            <button
+              type="button"
+              className={styles.searchIconBtn}
+              onClick={goToAllItems}
+              aria-label="Buscar"
+            >
+              🔍
+            </button>
             <input
               className={styles.searchInput}
               type="search"
               value={currentSearch}
               onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
               placeholder="Buscar productos"
             />
             {showDropdown && searchResults.length > 0 && (

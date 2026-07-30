@@ -69,7 +69,7 @@ export default function HomePage() {
   </div>
 
   <div className={styles.topList}>
-    <h1 classname={styles.topListTitle}>👤 Top 5 Usuarios</h1>
+    <h1 className={styles.topListTitle}>👤 Top 5 Usuarios</h1>
     {topUsersByReviews.map((user, index) => (
       <div
         key={user.username}

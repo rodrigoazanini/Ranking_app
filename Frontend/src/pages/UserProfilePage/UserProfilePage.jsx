@@ -87,94 +87,109 @@ export function UserProfilePage() {
         </div>
       </div>
 
-
       <div className={styles.tabs}>
         <button
-          className={`${styles.tab} ${activeTab === "reviews" ? styles.active : ""}`}
+          className={`${styles.tab} ${styles.tabReviews} ${activeTab === "reviews" ? styles.active : ""}`}
           onClick={() => setActiveTab("reviews")}
         >
+          <span className={styles.tabIcon}>💬</span>
           Mis reseñas ({myReviews.length})
         </button>
         <button
-          className={`${styles.tab} ${activeTab === "favorites" ? styles.active : ""}`}
+          className={`${styles.tab} ${styles.tabFavorites} ${activeTab === "favorites" ? styles.active : ""}`}
           onClick={() => setActiveTab("favorites")}
         >
+          <span className={styles.tabIcon}>⭐</span>
           Favoritos ({favorites.length})
         </button>
       </div>
 
-      {/* Tab: Reseñas */}
-      {activeTab === "reviews" && (
-        <div className={styles.empty}>
-          {myReviews.length === 0 ? (
-            <div> 🤷‍♂️ Todavía no escribiste ninguna reseña.</div>
-          ) : (
-            myReviews.map((r) => (
-              <div
-                key={r.id}
-                className={styles.reviewItem}
-                onClick={() => goToItem(r.item)}
-              >
-                <img
-                  src={r.item.imageUrl}
-                  alt={r.item.name}
-                  className={styles.reviewItemImage}
-                />
-                <div className={styles.reviewItemBody}>
-                  <p className={styles.reviewItemName}>{r.item.name}</p>
-                  <div className={styles.reviewItemMeta}>
-                    <Stars value={r.ranking} size={14} />
+      <div className={styles.contentPanel}>
+        {/* Tab: Reseñas */}
+        {activeTab === "reviews" && (
+          <div className={styles.tabContent}>
+            {myReviews.length === 0 ? (
+              <div className={styles.empty}>
+                <span className={styles.emptyIcon}>🤷‍♂️</span>
+                Todavía no escribiste ninguna reseña.
+              </div>
+            ) : (
+              myReviews.map((r) => (
+                <div
+                  key={r.id}
+                  className={styles.reviewItem}
+                  onClick={() => goToItem(r.item)}
+                >
+                  <img
+                    src={r.item.imageUrl}
+                    alt={r.item.name}
+                    className={styles.reviewItemImage}
+                  />
+                  <div className={styles.reviewItemBody}>
+                    <div className={styles.reviewItemMeta}>
+                      <Stars value={r.ranking} size={16} />
+                      <a
+                        className={styles.reviewItemLink}
+                        onClick={(e) => e.stopPropagation()}
+                        href={`/items/${r.item.id}`}
+                      >
+                        Producto #{r.item.id}
+                      </a>
+                      <span className={styles.reviewItemDate}>{r.date}</span>
+                    </div>
+                    <p className={styles.reviewItemName}>{r.item.name}</p>
+                    <p className={styles.reviewItemComment}>{r.comment}</p>
                     {r.price > 0 && (
                       <span className={styles.reviewItemPrice}>
                         Precio al momento de la reseña ${r.price.toLocaleString()}
                       </span>
                     )}
-                    <span className={styles.reviewItemDate}>{r.date}</span>
                   </div>
-                  <p className={styles.reviewItemComment}>{r.comment}</p>
+                  {r.item.rankingPosition && (
+                    <span className={styles.reviewItemRank}>#{r.item.rankingPosition}</span>
+                  )}
                 </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Tab: Favoritos */}
+        {activeTab === "favorites" && (
+          <div className={styles.tabContent}>
+            {favorites.length === 0 ? (
+              <div className={styles.empty}>
+                <span className={styles.emptyIcon}>💔</span>
+                Todavía no agregaste ningún favorito
               </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {/* Tab: Favoritos */}
-      {activeTab === "favorites" && (
-        <div className={styles.tabContent}>
-          {favorites.length === 0 ? (
-            <div className={styles.empty}>
-              <span className={styles.emptyIcon}>💔</span>
-			  Todavía no agregaste ningun favorito 
-            </div>
-          ) : (
-            <div className={styles.favGrid}>
-              {favorites.map((fav) => (
-                <div key={fav.id} className={styles.favCard}>
-                  <img
-                    src={fav.item.imageUrl}
-                    alt={fav.item.name}
-                    className={styles.favImage}
-                    onClick={() => goToItem(fav.item)}
-                  />
-                  <button
-                    className={styles.removeFavBtn}
-                    onClick={() => handleRemoveClick(fav.id)}
-                    title="Eliminar de favoritos"
-                  >
-                    ✕
-                  </button>
-                  <div className={styles.favInfo} onClick={() => goToItem(fav.item)}>
-                    <p className={styles.favName}>{fav.item.name}</p>
-                    <p className={styles.favBrand}>{fav.item.brand}</p>
+            ) : (
+              <div className={styles.favGrid}>
+                {favorites.map((fav) => (
+                  <div key={fav.id} className={styles.favCard}>
+                    <img
+                      src={fav.item.imageUrl}
+                      alt={fav.item.name}
+                      className={styles.favImage}
+                      onClick={() => goToItem(fav.item)}
+                    />
+                    <button
+                      className={styles.removeFavBtn}
+                      onClick={() => handleRemoveClick(fav.id)}
+                      title="Eliminar de favoritos"
+                    >
+                      ✕
+                    </button>
+                    <div className={styles.favInfo} onClick={() => goToItem(fav.item)}>
+                      <p className={styles.favName}>{fav.item.name}</p>
+                      <p className={styles.favBrand}>{fav.item.brand}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

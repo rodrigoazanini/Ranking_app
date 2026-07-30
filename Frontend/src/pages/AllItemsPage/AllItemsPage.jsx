@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./AllItemsPage.module.css";
 import ItemCard from "../../components/ItemCard/ItemCard";
 import FilterInput from "../../components/Filters/FilterInput/FilterInput";
@@ -7,20 +7,21 @@ import FilterComboBox from "../../components/Filters/FilterComboBox/FilterComboB
 import { categoryService } from "../../services/categoryService";
 import { useItems } from "../../hooks/useItems";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
 
 export function AllItemsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [page, setPage] = useState(0);
 
   const [filters, setFilters] = useState({
-    search: "",
+    search: searchParams.get("search") || "",
     brand: "",
     category: "",
   });
   const [categories, setCategories] = useState([]);
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get("search") || "");
   const [debouncedBrand, setDebouncedBrand] = useState("");
   const [debouncedCategory, setDebouncedCategory] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
@@ -40,6 +41,13 @@ export function AllItemsPage() {
     debouncedCategory,
     filters,
   });
+
+  useEffect(() => {
+    const urlSearch = searchParams.get("search") || "";
+    setFilters(prev => ({ ...prev, search: urlSearch }));
+    setDebouncedSearch(urlSearch);
+    setPage(0);
+  }, [searchParams]);
 
   useEffect(() => {
     if (debounceTimer) {
@@ -126,18 +134,29 @@ export function AllItemsPage() {
     });
   };
 
+  const getPageNumbers = () => {
+    const maxVisible = 5;
+    let start = Math.max(0, page - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible);
+    if (end - start < maxVisible) {
+      start = Math.max(0, end - maxVisible);
+    }
+    return Array.from({ length: end - start }, (_, i) => start + i);
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.gridContainer}>
-        <h1 className={styles.title}>Todos los productos</h1>
+
+        <div className={styles.headerRow}>
+          <div className={styles.headerIcon}>🛍️</div>
+          <div>
+            <h1 className={styles.title}>Todos los productos</h1>
+            <p className={styles.subtitle}>Explorá y gestioná todos los productos disponibles.</p>
+          </div>
+        </div>
 
         <div className={styles.filtersRow}>
-          <FilterInput
-            className={styles.filterInput}
-            value={filters.search}
-            onChange={(value) => updateFilter("search", value)}
-            placeholder="🔍 Buscar producto..."
-          />
           <FilterInput
             className={styles.filterInput}
             value={filters.brand}
@@ -171,23 +190,47 @@ export function AllItemsPage() {
             ))}
           </div>
         )}
-      </div>
-      <div className={styles.pagination}>
-        <button
-          className={styles.pageBtn}
-          disabled={page === 0}
-          onClick={() => setPage(p => Math.max(p - 1, 0))}
-        >
-          Anterior
-        </button>
-        <span className={styles.pageInfo}>Página {page + 1} de {totalPages}</span>
-        <button
-          className={styles.pageBtn}
-          disabled={page + 1 >= totalPages}
-          onClick={() => setPage(p => p + 1)}
-        >
-          Siguiente
-        </button>
+
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <button
+              className={styles.pageBtn}
+              disabled={page === 0}
+              onClick={() => setPage(p => Math.max(p - 1, 0))}
+              aria-label="Anterior"
+            >
+              ‹
+            </button>
+            {getPageNumbers().map((n) => (
+              <button
+                key={n}
+                className={`${styles.pageNumBtn} ${n === page ? styles.pageNumBtnActive : ""}`}
+                onClick={() => setPage(n)}
+              >
+                {n + 1}
+              </button>
+            ))}
+            {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && (
+              <>
+                <span className={styles.pageEllipsis}>…</span>
+                <button
+                  className={styles.pageNumBtn}
+                  onClick={() => setPage(totalPages - 1)}
+                >
+                  {totalPages}
+                </button>
+              </>
+            )}
+            <button
+              className={styles.pageBtn}
+              disabled={page + 1 >= totalPages}
+              onClick={() => setPage(p => p + 1)}
+              aria-label="Siguiente"
+            >
+              ›
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
